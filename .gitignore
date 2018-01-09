@@ -1,0 +1,9 @@
+#忽略的文件及文件夹
+target
+logs
+temp
+.idea
+*.iml
+
+#不忽略的文件
+!.gitignore
