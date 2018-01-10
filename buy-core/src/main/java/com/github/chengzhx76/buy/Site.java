@@ -15,15 +15,7 @@ public class Site {
 
     private Map<String, Map<String, String>> cookies = new HashMap<String, Map<String, String>>();
 
-    private String charset;
-
     private int sleepTime = 5000;
-
-    private int retryTimes = 0;
-
-    private int cycleRetryTimes = 0;
-
-    private int retrySleepTime = 1000;
 
     private int timeOut = 5000;
 
@@ -32,8 +24,6 @@ public class Site {
     private Set<Integer> acceptStatCode = DEFAULT_STATUS_CODE_SET;
 
     private Map<String, String> headers = new HashMap<String, String>();
-
-    private boolean useGzip = true;
 
     private boolean disableCookieManagement = false;
 
@@ -136,27 +126,6 @@ public class Site {
         return this;
     }
 
-    /**
-     * Set charset of page manually.<br>
-     * When charset is not set or set to null, it can be auto detected by Http header.
-     *
-     * @param charset charset
-     * @return this
-     */
-    public Site setCharset(String charset) {
-        this.charset = charset;
-        return this;
-    }
-
-    /**
-     * get charset set manually
-     *
-     * @return charset
-     */
-    public String getCharset() {
-        return charset;
-    }
-
     public int getTimeOut() {
         return timeOut;
     }
@@ -217,14 +186,6 @@ public class Site {
         return sleepTime;
     }
 
-    /**
-     * Get retry times immediately when download fail, 0 by default.<br>
-     *
-     * @return retry times when download fail
-     */
-    public int getRetryTimes() {
-        return retryTimes;
-    }
 
     public Map<String, String> getHeaders() {
         return headers;
@@ -243,67 +204,6 @@ public class Site {
         return this;
     }
 
-    /**
-     * Set retry times when download fail, 0 by default.<br>
-     *
-     * @param retryTimes retryTimes
-     * @return this
-     */
-    public Site setRetryTimes(int retryTimes) {
-        this.retryTimes = retryTimes;
-        return this;
-    }
-
-    /**
-     * When cycleRetryTimes is more than 0, it will add back to scheduler and try download again. <br>
-     *
-     * @return retry times when download fail
-     */
-    public int getCycleRetryTimes() {
-        return cycleRetryTimes;
-    }
-
-    /**
-     * Set cycleRetryTimes times when download fail, 0 by default. <br>
-     *
-     * @param cycleRetryTimes cycleRetryTimes
-     * @return this
-     */
-    public Site setCycleRetryTimes(int cycleRetryTimes) {
-        this.cycleRetryTimes = cycleRetryTimes;
-        return this;
-    }
-
-    public boolean isUseGzip() {
-        return useGzip;
-    }
-
-    public int getRetrySleepTime() {
-        return retrySleepTime;
-    }
-
-    /**
-     * Set retry sleep times when download fail, 1000 by default. <br>
-     *
-     * @param retrySleepTime retrySleepTime
-     * @return this
-     */
-    public Site setRetrySleepTime(int retrySleepTime) {
-        this.retrySleepTime = retrySleepTime;
-        return this;
-    }
-
-    /**
-     * Whether use gzip. <br>
-     * Default is true, you can set it to false to disable gzip.
-     *
-     * @param useGzip useGzip
-     * @return this
-     */
-    public Site setUseGzip(boolean useGzip) {
-        this.useGzip = useGzip;
-        return this;
-    }
 
     public boolean isDisableCookieManagement() {
         return disableCookieManagement;

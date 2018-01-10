@@ -1,7 +1,4 @@
-package com.github.chengzhx76.buy.httper;
-
-
-import com.github.chengzhx76.buy.model.HttpRequestBody;
+package com.github.chengzhx76.buy;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -15,12 +12,7 @@ public class Request implements Serializable {
 
     private String method;
 
-    private HttpRequestBody requestBody;
-
-    /**
-     * Store additional information in extras.
-     */
-    private Map<String, Object> extras;
+    private Map<String, String> requestBody;
 
     /**
      * cookies for current url, if not set use Site's cookies
@@ -37,35 +29,26 @@ public class Request implements Serializable {
         this.url = url;
     }
 
-
-    public Object getExtra(String key) {
-        if (extras == null) {
-            return null;
+    public Request putParam(String key, String value) {
+        if (requestBody == null) {
+            requestBody = new HashMap<String, String>();
         }
-        return extras.get(key);
+        requestBody.put(key, value);
+        return this;
     }
 
-    public Request putExtra(String key, Object value) {
-        if (extras == null) {
-            extras = new HashMap<String, Object>();
-        }
-        extras.put(key, value);
+    public Map<String, String> getRequestBody() {
+        return requestBody;
+    }
+
+    public Request setRequestBody(Map<String, String> requestBody) {
+        this.requestBody = requestBody;
         return this;
     }
 
     public String getUrl() {
         return url;
     }
-
-    public Map<String, Object> getExtras() {
-        return extras;
-    }
-
-    public Request setExtras(Map<String, Object> extras) {
-        this.extras = extras;
-        return this;
-    }
-
     public Request setUrl(String url) {
         this.url = url;
         return this;
@@ -103,14 +86,5 @@ public class Request implements Serializable {
     public Map<String, String> getHeaders() {
         return headers;
     }
-
-    public HttpRequestBody getRequestBody() {
-        return requestBody;
-    }
-
-    public void setRequestBody(HttpRequestBody requestBody) {
-        this.requestBody = requestBody;
-    }
-
 
 }

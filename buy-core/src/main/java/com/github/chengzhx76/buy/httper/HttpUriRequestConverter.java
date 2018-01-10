@@ -1,31 +1,37 @@
 package com.github.chengzhx76.buy.httper;
 
+import com.github.chengzhx76.buy.Request;
 import com.github.chengzhx76.buy.Site;
 import com.github.chengzhx76.buy.proxy.Proxy;
 import com.github.chengzhx76.buy.utils.HttpConstant;
 import org.apache.http.HttpHost;
+import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthState;
 import org.apache.http.auth.ChallengeState;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.cookie.BasicClientCookie;
+import org.apache.http.message.BasicNameValuePair;
 
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class HttpUriRequestConverter {
 
     public HttpClientRequestContext convert(Request request, Site site, Proxy proxy) {
         HttpClientRequestContext httpClientRequestContext = new HttpClientRequestContext();
-        httpClientRequestContext.setHttpUriRequest(convertHttpUriRequest(request, site, proxy));
         httpClientRequestContext.setHttpClientContext(convertHttpClientContext(request, site, proxy));
+        httpClientRequestContext.setHttpUriRequest(convertHttpUriRequest(request, site, proxy));
         return httpClientRequestContext;
     }
 
@@ -33,15 +39,16 @@ public class HttpUriRequestConverter {
         HttpClientContext httpContext = new HttpClientContext();
         if (proxy != null && proxy.getUsername() != null) {
             AuthState authState = new AuthState();
-            authState.update(new BasicScheme(ChallengeState.PROXY), new UsernamePasswordCredentials(proxy.getUsername(), proxy.getPassword()));
+            authState.update(new BasicScheme(ChallengeState.PROXY),
+                    new UsernamePasswordCredentials(proxy.getUsername(), proxy.getPassword()));
             httpContext.setAttribute(HttpClientContext.PROXY_AUTH_STATE, authState);
         }
         if (request.getCookies() != null && !request.getCookies().isEmpty()) {
             CookieStore cookieStore = new BasicCookieStore();
             for (Map.Entry<String, String> cookieEntry : request.getCookies().entrySet()) {
-                BasicClientCookie cookie1 = new BasicClientCookie(cookieEntry.getKey(), cookieEntry.getValue());
-                cookie1.setDomain(site.getDomain());
-                cookieStore.addCookie(cookie1);
+                BasicClientCookie cookie = new BasicClientCookie(cookieEntry.getKey(), cookieEntry.getValue());
+                cookie.setDomain(site.getDomain());
+                cookieStore.addCookie(cookie);
             }
             httpContext.setCookieStore(cookieStore);
         }
@@ -50,6 +57,7 @@ public class HttpUriRequestConverter {
 
     private HttpUriRequest convertHttpUriRequest(Request request, Site site, Proxy proxy) {
         RequestBuilder requestBuilder = selectRequestMethod(request).setUri(request.getUrl());
+
         if (site.getHeaders() != null) {
             for (Map.Entry<String, String> headerEntry : site.getHeaders().entrySet()) {
                 requestBuilder.addHeader(headerEntry.getKey(), headerEntry.getValue());
@@ -83,15 +91,28 @@ public class HttpUriRequestConverter {
             //default get
             return RequestBuilder.get();
         } else if (method.equalsIgnoreCase(HttpConstant.Method.POST)) {
-            return addFormParams(RequestBuilder.post(),request);
+            return addFormParams(RequestBuilder.post(), request);
         }
         throw new IllegalArgumentException("Illegal HTTP Method " + method);
     }
 
     private RequestBuilder addFormParams(RequestBuilder requestBuilder, Request request) {
         if (request.getRequestBody() != null) {
-            ByteArrayEntity entity = new ByteArrayEntity(request.getRequestBody().getBody());
-            entity.setContentType(request.getRequestBody().getContentType());
+//            ByteArrayEntity entity = new ByteArrayEntity(request.getRequestBody().getBody());
+//            entity.setContentType(request.getRequestBody().getContentType());
+//            StringEntity entity = new StringEntity(param)
+
+            List<NameValuePair> formParams = new ArrayList<NameValuePair>();
+            for (Map.Entry<String, String> param : request.getRequestBody().entrySet()) {
+                formParams.add(new BasicNameValuePair(param.getKey(), param.getValue()));
+            }
+            UrlEncodedFormEntity entity = null;
+            try {
+                entity = new UrlEncodedFormEntity(formParams);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+
             requestBuilder.setEntity(entity);
         }
         return requestBuilder;

@@ -1,7 +1,7 @@
 package com.github.chengzhx76.buy.proxy;
 
 
-import com.github.chengzhx76.buy.Page;
+import com.github.chengzhx76.buy.Response;
 import com.github.chengzhx76.buy.Site;
 
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class SimpleProxyProvider implements ProxyProvider {
     }
 
     @Override
-    public void returnProxy(Proxy proxy, Page page, Site site) {
+    public void returnProxy(Proxy proxy, Response page, Site site) {
         //Donothing
     }
 

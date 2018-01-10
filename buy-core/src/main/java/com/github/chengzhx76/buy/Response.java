@@ -1,6 +1,6 @@
 package com.github.chengzhx76.buy;
 
-public class Page {
+public class Response {
 
     private String content;
 

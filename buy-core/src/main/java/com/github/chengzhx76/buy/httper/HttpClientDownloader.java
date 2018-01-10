@@ -1,7 +1,8 @@
 package com.github.chengzhx76.buy.httper;
 
 
-import com.github.chengzhx76.buy.Page;
+import com.github.chengzhx76.buy.Request;
+import com.github.chengzhx76.buy.Response;
 import com.github.chengzhx76.buy.Site;
 import com.github.chengzhx76.buy.proxy.Proxy;
 import com.github.chengzhx76.buy.proxy.ProxyProvider;
@@ -40,9 +41,6 @@ public class HttpClientDownloader {
     }
 
     private CloseableHttpClient getHttpClient(Site site) {
-        if (site == null) {
-            return httpClientGenerator.getClient(null);
-        }
         String domain = site.getDomain();
         CloseableHttpClient httpClient = httpClients.get(domain);
         if (httpClient == null) {
@@ -57,29 +55,29 @@ public class HttpClientDownloader {
         return httpClient;
     }
 
-    public Page download(Request request, Site site) {
+    public Response request(Request request, Site site) {
         CloseableHttpResponse httpResponse = null;
         CloseableHttpClient httpClient = getHttpClient(site);
         Proxy proxy = proxyProvider != null ? proxyProvider.getProxy(site) : null;
         HttpClientRequestContext requestContext = httpUriRequestConverter.convert(request, site, proxy);
-        Page page = null;
+        Response response = null;
         try {
             httpResponse = httpClient.execute(requestContext.getHttpUriRequest(), requestContext.getHttpClientContext());
-            page = handleResponse(request, site.getCharset(), httpResponse, site);
+            response = handleResponse(httpResponse, site, request);
             onSuccess(request);
             logger.info("downloading page success {}", request.getUrl());
-            return page;
+            return response;
         } catch (IOException e) {
             logger.warn("download page {} error", request.getUrl(), e);
             onError(request);
-            return page;
+            return response;
         } finally {
             if (httpResponse != null) {
                 //ensure the connection is released back to pool
                 EntityUtils.consumeQuietly(httpResponse.getEntity());
             }
             if (proxyProvider != null && proxy != null) {
-                proxyProvider.returnProxy(proxy, page, site);
+                proxyProvider.returnProxy(proxy, response, site);
             }
         }
     }
@@ -88,11 +86,11 @@ public class HttpClientDownloader {
         httpClientGenerator.setPoolSize(thread);
     }
 
-    protected Page handleResponse(Request request, String charset, HttpResponse httpResponse, Site site) throws IOException {
+    protected Response handleResponse(HttpResponse httpResponse, Site site, Request request) throws IOException {
         String content = IOUtils.toString(httpResponse.getEntity().getContent());
-        Page page = new Page();
-        page.setContent(content);
-        return page;
+        Response response = new Response();
+        response.setContent(content);
+        return response;
     }
 
 
