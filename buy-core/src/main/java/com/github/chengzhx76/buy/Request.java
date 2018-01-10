@@ -1,5 +1,8 @@
 package com.github.chengzhx76.buy;
 
+
+import com.github.chengzhx76.buy.model.HttpRequestBody;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +15,14 @@ public class Request implements Serializable {
 
     private String method;
 
-    private Map<String, String> requestBody;
+    private HttpRequestBody requestBody;
+
+    private boolean disableCookieManagement = false;
+
+    /**
+     * Store additional information in extras.
+     */
+    private Map<String, Object> extras;
 
     /**
      * cookies for current url, if not set use Site's cookies
@@ -29,26 +39,35 @@ public class Request implements Serializable {
         this.url = url;
     }
 
-    public Request putParam(String key, String value) {
-        if (requestBody == null) {
-            requestBody = new HashMap<String, String>();
+
+    public Object getExtra(String key) {
+        if (extras == null) {
+            return null;
         }
-        requestBody.put(key, value);
-        return this;
+        return extras.get(key);
     }
 
-    public Map<String, String> getRequestBody() {
-        return requestBody;
-    }
-
-    public Request setRequestBody(Map<String, String> requestBody) {
-        this.requestBody = requestBody;
+    public Request putExtra(String key, Object value) {
+        if (extras == null) {
+            extras = new HashMap<String, Object>();
+        }
+        extras.put(key, value);
         return this;
     }
 
     public String getUrl() {
         return url;
     }
+
+    public Map<String, Object> getExtras() {
+        return extras;
+    }
+
+    public Request setExtras(Map<String, Object> extras) {
+        this.extras = extras;
+        return this;
+    }
+
     public Request setUrl(String url) {
         this.url = url;
         return this;
@@ -85,6 +104,29 @@ public class Request implements Serializable {
 
     public Map<String, String> getHeaders() {
         return headers;
+    }
+
+    public HttpRequestBody getRequestBody() {
+        return requestBody;
+    }
+
+    public void setRequestBody(HttpRequestBody requestBody) {
+        this.requestBody = requestBody;
+    }
+    public boolean isDisableCookieManagement() {
+        return disableCookieManagement;
+    }
+
+    /**
+     * Downloader is supposed to store response cookie.
+     * Disable it to ignore all cookie fields and stay clean.
+     * Warning: Set cookie will still NOT work if disableCookieManagement is true.
+     * @param disableCookieManagement disableCookieManagement
+     * @return this
+     */
+    public Request setDisableCookieManagement(boolean disableCookieManagement) {
+        this.disableCookieManagement = disableCookieManagement;
+        return this;
     }
 
 }

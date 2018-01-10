@@ -40,6 +40,10 @@ public class HttpClientDownloader {
         this.httpUriRequestConverter = httpUriRequestConverter;
     }
 
+    public void setProxyProvider(ProxyProvider proxyProvider) {
+        this.proxyProvider = proxyProvider;
+    }
+
     private CloseableHttpClient getHttpClient(Site site) {
         String domain = site.getDomain();
         CloseableHttpClient httpClient = httpClients.get(domain);

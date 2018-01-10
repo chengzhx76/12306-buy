@@ -5,25 +5,20 @@ import com.github.chengzhx76.buy.Site;
 import com.github.chengzhx76.buy.proxy.Proxy;
 import com.github.chengzhx76.buy.utils.HttpConstant;
 import org.apache.http.HttpHost;
-import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthState;
 import org.apache.http.auth.ChallengeState;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.cookie.BasicClientCookie;
-import org.apache.http.message.BasicNameValuePair;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class HttpUriRequestConverter {
@@ -98,21 +93,8 @@ public class HttpUriRequestConverter {
 
     private RequestBuilder addFormParams(RequestBuilder requestBuilder, Request request) {
         if (request.getRequestBody() != null) {
-//            ByteArrayEntity entity = new ByteArrayEntity(request.getRequestBody().getBody());
-//            entity.setContentType(request.getRequestBody().getContentType());
-//            StringEntity entity = new StringEntity(param)
-
-            List<NameValuePair> formParams = new ArrayList<NameValuePair>();
-            for (Map.Entry<String, String> param : request.getRequestBody().entrySet()) {
-                formParams.add(new BasicNameValuePair(param.getKey(), param.getValue()));
-            }
-            UrlEncodedFormEntity entity = null;
-            try {
-                entity = new UrlEncodedFormEntity(formParams);
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-
+            ByteArrayEntity entity = new ByteArrayEntity(request.getRequestBody().getBody());
+            entity.setContentType(request.getRequestBody().getContentType());
             requestBuilder.setEntity(entity);
         }
         return requestBuilder;
