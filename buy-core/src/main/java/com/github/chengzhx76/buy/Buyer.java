@@ -1,7 +1,12 @@
 package com.github.chengzhx76.buy;
 
+import com.github.chengzhx76.buy.httper.Downloader;
+import com.github.chengzhx76.buy.httper.HttpClientDownloader;
+import com.github.chengzhx76.buy.model.Request;
+import com.github.chengzhx76.buy.model.Response;
 import com.github.chengzhx76.buy.utils.CollectionUtils;
 import com.github.chengzhx76.buy.utils.ConfigUtils;
+import com.github.chengzhx76.buy.utils.OperationEnum;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
@@ -14,7 +19,7 @@ import java.util.Properties;
  * @date: 2018/1/10
  */
 public class Buyer {
-    /** 乘车时间 **/
+    /** 出发日期不能为空 **/
     private String stationDate;
     /** 车次 **/
     private List<String> stationTrains;
@@ -30,6 +35,10 @@ public class Buyer {
     private String password;
 
     private Site site;
+
+    private Downloader downloader;
+
+    private Request request;
 
     public Buyer() {
     }
@@ -110,13 +119,47 @@ public class Buyer {
         return this;
     }
 
+    public Downloader getDownloader() {
+        return downloader;
+    }
+
+    public Buyer setDownloader(Downloader downloader) {
+        this.downloader = downloader;
+        return this;
+    }
+
+    public Request getRequest() {
+        return request;
+    }
+
+    public Buyer setRequest(Request request) {
+        this.request = request;
+        return this;
+    }
+
+    // -------------------------------------------------
+
+
     public static Buyer create(Site site) {
         return new Buyer(site);
     }
 
-    public void go() {
+    private void initComponent() {
+        if (downloader == null) {
+            downloader = new HttpClientDownloader();
+        }
+        if (request == null) {
+            request = new Request();
+        }
+        request.setOperation(OperationEnum.QUERY);
+        loadConfig();
+    }
 
+    public void go() {
+        initComponent();
         System.out.println("-----go--->");
+        Response response = downloader.request(request, site);
+        System.out.println("--> "+response.getContent());
     }
 
     private void loadConfig() {
@@ -137,11 +180,33 @@ public class Buyer {
         if (StringUtils.isBlank(getFromStation())) {
             fromStation = properties.getProperty("fromStation");
             if (StringUtils.isBlank(fromStation)) {
+                throw new RuntimeException("乘车地点不能为空");
+            }
+        }
+        if (StringUtils.isBlank(getToStation())) {
+            toStation = properties.getProperty("toStation");
+            if (StringUtils.isBlank(toStation)) {
                 throw new RuntimeException("到达站不能为空");
             }
         }
-        if (StringUtils.isBlank(getStationDate())) {
-            stationDate = properties.getProperty("stationDate");
+        if (CollectionUtils.isEmpty(getSetType())) {
+            String type = properties.getProperty("setType");
+            if (StringUtils.isBlank(type)) {
+                throw new RuntimeException("席别不能为空");
+            }
+            setType = Arrays.asList(StringUtils.split(type, ","));
+        }
+        if (StringUtils.isBlank(getUsername())) {
+            username = properties.getProperty("username");
+            if (StringUtils.isBlank(username)) {
+                throw new RuntimeException("用户名不能为空");
+            }
+        }
+        if (StringUtils.isBlank(getPassword())) {
+            password = properties.getProperty("username");
+            if (StringUtils.isBlank(password)) {
+                throw new RuntimeException("密码不能为空");
+            }
         }
     }
 
