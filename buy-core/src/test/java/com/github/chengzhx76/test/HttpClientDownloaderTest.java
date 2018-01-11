@@ -4,6 +4,8 @@ import com.github.chengzhx76.buy.model.Request;
 import com.github.chengzhx76.buy.model.Response;
 import com.github.chengzhx76.buy.Site;
 import com.github.chengzhx76.buy.httper.HttpClientDownloader;
+import com.github.chengzhx76.buy.utils.HttpConstant;
+import com.github.chengzhx76.buy.utils.OperationEnum;
 import com.github.dreamhead.moco.HttpServer;
 import com.github.dreamhead.moco.Runnable;
 import com.github.dreamhead.moco.Runner;
@@ -28,7 +30,7 @@ public class HttpClientDownloaderTest {
             public void run() throws Exception {
                 final HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
                 Request request = new Request();
-                request.setUrl("https://kyfw.12306.cn/otn/leftTicket/queryZ?leftTicketDTO.train_date=2018-01-19&leftTicketDTO.from_station=BJP&leftTicketDTO.to_station=CXK&purpose_codes=ADULT");
+                request.setOperation(OperationEnum.QUERY);
                 Response response = httpClientDownloader.request(request, Site.me());
                 System.out.println(response.getContent());
             }
@@ -39,8 +41,8 @@ public class HttpClientDownloaderTest {
     public void test12306() throws Exception {
         HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
         Request request = new Request();
-        request.setUrl("https://kyfw.12306.cn/otn/leftTicket/queryZ?leftTicketDTO.train_date=2018-01-19&leftTicketDTO.from_station=BJP&leftTicketDTO.to_station=CXK&purpose_codes=ADULT");
-        Response response = httpClientDownloader.request(request, Site.me().setUserAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36"));
+        request.setOperation(OperationEnum.QUERY);
+        Response response = httpClientDownloader.request(request, Site.me().setUserAgent(HttpConstant.UserAgent.CHROME));
         System.out.println(response.getContent());
     }
 
