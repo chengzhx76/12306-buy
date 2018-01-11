@@ -1,6 +1,6 @@
 package com.github.chengzhx76.buy.httper;
 
-import com.github.chengzhx76.buy.Request;
+import com.github.chengzhx76.buy.model.Request;
 import com.github.chengzhx76.buy.Site;
 import com.github.chengzhx76.buy.proxy.Proxy;
 import com.github.chengzhx76.buy.utils.HttpConstant;
@@ -51,7 +51,7 @@ public class HttpUriRequestConverter {
     }
 
     private HttpUriRequest convertHttpUriRequest(Request request, Site site, Proxy proxy) {
-        RequestBuilder requestBuilder = selectRequestMethod(request).setUri(request.getUrl());
+        RequestBuilder requestBuilder = selectRequestMethod(request).setUri(request.getOperation().getUrl());
 
         if (site.getHeaders() != null) {
             for (Map.Entry<String, String> headerEntry : site.getHeaders().entrySet()) {
@@ -81,7 +81,7 @@ public class HttpUriRequestConverter {
     }
 
     private RequestBuilder selectRequestMethod(Request request) {
-        String method = request.getMethod();
+        String method = request.getOperation().getMethod();
         if (method == null || method.equalsIgnoreCase(HttpConstant.Method.GET)) {
             //default get
             return RequestBuilder.get();

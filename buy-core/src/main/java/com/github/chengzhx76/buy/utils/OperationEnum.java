@@ -7,15 +7,20 @@ package com.github.chengzhx76.buy.utils;
  */
 public enum OperationEnum {
     // 查询
-    QUERY(Constant.QUERY);
+    QUERY(HttpConstant.URL.QUERY, HttpConstant.Method.GET);
 
     private String url;
+    private String method;
 
-    OperationEnum(String url) {
+    OperationEnum(String url, String method) {
         this.url = url;
     }
 
     public String getUrl() {
         return url;
+    }
+
+    public String getMethod() {
+        return method;
     }
 }

@@ -1,6 +1,6 @@
 package com.github.chengzhx76.buy.proxy;
 
-import com.github.chengzhx76.buy.Response;
+import com.github.chengzhx76.buy.model.Response;
 import com.github.chengzhx76.buy.Site;
 
 public interface ProxyProvider {

@@ -1,8 +1,8 @@
 package com.github.chengzhx76.buy.httper;
 
 
-import com.github.chengzhx76.buy.Request;
-import com.github.chengzhx76.buy.Response;
+import com.github.chengzhx76.buy.model.Request;
+import com.github.chengzhx76.buy.model.Response;
 import com.github.chengzhx76.buy.Site;
 import com.github.chengzhx76.buy.proxy.Proxy;
 import com.github.chengzhx76.buy.proxy.ProxyProvider;
@@ -69,10 +69,10 @@ public class HttpClientDownloader {
             httpResponse = httpClient.execute(requestContext.getHttpUriRequest(), requestContext.getHttpClientContext());
             response = handleResponse(httpResponse, site, request);
             onSuccess(request);
-            logger.info("downloading page success {}", request.getUrl());
+            logger.info("downloading page success {}", request.getOperation());
             return response;
         } catch (IOException e) {
-            logger.warn("download page {} error", request.getUrl(), e);
+            logger.warn("download page {} error", request.getOperation(), e);
             onError(request);
             return response;
         } finally {

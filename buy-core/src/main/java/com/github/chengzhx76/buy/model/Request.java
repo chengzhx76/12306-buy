@@ -1,7 +1,7 @@
-package com.github.chengzhx76.buy;
+package com.github.chengzhx76.buy.model;
 
 
-import com.github.chengzhx76.buy.model.HttpRequestBody;
+import com.github.chengzhx76.buy.utils.OperationEnum;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -11,9 +11,7 @@ public class Request implements Serializable {
 
     private static final long serialVersionUID = 2062192774891352043L;
 
-    private String url;
-
-    private String method;
+    private OperationEnum operation;
 
     private HttpRequestBody requestBody;
 
@@ -35,11 +33,6 @@ public class Request implements Serializable {
     public Request() {
     }
 
-    public Request(String url) {
-        this.url = url;
-    }
-
-
     public Object getExtra(String key) {
         if (extras == null) {
             return null;
@@ -55,8 +48,13 @@ public class Request implements Serializable {
         return this;
     }
 
-    public String getUrl() {
-        return url;
+    public OperationEnum getOperation() {
+        return operation;
+    }
+
+    public Request setOperation(OperationEnum operation) {
+        this.operation = operation;
+        return this;
     }
 
     public Map<String, Object> getExtras() {
@@ -65,26 +63,6 @@ public class Request implements Serializable {
 
     public Request setExtras(Map<String, Object> extras) {
         this.extras = extras;
-        return this;
-    }
-
-    public Request setUrl(String url) {
-        this.url = url;
-        return this;
-    }
-
-    /**
-     * The http method of the request. Get for default.
-     * @return httpMethod
-     * @see com.github.chengzhx76.buy.utils.HttpConstant.Method
-     * @since 0.5.0
-     */
-    public String getMethod() {
-        return method;
-    }
-
-    public Request setMethod(String method) {
-        this.method = method;
         return this;
     }
 
