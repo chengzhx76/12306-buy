@@ -94,6 +94,7 @@ public class HttpClientDownloader implements Downloader {
         String content = IOUtils.toString(httpResponse.getEntity().getContent());
         Response response = new Response();
         response.setContent(content);
+        response.setOperation(request.getOperation());
         return response;
     }
 
