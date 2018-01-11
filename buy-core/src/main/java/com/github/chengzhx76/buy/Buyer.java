@@ -145,6 +145,7 @@ public class Buyer {
     }
 
     private void initComponent() {
+        loadConfig();
         if (downloader == null) {
             downloader = new HttpClientDownloader();
         }
@@ -152,7 +153,6 @@ public class Buyer {
             request = new Request();
         }
         request.setOperation(OperationEnum.QUERY);
-        loadConfig();
     }
 
     public void go() {
