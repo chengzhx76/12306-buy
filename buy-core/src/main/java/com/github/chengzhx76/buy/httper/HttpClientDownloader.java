@@ -6,6 +6,7 @@ import com.github.chengzhx76.buy.model.Response;
 import com.github.chengzhx76.buy.Site;
 import com.github.chengzhx76.buy.proxy.Proxy;
 import com.github.chengzhx76.buy.proxy.ProxyProvider;
+import com.github.chengzhx76.buy.utils.HttpConstant;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -96,6 +97,8 @@ public class HttpClientDownloader implements Downloader {
         Response response = new Response();
         response.setContent(content);
         response.setOperation(request.getOperation());
+        response.setRequestSuccess(true);
+        response.setStatusCode(HttpConstant.StatusCode.CODE_200);
         return response;
     }
 

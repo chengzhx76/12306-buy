@@ -7,7 +7,8 @@ package com.github.chengzhx76.buy.utils;
  */
 public enum OperationEnum {
     // 查询
-    QUERY(HttpConstant.URL.QUERY, HttpConstant.Method.GET);
+    QUERY(HttpConstant.URL.QUERY, HttpConstant.Method.GET),
+    LOGIN(HttpConstant.URL.LOGIN, HttpConstant.Method.GET);
 
     private String url;
     private String method;

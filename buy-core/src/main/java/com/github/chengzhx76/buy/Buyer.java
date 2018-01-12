@@ -4,12 +4,16 @@ import com.github.chengzhx76.buy.httper.Downloader;
 import com.github.chengzhx76.buy.httper.HttpClientDownloader;
 import com.github.chengzhx76.buy.model.Request;
 import com.github.chengzhx76.buy.model.Response;
+import com.github.chengzhx76.buy.pipeline.ConsolePipeline;
+import com.github.chengzhx76.buy.pipeline.Pipeline;
 import com.github.chengzhx76.buy.processor.Processor;
 import com.github.chengzhx76.buy.processor.SimpleProcessor;
 import com.github.chengzhx76.buy.utils.CollectionUtils;
 import com.github.chengzhx76.buy.utils.ConfigUtils;
 import com.github.chengzhx76.buy.utils.OperationEnum;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +25,9 @@ import java.util.Properties;
  * @date: 2018/1/10
  */
 public class Buyer {
+
+    protected final static Logger logger = LoggerFactory.getLogger(Buyer.class);
+
     /** 出发日期不能为空 **/
     private String stationDate;
     /** 车次 **/
@@ -44,6 +51,10 @@ public class Buyer {
 
     private Processor processor;
 
+    private Pipeline pipeline;
+
+    private volatile boolean query = true;
+
     public Buyer() {
     }
 
@@ -64,8 +75,8 @@ public class Buyer {
         return stationTrains;
     }
 
-    public Buyer setStationTrains(List<String> stationTrains) {
-        this.stationTrains = stationTrains;
+    public Buyer setStationTrains(String stationTrains) {
+        this.stationTrains = Arrays.asList(StringUtils.split(stationTrains, ","));
         return this;
     }
 
@@ -91,8 +102,8 @@ public class Buyer {
         return setType;
     }
 
-    public Buyer setSetType(List<String> setType) {
-        this.setType = setType;
+    public Buyer setSetType(String setType) {
+        this.setType = Arrays.asList(StringUtils.split(setType, ","));
         return this;
     }
 
@@ -141,6 +152,28 @@ public class Buyer {
         return this;
     }
 
+    public static Logger getLogger() {
+        return logger;
+    }
+
+    public Processor getProcessor() {
+        return processor;
+    }
+
+    public Buyer setProcessor(Processor processor) {
+        this.processor = processor;
+        return this;
+    }
+
+    public Pipeline getPipeline() {
+        return pipeline;
+    }
+
+    public Buyer setPipeline(Pipeline pipeline) {
+        this.pipeline = pipeline;
+        return this;
+    }
+
     // -------------------------------------------------
 
 
@@ -156,10 +189,15 @@ public class Buyer {
         if (request == null) {
             request = new Request();
         }
+        request.setOperation(OperationEnum.QUERY);
+
         if (processor == null) {
             processor = new SimpleProcessor();
         }
-        request.setOperation(OperationEnum.QUERY);
+        if (pipeline == null) {
+            pipeline = new ConsolePipeline();
+        }
+
     }
 
     public void go() {
@@ -169,24 +207,33 @@ public class Buyer {
     }
 
     private void processRequest(Request request) {
-        Response response = downloader.request(request, site);
-        if (response.isRequestSuccess()) {
-            onRequestSuccess(response);
-        } else {
-            onRequestFail(response);
+        if (OperationEnum.QUERY.equals(request.getOperation())) {
+            while (query) {
+                Response response = downloader.request(request, site);
+                if (response.isRequestSuccess()) {
+                    onRequestSuccess(response);
+                } else {
+                    onRequestFail(response);
+                }
+            }
+        } else if (OperationEnum.LOGIN.equals(request.getOperation())) {
+            // TODO 登录
         }
-        System.out.println("--> "+response.getContent());
+
     }
 
     private void onRequestSuccess(Response response) {
-        if (site.getAcceptStatCode().contains(response.getStatusCode())){
+        if (site.getAcceptStatCode().contains(response.getStatusCode())) {
             processor.process(response);
-            // 打印结果
+            pipeline.process(response);
+        } else {
+            logger.warn("page status code error, page {} , code: {}", response.getOperation(), response.getStatusCode());
         }
+        sleep(site.getSleepTime());
     }
 
     private void onRequestFail(Response response) {
-
+        System.err.println("error");
     }
 
     private void checkConfig() {
@@ -234,6 +281,14 @@ public class Buyer {
             if (StringUtils.isBlank(password)) {
                 throw new RuntimeException("密码不能为空");
             }
+        }
+    }
+
+    private void sleep(int time) {
+        try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            logger.error("Thread interrupted when sleep",e);
         }
     }
 

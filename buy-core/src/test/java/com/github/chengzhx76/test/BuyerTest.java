@@ -3,8 +3,6 @@ package com.github.chengzhx76.test;
 import com.github.chengzhx76.buy.Buyer;
 import com.github.chengzhx76.buy.Site;
 
-import java.util.ArrayList;
-
 /**
  * @desc:
  * @author: hp
@@ -20,8 +18,8 @@ public class BuyerTest {
                 .setStationDate("2018-01-11")
                 .setFromStation("bj")
                 .setToStation("hz")
-                .setSetType(new ArrayList<String>())
-                .setStationTrains(new ArrayList<String>())
+                .setSetType("硬座,硬卧")
+                .setStationTrains("1303,k105")
                 .go();
     }
 
