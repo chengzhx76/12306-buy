@@ -100,7 +100,7 @@ public class HttpClientGenerator {
         SocketConfig socketConfig = socketConfigBuilder.build();
         httpClientBuilder.setDefaultSocketConfig(socketConfig);
         connectionManager.setDefaultSocketConfig(socketConfig);
-//        generateCookie(httpClientBuilder, site);
+        //generateCookie(httpClientBuilder, site);
         return httpClientBuilder.build();
     }
 

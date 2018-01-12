@@ -1,9 +1,10 @@
 package com.github.chengzhx76.buy.httper;
 
-import com.github.chengzhx76.buy.model.Request;
 import com.github.chengzhx76.buy.Site;
+import com.github.chengzhx76.buy.model.Request;
 import com.github.chengzhx76.buy.proxy.Proxy;
 import com.github.chengzhx76.buy.utils.HttpConstant;
+import com.github.chengzhx76.buy.utils.UrlUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthState;
 import org.apache.http.auth.ChallengeState;
@@ -38,14 +39,21 @@ public class HttpUriRequestConverter {
                     new UsernamePasswordCredentials(proxy.getUsername(), proxy.getPassword()));
             httpContext.setAttribute(HttpClientContext.PROXY_AUTH_STATE, authState);
         }
-        if (request.getCookies() != null && !request.getCookies().isEmpty()) {
-            CookieStore cookieStore = new BasicCookieStore();
-            for (Map.Entry<String, String> cookieEntry : request.getCookies().entrySet()) {
-                BasicClientCookie cookie = new BasicClientCookie(cookieEntry.getKey(), cookieEntry.getValue());
-                cookie.setDomain(site.getDomain());
-                cookieStore.addCookie(cookie);
+        if (request.isDisableCookieManagement()) {
+            CookieStore store = httpContext.getCookieStore();
+            if (store != null) {
+                store.clear();
             }
-            httpContext.setCookieStore(cookieStore);
+        } else {
+            if (request.getCookies() != null && !request.getCookies().isEmpty()) {
+                CookieStore cookieStore = new BasicCookieStore();
+                for (Map.Entry<String, String> cookieEntry : request.getCookies().entrySet()) {
+                    BasicClientCookie cookie = new BasicClientCookie(cookieEntry.getKey(), cookieEntry.getValue());
+                    cookie.setDomain(UrlUtils.getDomain(request.getOperation().getUrl()));
+                    cookieStore.addCookie(cookie);
+                }
+                httpContext.setCookieStore(cookieStore);
+            }
         }
         return httpContext;
     }

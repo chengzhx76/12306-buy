@@ -10,6 +10,7 @@ import com.github.chengzhx76.buy.utils.OperationEnum;
  * @date: 2018/1/12
  */
 public class SimpleProcessor implements Processor {
+
     @Override
     public void process(Request request, Response response) {
         OperationEnum operation = response.getOperation();
@@ -21,6 +22,8 @@ public class SimpleProcessor implements Processor {
             System.out.println("SimpleProcessor--> 解析为结束");
             System.out.println("---结束---");
             request.setOperation(OperationEnum.END);
+        } else {
+            System.out.println("SimpleProcessor--> " + request.getOperation());
         }
     }
 }

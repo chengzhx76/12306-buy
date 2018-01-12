@@ -13,15 +13,7 @@ public class BuyerTest {
 
     public static void main(String[] args) {
         Site site = Site.me().setUserAgent(HttpConstant.UserAgent.CHROME);
-        Buyer.create(site)
-                .setUsername("chengzhx76")
-                .setPassword("123456")
-                .setStationDate("2018-01-11")
-                .setFromStation("bj")
-                .setToStation("hz")
-                .setSetType("硬座,硬卧")
-                .setStationTrains("1303,k105")
-                .go();
+        Buyer.create(site).go();
     }
 
 }

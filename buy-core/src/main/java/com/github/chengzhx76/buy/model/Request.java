@@ -15,7 +15,7 @@ public class Request implements Serializable {
 
     private HttpRequestBody requestBody;
 
-    private boolean disableCookieManagement = false;
+    private boolean disableCookieManagement;
 
     /**
      * Store additional information in extras.
@@ -92,6 +92,9 @@ public class Request implements Serializable {
         this.requestBody = requestBody;
     }
     public boolean isDisableCookieManagement() {
+        if (OperationEnum.QUERY.equals(getOperation())) {
+            disableCookieManagement = true;
+        }
         return disableCookieManagement;
     }
 

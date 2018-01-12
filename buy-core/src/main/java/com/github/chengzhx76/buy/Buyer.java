@@ -209,29 +209,18 @@ public class Buyer {
     }
 
     private void processRequest(Request request) {
-        if (OperationEnum.QUERY.equals(request.getOperation())) {
-            Response response = downloader.request(request, site);
-            if (response.isRequestSuccess()) {
-                onRequestSuccess(request, response);
-            } else {
-                onRequestFail(response);
-            }
-        } else if (OperationEnum.LOGIN.equals(request.getOperation())) {
-            System.out.println("---------登录-----------");
-            Response response = downloader.request(request, site);
-            if (response.isRequestSuccess()) {
-                onRequestSuccess(request, response);
-            } else {
-                onRequestFail(response);
-            }
+        Response response = downloader.request(request, site);
+        if (response.isRequestSuccess()) {
+            onRequestSuccess(request, response);
+        } else {
+            onRequestFail(response);
         }
-
     }
 
     private void onRequestSuccess(Request request, Response response) {
         if (site.getAcceptStatCode().contains(response.getStatusCode())) {
             processor.process(request, response);
-            pipeline.process(response);
+            pipeline.process(request, response);
         } else {
             logger.warn("page status code error, page {} , code: {}", response.getOperation(), response.getStatusCode());
         }
@@ -252,10 +241,13 @@ public class Buyer {
         }
         if (CollectionUtils.isEmpty(getStationTrains())) {
             String stationTrain = properties.getProperty("stationTrains");
+            stationTrains = Arrays.asList(StringUtils.split(stationTrain, ","));
+            if (CollectionUtils.isEmpty(getStationTrains())) {
+                stationTrains = Arrays.asList(StringUtils.split(stationTrain, "|"));
+            }
             if (StringUtils.isBlank(stationTrain)) {
                 throw new RuntimeException("车次不能为空");
             }
-            stationTrains = Arrays.asList(StringUtils.split(stationTrain, ","));
         }
         if (StringUtils.isBlank(getFromStation())) {
             fromStation = properties.getProperty("fromStation");
@@ -271,10 +263,13 @@ public class Buyer {
         }
         if (CollectionUtils.isEmpty(getSetType())) {
             String type = properties.getProperty("setType");
+            setType = Arrays.asList(StringUtils.split(type, ","));
+            if (CollectionUtils.isEmpty(getSetType())) {
+                setType = Arrays.asList(StringUtils.split(type, "|"));
+            }
             if (StringUtils.isBlank(type)) {
                 throw new RuntimeException("席别不能为空");
             }
-            setType = Arrays.asList(StringUtils.split(type, ","));
         }
         if (StringUtils.isBlank(getUsername())) {
             username = properties.getProperty("username");
@@ -283,7 +278,7 @@ public class Buyer {
             }
         }
         if (StringUtils.isBlank(getPassword())) {
-            password = properties.getProperty("username");
+            password = properties.getProperty("password");
             if (StringUtils.isBlank(password)) {
                 throw new RuntimeException("密码不能为空");
             }
