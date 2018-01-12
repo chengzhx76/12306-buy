@@ -59,6 +59,7 @@ public class HttpClientDownloader implements Downloader {
         return httpClient;
     }
 
+    @Override
     public Response request(Request request, Site site) {
         CloseableHttpResponse httpResponse = null;
         CloseableHttpClient httpClient = getHttpClient(site);

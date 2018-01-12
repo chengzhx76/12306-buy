@@ -8,6 +8,10 @@ public class Response {
 
     private OperationEnum operation;
 
+    private boolean requestSuccess;
+
+    private int statusCode;
+
     public String getContent() {
         return content;
     }
@@ -22,6 +26,24 @@ public class Response {
 
     public Response setOperation(OperationEnum operation) {
         this.operation = operation;
+        return this;
+    }
+
+    public boolean isRequestSuccess() {
+        return requestSuccess;
+    }
+
+    public Response setRequestSuccess(boolean requestSuccess) {
+        this.requestSuccess = requestSuccess;
+        return this;
+    }
+
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public Response setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
         return this;
     }
 }

@@ -4,6 +4,8 @@ import com.github.chengzhx76.buy.httper.Downloader;
 import com.github.chengzhx76.buy.httper.HttpClientDownloader;
 import com.github.chengzhx76.buy.model.Request;
 import com.github.chengzhx76.buy.model.Response;
+import com.github.chengzhx76.buy.processor.Processor;
+import com.github.chengzhx76.buy.processor.SimpleProcessor;
 import com.github.chengzhx76.buy.utils.CollectionUtils;
 import com.github.chengzhx76.buy.utils.ConfigUtils;
 import com.github.chengzhx76.buy.utils.OperationEnum;
@@ -39,6 +41,8 @@ public class Buyer {
     private Downloader downloader;
 
     private Request request;
+
+    private Processor processor;
 
     public Buyer() {
     }
@@ -145,12 +149,15 @@ public class Buyer {
     }
 
     private void initComponent() {
-        loadConfig();
+        checkConfig();
         if (downloader == null) {
             downloader = new HttpClientDownloader();
         }
         if (request == null) {
             request = new Request();
+        }
+        if (processor == null) {
+            processor = new SimpleProcessor();
         }
         request.setOperation(OperationEnum.QUERY);
     }
@@ -158,11 +165,31 @@ public class Buyer {
     public void go() {
         initComponent();
         System.out.println("-----go--->");
+        processRequest(request);
+    }
+
+    private void processRequest(Request request) {
         Response response = downloader.request(request, site);
+        if (response.isRequestSuccess()) {
+            onRequestSuccess(response);
+        } else {
+            onRequestFail(response);
+        }
         System.out.println("--> "+response.getContent());
     }
 
-    private void loadConfig() {
+    private void onRequestSuccess(Response response) {
+        if (site.getAcceptStatCode().contains(response.getStatusCode())){
+            processor.process(response);
+            // 打印结果
+        }
+    }
+
+    private void onRequestFail(Response response) {
+
+    }
+
+    private void checkConfig() {
         Properties properties = ConfigUtils.loadProperties("buy.properties");
         if (StringUtils.isBlank(getStationDate())) {
             stationDate = properties.getProperty("stationDate");
