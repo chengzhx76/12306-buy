@@ -203,28 +203,35 @@ public class Buyer {
     public void go() {
         initComponent();
         System.out.println("-----go--->");
-        processRequest(request);
+        while (!OperationEnum.END.equals(request.getOperation())) {
+            processRequest(request);
+        }
     }
 
     private void processRequest(Request request) {
         if (OperationEnum.QUERY.equals(request.getOperation())) {
-            while (query) {
-                Response response = downloader.request(request, site);
-                if (response.isRequestSuccess()) {
-                    onRequestSuccess(response);
-                } else {
-                    onRequestFail(response);
-                }
+            Response response = downloader.request(request, site);
+            if (response.isRequestSuccess()) {
+                onRequestSuccess(request, response);
+            } else {
+                onRequestFail(response);
             }
         } else if (OperationEnum.LOGIN.equals(request.getOperation())) {
             // TODO 登录
+            System.out.println("---------登录-----------");
+            Response response = downloader.request(request, site);
+            if (response.isRequestSuccess()) {
+                onRequestSuccess(request, response);
+            } else {
+                onRequestFail(response);
+            }
         }
 
     }
 
-    private void onRequestSuccess(Response response) {
+    private void onRequestSuccess(Request request, Response response) {
         if (site.getAcceptStatCode().contains(response.getStatusCode())) {
-            processor.process(response);
+            processor.process(request, response);
             pipeline.process(response);
         } else {
             logger.warn("page status code error, page {} , code: {}", response.getOperation(), response.getStatusCode());
