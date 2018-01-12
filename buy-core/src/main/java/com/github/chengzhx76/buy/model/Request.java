@@ -25,9 +25,9 @@ public class Request implements Serializable {
     /**
      * cookies for current url, if not set use Site's cookies
      */
-    private Map<String, String> cookies = new HashMap<String, String>();
+    private Map<String, String> cookies = new HashMap<>();
 
-    private Map<String, String> headers = new HashMap<String, String>();
+    private Map<String, String> headers = new HashMap<>();
 
 
     public Request() {

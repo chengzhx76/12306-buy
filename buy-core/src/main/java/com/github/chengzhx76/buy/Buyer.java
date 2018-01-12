@@ -217,7 +217,6 @@ public class Buyer {
                 onRequestFail(response);
             }
         } else if (OperationEnum.LOGIN.equals(request.getOperation())) {
-            // TODO 登录
             System.out.println("---------登录-----------");
             Response response = downloader.request(request, site);
             if (response.isRequestSuccess()) {

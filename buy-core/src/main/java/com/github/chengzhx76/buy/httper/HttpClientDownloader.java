@@ -1,9 +1,9 @@
 package com.github.chengzhx76.buy.httper;
 
 
+import com.github.chengzhx76.buy.Site;
 import com.github.chengzhx76.buy.model.Request;
 import com.github.chengzhx76.buy.model.Response;
-import com.github.chengzhx76.buy.Site;
 import com.github.chengzhx76.buy.proxy.Proxy;
 import com.github.chengzhx76.buy.proxy.ProxyProvider;
 import com.github.chengzhx76.buy.utils.HttpConstant;
@@ -70,6 +70,7 @@ public class HttpClientDownloader implements Downloader {
         try {
             httpResponse = httpClient.execute(requestContext.getHttpUriRequest(), requestContext.getHttpClientContext());
             response = handleResponse(httpResponse, site, request);
+            setCookies(requestContext, request);
             onSuccess(request);
             logger.info("downloading page success {}", request.getOperation());
             return response;
@@ -102,6 +103,8 @@ public class HttpClientDownloader implements Downloader {
         return response;
     }
 
+    private void setCookies(HttpClientRequestContext requestContext, Request request) {
+    }
 
     protected void onSuccess(Request request) {
     }

@@ -11,11 +11,9 @@ public class Site {
 
     private String userAgent;
 
-    private Map<String, String> defaultCookies = new LinkedHashMap<>();
+    private Map<String, String> cookies = new LinkedHashMap<>();
 
-    private Map<String, Map<String, String>> cookies = new HashMap<>();
-
-    private int sleepTime = 5000;
+    private int sleepTime = 3000;
 
     private int timeOut = 5000;
 
@@ -48,23 +46,7 @@ public class Site {
      * @return this
      */
     public Site addCookie(String name, String value) {
-        defaultCookies.put(name, value);
-        return this;
-    }
-
-    /**
-     * Add a cookie with specific domain.
-     *
-     * @param domain domain
-     * @param name name
-     * @param value value
-     * @return this
-     */
-    public Site addCookie(String domain, String name, String value) {
-        if (!cookies.containsKey(domain)){
-            cookies.put(domain,new HashMap<String, String>());
-        }
-        cookies.get(domain).put(name, value);
+        cookies.put(name, value);
         return this;
     }
 
@@ -85,15 +67,6 @@ public class Site {
      * @return get cookies
      */
     public Map<String, String> getCookies() {
-        return defaultCookies;
-    }
-
-    /**
-     * get cookies of all domains
-     *
-     * @return get cookies
-     */
-    public Map<String,Map<String, String>> getAllCookies() {
         return cookies;
     }
 

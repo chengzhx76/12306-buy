@@ -1,7 +1,6 @@
 package com.github.chengzhx76.buy.httper;
 
 import com.github.chengzhx76.buy.Site;
-import org.apache.http.client.CookieStore;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.config.SocketConfig;
@@ -9,9 +8,10 @@ import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.DefaultHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.*;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.impl.cookie.BasicClientCookie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,12 +22,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.Map;
 
-/**
- * @author code4crafter@gmail.com <br>
- * @since 0.4.0
- */
 public class HttpClientGenerator {
 	
 	private transient Logger logger = LoggerFactory.getLogger(getClass());
@@ -105,11 +100,11 @@ public class HttpClientGenerator {
         SocketConfig socketConfig = socketConfigBuilder.build();
         httpClientBuilder.setDefaultSocketConfig(socketConfig);
         connectionManager.setDefaultSocketConfig(socketConfig);
-        generateCookie(httpClientBuilder, site);
+//        generateCookie(httpClientBuilder, site);
         return httpClientBuilder.build();
     }
 
-    private void generateCookie(HttpClientBuilder httpClientBuilder, Site site) {
+    /*private void generateCookie(HttpClientBuilder httpClientBuilder, Site site) {
         if (site.isDisableCookieManagement()) {
             httpClientBuilder.disableCookieManagement();
             return;
@@ -120,14 +115,7 @@ public class HttpClientGenerator {
             cookie.setDomain(site.getDomain());
             cookieStore.addCookie(cookie);
         }
-        for (Map.Entry<String, Map<String, String>> domainEntry : site.getAllCookies().entrySet()) {
-            for (Map.Entry<String, String> cookieEntry : domainEntry.getValue().entrySet()) {
-                BasicClientCookie cookie = new BasicClientCookie(cookieEntry.getKey(), cookieEntry.getValue());
-                cookie.setDomain(domainEntry.getKey());
-                cookieStore.addCookie(cookie);
-            }
-        }
         httpClientBuilder.setDefaultCookieStore(cookieStore);
-    }
+    }*/
 
 }
