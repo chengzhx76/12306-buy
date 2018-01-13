@@ -21,6 +21,8 @@ public class Request implements Serializable {
 
     private boolean disableCookieManagement;
 
+    private long sleepTime;
+
     /**
      * Store additional information in extras.
      */
@@ -132,4 +134,12 @@ public class Request implements Serializable {
         return this;
     }
 
+    public long getSleepTime() {
+        return sleepTime;
+    }
+
+    public Request setSleepTime(long sleepTime) {
+        this.sleepTime = sleepTime;
+        return this;
+    }
 }

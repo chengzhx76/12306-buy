@@ -230,7 +230,15 @@ public class Buyer {
         } else {
             logger.warn("page status code error, page {} , code: {}", response.getOperation(), response.getStatusCode());
         }
-        sleep(site.getSleepTime());
+        sleepTime(request);
+    }
+
+    private void sleepTime(Request request) {
+        if (request.getSleepTime() > 0L) {
+            sleep(request.getSleepTime());
+        }else {
+            sleep(site.getSleepTime());
+        }
     }
 
     private void onRequestFail(Response response) {
@@ -293,7 +301,7 @@ public class Buyer {
         }
     }
 
-    private void sleep(int time) {
+    private void sleep(long time) {
         try {
             Thread.sleep(time);
         } catch (InterruptedException e) {

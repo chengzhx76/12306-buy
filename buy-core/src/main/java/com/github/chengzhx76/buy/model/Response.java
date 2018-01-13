@@ -12,6 +12,8 @@ public class Response {
 
     private int statusCode;
 
+    private boolean destroy;
+
     public String getContent() {
         return content;
     }
@@ -45,5 +47,13 @@ public class Response {
     public Response setStatusCode(int statusCode) {
         this.statusCode = statusCode;
         return this;
+    }
+
+    public void destroy() {
+        destroy = true;
+    }
+
+    public boolean isDestroy() {
+        return destroy;
     }
 }

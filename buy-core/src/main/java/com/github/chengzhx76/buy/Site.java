@@ -13,7 +13,7 @@ public class Site {
 
     private Map<String, String> cookies = new LinkedHashMap<>();
 
-    private int sleepTime = 3000;
+    private long sleepTime = 3000L;
 
     private int timeOut = 5000;
 
@@ -144,7 +144,7 @@ public class Site {
      * @param sleepTime sleepTime
      * @return this
      */
-    public Site setSleepTime(int sleepTime) {
+    public Site setSleepTime(long sleepTime) {
         this.sleepTime = sleepTime;
         return this;
     }
@@ -155,7 +155,7 @@ public class Site {
      *
      * @return the interval between the processing of two pages,
      */
-    public int getSleepTime() {
+    public long getSleepTime() {
         return sleepTime;
     }
 

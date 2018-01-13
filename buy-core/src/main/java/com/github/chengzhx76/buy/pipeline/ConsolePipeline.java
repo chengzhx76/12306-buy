@@ -11,6 +11,11 @@ import com.github.chengzhx76.buy.model.Response;
 public class ConsolePipeline implements Pipeline {
     @Override
     public void process(Request request, Response response) {
-        System.out.println("ConsolePipeline--> \r\n"+response.getContent()+"\r\n"+request.getUrl()+"\r\n");
+        if (response.isDestroy()) {
+            return;
+        }
+        System.out.println("result:\r\n" +
+                "msg--> "+response.getContent()+"\r\n" +
+                "url--> "+request.getUrl()+"\r\n");
     }
 }
