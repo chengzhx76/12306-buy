@@ -11,6 +11,10 @@ public class Request implements Serializable {
 
     private static final long serialVersionUID = 2062192774891352043L;
 
+    private String url;
+
+    private String method;
+
     private OperationEnum operation;
 
     private HttpRequestBody requestBody;
@@ -31,6 +35,24 @@ public class Request implements Serializable {
 
 
     public Request() {
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public Request setUrl(String url) {
+        this.url = url;
+        return this;
+    }
+
+    public String getMethod() {
+        return method;
+    }
+
+    public Request setMethod(String method) {
+        this.method = method;
+        return this;
     }
 
     public Object getExtra(String key) {

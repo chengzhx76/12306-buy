@@ -72,7 +72,7 @@ public class HttpClientDownloader implements Downloader {
             response = handleResponse(httpResponse, site, request);
             setCookies(requestContext, request);
             onSuccess(request);
-            logger.info("downloading page success {}", request.getOperation());
+            //logger.info("downloading page success {}", request.getOperation());
             return response;
         } catch (IOException e) {
             logger.warn("download page {} error", request.getOperation(), e);

@@ -11,6 +11,8 @@ import java.util.regex.Pattern;
  */
 public class UrlUtils {
 
+    //public static String queryReplace()
+
     public static String getDomain(String url) {
         String domain = removeProtocol(url);
         int i = StringUtils.indexOf(domain, "/", 1);

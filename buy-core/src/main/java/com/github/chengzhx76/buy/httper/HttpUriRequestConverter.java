@@ -49,7 +49,7 @@ public class HttpUriRequestConverter {
                 CookieStore cookieStore = new BasicCookieStore();
                 for (Map.Entry<String, String> cookieEntry : request.getCookies().entrySet()) {
                     BasicClientCookie cookie = new BasicClientCookie(cookieEntry.getKey(), cookieEntry.getValue());
-                    cookie.setDomain(UrlUtils.getDomain(request.getOperation().getUrl()));
+                    cookie.setDomain(UrlUtils.getDomain(request.getUrl()));
                     cookieStore.addCookie(cookie);
                 }
                 httpContext.setCookieStore(cookieStore);
@@ -59,7 +59,7 @@ public class HttpUriRequestConverter {
     }
 
     private HttpUriRequest convertHttpUriRequest(Request request, Site site, Proxy proxy) {
-        RequestBuilder requestBuilder = selectRequestMethod(request).setUri(request.getOperation().getUrl());
+        RequestBuilder requestBuilder = selectRequestMethod(request).setUri(request.getUrl());
 
         if (site.getHeaders() != null) {
             for (Map.Entry<String, String> headerEntry : site.getHeaders().entrySet()) {
@@ -89,7 +89,7 @@ public class HttpUriRequestConverter {
     }
 
     private RequestBuilder selectRequestMethod(Request request) {
-        String method = request.getOperation().getMethod();
+        String method = request.getMethod();
         if (method == null || method.equalsIgnoreCase(HttpConstant.Method.GET)) {
             //default get
             return RequestBuilder.get();

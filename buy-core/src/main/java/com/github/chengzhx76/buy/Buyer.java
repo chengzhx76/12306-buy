@@ -11,6 +11,7 @@ import com.github.chengzhx76.buy.processor.SimpleProcessor;
 import com.github.chengzhx76.buy.utils.CollectionUtils;
 import com.github.chengzhx76.buy.utils.ConfigUtils;
 import com.github.chengzhx76.buy.utils.OperationEnum;
+import com.github.chengzhx76.buy.utils.StationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -189,7 +190,7 @@ public class Buyer {
         if (request == null) {
             request = new Request();
         }
-        request.setOperation(OperationEnum.QUERY);
+        request.setOperation(OperationEnum.LOG);
 
         if (processor == null) {
             processor = new SimpleProcessor();
@@ -209,6 +210,7 @@ public class Buyer {
     }
 
     private void processRequest(Request request) {
+        preRequest(request);
         Response response = downloader.request(request, site);
         if (response.isRequestSuccess()) {
             onRequestSuccess(request, response);
@@ -217,9 +219,13 @@ public class Buyer {
         }
     }
 
+    private void preRequest(Request request) {
+        processor.preHandle(this, request);
+    }
+
     private void onRequestSuccess(Request request, Response response) {
         if (site.getAcceptStatCode().contains(response.getStatusCode())) {
-            processor.process(request, response);
+            processor.afterCompletion(request, response);
             pipeline.process(request, response);
         } else {
             logger.warn("page status code error, page {} , code: {}", response.getOperation(), response.getStatusCode());
@@ -254,12 +260,14 @@ public class Buyer {
             if (StringUtils.isBlank(fromStation)) {
                 throw new RuntimeException("乘车地点不能为空");
             }
+            fromStation = StationUtils.getStationCode(fromStation);
         }
         if (StringUtils.isBlank(getToStation())) {
             toStation = properties.getProperty("toStation");
             if (StringUtils.isBlank(toStation)) {
                 throw new RuntimeException("到达站不能为空");
             }
+            toStation = StationUtils.getStationCode(toStation);
         }
         if (CollectionUtils.isEmpty(getSetType())) {
             String type = properties.getProperty("setType");
