@@ -7,11 +7,12 @@ package com.github.chengzhx76.buy.utils;
  */
 public enum OperationType {
     // 查询
-    QUERY(HttpConstant.URL.QUERY, HttpConstant.Method.GET),
     LOG(HttpConstant.URL.LOG, HttpConstant.Method.GET),
-    LOGIN(HttpConstant.URL.LOGIN, HttpConstant.Method.POST),
+    QUERY(HttpConstant.URL.QUERY, HttpConstant.Method.GET),
     CHECK_USER(HttpConstant.URL.CHECK_USER, HttpConstant.Method.POST),
     CAPTCHA_IMG(HttpConstant.URL.CAPTCHA_IMG, HttpConstant.Method.GET),
+    CHECK_CAPTCHA(HttpConstant.URL.CHECK_CAPTCHA, HttpConstant.Method.POST),
+    LOGIN(HttpConstant.URL.LOGIN, HttpConstant.Method.POST),
     TEST(HttpConstant.URL.TEST, HttpConstant.Method.GET),
 
     END("success", "success");
@@ -21,6 +22,7 @@ public enum OperationType {
 
     OperationType(String url, String method) {
         this.url = url;
+        this.method = method;
     }
 
     public String getUrl() {

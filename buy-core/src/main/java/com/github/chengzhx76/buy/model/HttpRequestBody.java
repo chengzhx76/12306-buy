@@ -71,19 +71,11 @@ public class HttpRequestBody implements Serializable {
         }
     }
 
-    public static HttpRequestBody xml(String xml, String encoding) {
-        try {
-            return new HttpRequestBody(xml.getBytes(encoding), ContentType.XML, encoding);
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalArgumentException("illegal encoding " + encoding, e);
-        }
-    }
-
     public static HttpRequestBody custom(byte[] body, String contentType, String encoding) {
         return new HttpRequestBody(body, contentType, encoding);
     }
 
-    public static HttpRequestBody form(Map<String,Object> params, String encoding){
+    public static HttpRequestBody form(Map<String, Object> params, String encoding){
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(params.size());
         for (Map.Entry<String, Object> entry : params.entrySet()) {
             nameValuePairs.add(new BasicNameValuePair(entry.getKey(), String.valueOf(entry.getValue())));

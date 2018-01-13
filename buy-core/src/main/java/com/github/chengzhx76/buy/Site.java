@@ -15,7 +15,7 @@ public class Site {
 
     private long sleepTime = 3000L;
 
-    private int timeOut = 5000;
+    private int timeOut = 10000;
 
     private static final Set<Integer> DEFAULT_STATUS_CODE_SET = new HashSet<>();
 

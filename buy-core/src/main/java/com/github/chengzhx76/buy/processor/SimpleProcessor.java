@@ -2,15 +2,18 @@ package com.github.chengzhx76.buy.processor;
 
 import com.alibaba.fastjson.JSON;
 import com.github.chengzhx76.buy.Buyer;
-import com.github.chengzhx76.buy.model.*;
+import com.github.chengzhx76.buy.model.HttpRequestBody;
+import com.github.chengzhx76.buy.model.Request;
+import com.github.chengzhx76.buy.model.Response;
+import com.github.chengzhx76.buy.model.ValidateMsg;
 import com.github.chengzhx76.buy.utils.FileUtils;
 import com.github.chengzhx76.buy.utils.OperationType;
-import com.github.chengzhx76.buy.utils.TicketConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @desc:
@@ -32,6 +35,22 @@ public class SimpleProcessor implements Processor {
                     .replace("{TRAINDATE}", buyer.getStationDate())
                     .replace("{FROMSTATION}", buyer.getFromStationCode())
                     .replace("{TOSTATION}", buyer.getToStationCode()));
+        } else if (OperationType.CHECK_CAPTCHA.equals(operation)) {
+            request.setUrl(operation.getUrl());
+            System.out.print("输入图片坐标：");
+            /*Scanner scan = new Scanner(System.in);
+            String read = scan.nextLine();*/
+            String read = "41,41";
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("answer", read);
+            params.put("login_site", "E");
+            params.put("rand", "sjrand");
+            params.put("_json_att", "");
+            HttpRequestBody.form(params, "UTF-8");
+
+            request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
+
         } else {
             request.setUrl(operation.getUrl());
         }
@@ -53,7 +72,7 @@ public class SimpleProcessor implements Processor {
 
         } else if (OperationType.QUERY.equals(operation)) {
 
-            Query query = parseObject(response, Query.class);
+            /*Query query = parseObject(response, Query.class);
             if (query == null ||
                     query.getData() == null ||
                     query.getData().getResult().isEmpty()) {
@@ -83,8 +102,8 @@ public class SimpleProcessor implements Processor {
                         }
                     }
                 }
-            }
-
+            }*/
+            request.setOperation(OperationType.CHECK_USER);
         } else if (OperationType.CHECK_USER.equals(operation)) {
 
             ValidateMsg validateMsg = parseObject(response, ValidateMsg.class);
@@ -95,30 +114,27 @@ public class SimpleProcessor implements Processor {
             }
 
         } else if (OperationType.CAPTCHA_IMG.equals(operation)) {
-
-            System.out.println("-----success-img------");
             try {
                 FileUtils.writeToLocal(".\\s1.png", response.getContent());
-
             } catch (IOException e) {
                 throw new RuntimeException(e.getMessage());
             }
+            System.out.println("-----验证码已保存-----");
+            request.setOperation(OperationType.CHECK_CAPTCHA);
+        } else if (OperationType.CHECK_CAPTCHA.equals(operation)) {
+            System.out.println("-----检查验证码-----");
+            System.out.println(response.getRawText());
 
+
+            request.setOperation(OperationType.CHECK_CAPTCHA);
+        } else if (OperationType.LOGIN.equals(operation)) {
+            System.out.println("-----用户登陆-----");
             request.setOperation(OperationType.END);
         } else if (OperationType.END.equals(operation)) {
             System.out.println("-----end-----");
             response.destroy();
         } else {
             System.out.println("SimpleProcessor--> ---------");
-        }
-    }
-
-    private ValidateMsg getValidateMsg(Response response) {
-        try {
-            return JSON.parseObject(response.getRawText(), ValidateMsg.class);
-        } catch (Exception e) {
-            LOG.error("解析验证消息出错");
-            throw new RuntimeException(e.getMessage());
         }
     }
 

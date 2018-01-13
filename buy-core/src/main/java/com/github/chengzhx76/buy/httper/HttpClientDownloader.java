@@ -10,6 +10,7 @@ import com.github.chengzhx76.buy.utils.HttpConstant;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
@@ -104,6 +105,10 @@ public class HttpClientDownloader implements Downloader {
     }
 
     private void setCookies(HttpClientRequestContext requestContext, Request request) {
+        for (Cookie cookie : requestContext.getHttpClientContext().getCookieStore().getCookies()) {
+            System.out.println(cookie);
+        }
+
     }
 
     protected void onSuccess(Request request) {

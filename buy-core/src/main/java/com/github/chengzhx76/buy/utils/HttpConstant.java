@@ -38,11 +38,14 @@ public abstract class HttpConstant {
 
         public static final String LOG = "https://kyfw.12306.cn/otn/leftTicket/log?leftTicketDTO.train_date={TRAINDATE}&leftTicketDTO.from_station={FROMSTATION}&leftTicketDTO.to_station={TOSTATION}&purpose_codes=ADULT";
 
-        public static final String LOGIN = "https://kyfw.12306.cn/otn/leftTicket/log?leftTicketDTO.train_date=2018-01-19&leftTicketDTO.from_station=BJP&leftTicketDTO.to_station=CXK&purpose_codes=ADULT";
-
         public static final String CHECK_USER = "https://kyfw.12306.cn/otn/login/checkUser";
 
         public static final String CAPTCHA_IMG = "https://kyfw.12306.cn/passport/captcha/captcha-image?login_site=E&module=login&rand=sjrand";
+
+        public static final String CHECK_CAPTCHA = "https://kyfw.12306.cn/passport/captcha/captcha-check";
+        //public static final String CHECK_CAPTCHA = "http://localhost/ServletMVC/index?method=test";
+
+        public static final String LOGIN = "https://kyfw.12306.cn/passport/web/login";
 
         public static final String TEST = "http://127.0.0.1:9091";
     }

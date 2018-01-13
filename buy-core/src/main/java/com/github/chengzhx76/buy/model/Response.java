@@ -31,10 +31,11 @@ public class Response {
             return "IMG";
         }
         try {
-            return new String(content, "UTF-8");
+            setRawText(new String(content, "UTF-8"));
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
+        return rawText;
     }
 
     public void setRawText(String rawText) {

@@ -16,6 +16,7 @@ public class ConsolePipeline implements Pipeline {
         }
         System.out.println(response.getOperation()+"\r\n" +
                 "msg--> "+response.getRawText()+"\r\n" +
-                "url--> "+request.getUrl()+"\r\n");
+                "url--> "+request.getUrl()+"\r\n" +
+                "method--> "+request.getMethod());
     }
 }
