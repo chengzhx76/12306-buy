@@ -1,7 +1,7 @@
 package com.github.chengzhx76.buy.model;
 
 
-import com.github.chengzhx76.buy.utils.OperationEnum;
+import com.github.chengzhx76.buy.utils.OperationType;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ public class Request implements Serializable {
 
     private String method;
 
-    private OperationEnum operation;
+    private OperationType operation;
 
     private HttpRequestBody requestBody;
 
@@ -72,11 +72,11 @@ public class Request implements Serializable {
         return this;
     }
 
-    public OperationEnum getOperation() {
+    public OperationType getOperation() {
         return operation;
     }
 
-    public Request setOperation(OperationEnum operation) {
+    public Request setOperation(OperationType operation) {
         this.operation = operation;
         return this;
     }
@@ -116,7 +116,7 @@ public class Request implements Serializable {
         this.requestBody = requestBody;
     }
     public boolean isDisableCookieManagement() {
-        if (OperationEnum.QUERY.equals(getOperation())) {
+        if (OperationType.QUERY.equals(getOperation())) {
             disableCookieManagement = true;
         }
         return disableCookieManagement;

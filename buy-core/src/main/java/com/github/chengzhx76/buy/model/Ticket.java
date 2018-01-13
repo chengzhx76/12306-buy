@@ -1,5 +1,6 @@
 package com.github.chengzhx76.buy.model;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -10,7 +11,7 @@ import java.util.Map;
 public class Ticket {
     private String flag;
     private Map<String, String> map;
-    private String result;
+    private List<String> result;
 
     public String getFlag() {
         return flag;
@@ -28,12 +29,13 @@ public class Ticket {
         this.map = map;
     }
 
-    public String getResult() {
+    public List<String> getResult() {
         return result;
     }
 
-    public void setResult(String result) {
+    public Ticket setResult(List<String> result) {
         this.result = result;
+        return this;
     }
 
     @Override

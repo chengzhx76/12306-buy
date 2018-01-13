@@ -11,5 +11,5 @@ import com.github.chengzhx76.buy.model.Response;
  */
 public interface Processor {
     void preHandle(Buyer buyer, Request request);
-    void afterCompletion(Request request, Response response);
+    void afterCompletion(Buyer buyer, Request request, Response response);
 }

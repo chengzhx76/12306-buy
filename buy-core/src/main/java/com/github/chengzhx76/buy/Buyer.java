@@ -10,7 +10,7 @@ import com.github.chengzhx76.buy.processor.Processor;
 import com.github.chengzhx76.buy.processor.SimpleProcessor;
 import com.github.chengzhx76.buy.utils.CollectionUtils;
 import com.github.chengzhx76.buy.utils.ConfigUtils;
-import com.github.chengzhx76.buy.utils.OperationEnum;
+import com.github.chengzhx76.buy.utils.OperationType;
 import com.github.chengzhx76.buy.utils.StationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -54,7 +54,9 @@ public class Buyer {
 
     private Pipeline pipeline;
 
-    private volatile boolean query = true;
+    private String fromStationCode;
+
+    private String toStationCode;
 
     public Buyer() {
     }
@@ -77,7 +79,14 @@ public class Buyer {
     }
 
     public Buyer setStationTrains(String stationTrains) {
-        this.stationTrains = Arrays.asList(StringUtils.split(stationTrains, ","));
+        if (StringUtils.contains(stationTrains, ",")) {
+            this.stationTrains = Arrays.asList(StringUtils.split(stationTrains, ","));
+        }
+        if (CollectionUtils.isEmpty(getStationTrains())) {
+            if (StringUtils.contains(stationTrains, "|")) {
+                this.stationTrains = Arrays.asList(StringUtils.split(stationTrains, "|"));
+            }
+        }
         return this;
     }
 
@@ -104,7 +113,15 @@ public class Buyer {
     }
 
     public Buyer setSetType(String setType) {
-        this.setType = Arrays.asList(StringUtils.split(setType, ","));
+        if (StringUtils.contains(setType, ",")) {
+            this.setType = Arrays.asList(StringUtils.split(setType, ","));
+        }
+        if (CollectionUtils.isEmpty(getSetType())) {
+            if (StringUtils.contains(setType, "|")) {
+                this.setType = Arrays.asList(StringUtils.split(setType, "|"));
+            }
+        }
+
         return this;
     }
 
@@ -175,6 +192,23 @@ public class Buyer {
         return this;
     }
 
+    public String getFromStationCode() {
+        return fromStationCode;
+    }
+
+    public Buyer setFromStationCode(String fromStationCode) {
+        this.fromStationCode = fromStationCode;
+        return this;
+    }
+
+    public String getToStationCode() {
+        return toStationCode;
+    }
+
+    public Buyer setToStationCode(String toStationCode) {
+        this.toStationCode = toStationCode;
+        return this;
+    }
     // -------------------------------------------------
 
 
@@ -190,7 +224,7 @@ public class Buyer {
         if (request == null) {
             request = new Request();
         }
-        request.setOperation(OperationEnum.LOG);
+        request.setOperation(OperationType.LOG);
 
         if (processor == null) {
             processor = new SimpleProcessor();
@@ -204,7 +238,7 @@ public class Buyer {
     public void go() {
         initComponent();
         System.out.println("-----go--->");
-        while (!OperationEnum.END.equals(request.getOperation())) {
+        while (!OperationType.END.equals(request.getOperation())) {
             processRequest(request);
         }
     }
@@ -225,7 +259,7 @@ public class Buyer {
 
     private void onRequestSuccess(Request request, Response response) {
         if (site.getAcceptStatCode().contains(response.getStatusCode())) {
-            processor.afterCompletion(request, response);
+            processor.afterCompletion(this, request, response);
             pipeline.process(request, response);
         } else {
             logger.warn("page status code error, page {} , code: {}", response.getOperation(), response.getStatusCode());
@@ -234,7 +268,7 @@ public class Buyer {
     }
 
     private void sleepTime(Request request) {
-        if (request.getSleepTime() > 0L) {
+        if (request.getSleepTime() > -1L) {
             sleep(request.getSleepTime());
         }else {
             sleep(site.getSleepTime());
@@ -255,11 +289,15 @@ public class Buyer {
         }
         if (CollectionUtils.isEmpty(getStationTrains())) {
             String stationTrain = properties.getProperty("stationTrains");
-            stationTrains = Arrays.asList(StringUtils.split(stationTrain, ","));
-            if (CollectionUtils.isEmpty(getStationTrains())) {
-                stationTrains = Arrays.asList(StringUtils.split(stationTrain, "|"));
+            if (StringUtils.contains(stationTrain, ",")) {
+                stationTrains = Arrays.asList(StringUtils.split(stationTrain, ","));
             }
-            if (StringUtils.isBlank(stationTrain)) {
+            if (CollectionUtils.isEmpty(getStationTrains())) {
+                if (StringUtils.contains(stationTrain, "|")) {
+                    stationTrains = Arrays.asList(StringUtils.split(stationTrain, "|"));
+                }
+            }
+            if (CollectionUtils.isEmpty(getStationTrains())) {
                 throw new RuntimeException("车次不能为空");
             }
         }
@@ -268,22 +306,29 @@ public class Buyer {
             if (StringUtils.isBlank(fromStation)) {
                 throw new RuntimeException("乘车地点不能为空");
             }
-            fromStation = StationUtils.getStationCode(fromStation);
         }
+        fromStationCode = StationUtils.getStationCode(fromStation);
+
         if (StringUtils.isBlank(getToStation())) {
             toStation = properties.getProperty("toStation");
             if (StringUtils.isBlank(toStation)) {
                 throw new RuntimeException("到达站不能为空");
             }
-            toStation = StationUtils.getStationCode(toStation);
         }
+        toStationCode = StationUtils.getStationCode(toStation);
+
         if (CollectionUtils.isEmpty(getSetType())) {
             String type = properties.getProperty("setType");
-            setType = Arrays.asList(StringUtils.split(type, ","));
-            if (CollectionUtils.isEmpty(getSetType())) {
-                setType = Arrays.asList(StringUtils.split(type, "|"));
+
+            if (StringUtils.contains(type, ",")) {
+                setType = Arrays.asList(StringUtils.split(type, ","));
             }
-            if (StringUtils.isBlank(type)) {
+            if (CollectionUtils.isEmpty(getSetType())) {
+                if (StringUtils.contains(type, "|")) {
+                    setType = Arrays.asList(StringUtils.split(type, "|"));
+                }
+            }
+            if (CollectionUtils.isEmpty(getSetType())) {
                 throw new RuntimeException("席别不能为空");
             }
         }

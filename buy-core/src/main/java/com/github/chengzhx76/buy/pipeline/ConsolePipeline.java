@@ -14,8 +14,8 @@ public class ConsolePipeline implements Pipeline {
         if (response.isDestroy()) {
             return;
         }
-        System.out.println("result:\r\n" +
-                "msg--> "+response.getContent()+"\r\n" +
+        System.out.println(response.getOperation()+"\r\n" +
+                "msg--> "+response.getRawText()+"\r\n" +
                 "url--> "+request.getUrl()+"\r\n");
     }
 }

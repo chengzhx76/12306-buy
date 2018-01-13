@@ -1,12 +1,16 @@
 package com.github.chengzhx76.buy.model;
 
-import com.github.chengzhx76.buy.utils.OperationEnum;
+import com.github.chengzhx76.buy.utils.OperationType;
+
+import java.io.IOException;
 
 public class Response {
 
-    private String content;
+    private byte[] content;
 
-    private OperationEnum operation;
+    private String rawText;
+
+    private OperationType operation;
 
     private boolean requestSuccess;
 
@@ -14,19 +18,34 @@ public class Response {
 
     private boolean destroy;
 
-    public String getContent() {
+    public byte[] getContent() {
         return content;
     }
 
-    public void setContent(String content) {
+    public void setContent(byte[] content) {
         this.content = content;
     }
 
-    public OperationEnum getOperation() {
+    public String getRawText() {
+        if (OperationType.CAPTCHA_IMG.equals(operation)) {
+            return "IMG";
+        }
+        try {
+            return new String(content, "UTF-8");
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public void setRawText(String rawText) {
+        this.rawText = rawText;
+    }
+
+    public OperationType getOperation() {
         return operation;
     }
 
-    public Response setOperation(OperationEnum operation) {
+    public Response setOperation(OperationType operation) {
         this.operation = operation;
         return this;
     }

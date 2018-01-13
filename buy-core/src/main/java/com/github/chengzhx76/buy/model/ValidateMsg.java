@@ -1,5 +1,7 @@
 package com.github.chengzhx76.buy.model;
 
+import com.github.chengzhx76.buy.utils.Flag;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -7,6 +9,8 @@ import java.util.List;
  * Desc:
  * Author: 光灿
  * Date: 2018/1/13
+ * {"validateMessagesShowId":"_validatorMessage","status":true,
+ * "httpstatus":200,"data":{"flag":false},"messages":[],"validateMessages":{}}
  */
 public class ValidateMsg implements Serializable {
 
@@ -15,6 +19,7 @@ public class ValidateMsg implements Serializable {
     private Integer httpstatus;
     private List<String> messages;
     private Object validateMessages;
+    private Flag data;
 
     public String getValidateMessagesShowId() {
         return validateMessagesShowId;
@@ -54,6 +59,14 @@ public class ValidateMsg implements Serializable {
 
     public void setValidateMessages(Object validateMessages) {
         this.validateMessages = validateMessages;
+    }
+
+    public Flag getData() {
+        return data;
+    }
+
+    public void setData(Flag data) {
+        this.data = data;
     }
 
     @Override

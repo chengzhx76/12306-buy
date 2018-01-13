@@ -94,9 +94,9 @@ public class HttpClientDownloader implements Downloader {
     }
 
     protected Response handleResponse(HttpResponse httpResponse, Site site, Request request) throws IOException {
-        String content = IOUtils.toString(httpResponse.getEntity().getContent());
         Response response = new Response();
-        response.setContent(content);
+        byte[] bytes = IOUtils.toByteArray(httpResponse.getEntity().getContent());
+        response.setContent(bytes);
         response.setOperation(request.getOperation());
         response.setRequestSuccess(true);
         response.setStatusCode(HttpConstant.StatusCode.CODE_200);

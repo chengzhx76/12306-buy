@@ -5,7 +5,7 @@ import com.github.chengzhx76.buy.model.Response;
 import com.github.chengzhx76.buy.Site;
 import com.github.chengzhx76.buy.httper.HttpClientDownloader;
 import com.github.chengzhx76.buy.utils.HttpConstant;
-import com.github.chengzhx76.buy.utils.OperationEnum;
+import com.github.chengzhx76.buy.utils.OperationType;
 import com.github.dreamhead.moco.HttpServer;
 import com.github.dreamhead.moco.Runnable;
 import com.github.dreamhead.moco.Runner;
@@ -28,7 +28,7 @@ public class HttpClientDownloaderTest {
     public void test12306() throws Exception {
         HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
         Request request = new Request();
-        request.setOperation(OperationEnum.QUERY);
+        request.setOperation(OperationType.QUERY);
         Response response = httpClientDownloader.request(request, Site.me().setUserAgent(HttpConstant.UserAgent.CHROME));
         System.out.println(response.getContent());
     }
@@ -42,7 +42,7 @@ public class HttpClientDownloaderTest {
             public void run() throws Exception {
                 final HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
                 Request request = new Request();
-                request.setOperation(OperationEnum.QUERY);
+                request.setOperation(OperationType.QUERY);
                 Response response = httpClientDownloader.request(request, Site.me());
                 System.out.println(response.getContent());
             }
@@ -58,7 +58,7 @@ public class HttpClientDownloaderTest {
             public void run() throws Exception {
                 HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
                 Request request = new Request();
-                request.setOperation(OperationEnum.TEST);
+                request.setOperation(OperationType.TEST);
                 request.addCookie("cookie","cookie-cheng");
                 Response response = httpClientDownloader.request(request, Site.me().addCookie("cookie","cookie-cheng"));
                 assertThat(response.getContent()).isEqualTo("ok");
@@ -75,7 +75,7 @@ public class HttpClientDownloaderTest {
             public void run() throws Exception {
                 HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
                 Request request = new Request();
-                request.setOperation(OperationEnum.TEST);
+                request.setOperation(OperationType.TEST);
                 request.addCookie("cookie","cookie-cheng");
                 Response response = httpClientDownloader.request(request, Site.me().setDisableCookieManagement(true));
                 assertThat(response.getContent()).isEqualTo("ok");
