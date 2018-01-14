@@ -71,7 +71,7 @@ public class HttpClientDownloader implements Downloader {
         try {
             httpResponse = httpClient.execute(requestContext.getHttpUriRequest(), requestContext.getHttpClientContext());
             response = handleResponse(httpResponse, site, request);
-            setCookies(requestContext, request);
+            getCookies(requestContext, request);
             onSuccess(request);
             //logger.info("downloading page success {}", request.getOperation());
             return response;
@@ -104,7 +104,7 @@ public class HttpClientDownloader implements Downloader {
         return response;
     }
 
-    private void setCookies(HttpClientRequestContext requestContext, Request request) {
+    private void getCookies(HttpClientRequestContext requestContext, Request request) {
         for (Cookie cookie : requestContext.getHttpClientContext().getCookieStore().getCookies()) {
             System.out.println(cookie);
         }

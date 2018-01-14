@@ -7,6 +7,7 @@ import com.github.chengzhx76.buy.model.Request;
 import com.github.chengzhx76.buy.model.Response;
 import com.github.chengzhx76.buy.model.ValidateMsg;
 import com.github.chengzhx76.buy.utils.FileUtils;
+import com.github.chengzhx76.buy.utils.HttpConstant;
 import com.github.chengzhx76.buy.utils.OperationType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,9 +36,15 @@ public class SimpleProcessor implements Processor {
                     .replace("{TRAINDATE}", buyer.getStationDate())
                     .replace("{FROMSTATION}", buyer.getFromStationCode())
                     .replace("{TOSTATION}", buyer.getToStationCode()));
-        } else if (OperationType.CHECK_CAPTCHA.equals(operation)) {
+        }else if (OperationType.CHECK_USER.equals(operation)) {
             request.setUrl(operation.getUrl());
-            System.out.print("输入图片坐标：");
+            request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
+            Map<String, Object> params = new HashMap<>();
+            params.put("json_att", "");
+            HttpRequestBody.form(params, "UTF-8");
+        }else if (OperationType.CHECK_CAPTCHA.equals(operation)) {
+            request.setUrl(operation.getUrl());
+            System.out.println("输入图片坐标：");
             /*Scanner scan = new Scanner(System.in);
             String read = scan.nextLine();*/
             String read = "41,41";
@@ -47,9 +54,16 @@ public class SimpleProcessor implements Processor {
             params.put("login_site", "E");
             params.put("rand", "sjrand");
             params.put("_json_att", "");
+
+            /*params.put("randCode", read);
+            params.put("rand", "sjrand");*/
             HttpRequestBody.form(params, "UTF-8");
 
+            request.addHeader("Content-Type", "application/x-www-form-urlencoded;application/json;charset=utf-8");
+            request.addHeader("X-Requested-With", "xmlHttpRequest");
             request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
+            request.addHeader("Accept", "*/*");
+            request.addHeader("User-Agent", HttpConstant.UserAgent.CHROME);
 
         } else {
             request.setUrl(operation.getUrl());

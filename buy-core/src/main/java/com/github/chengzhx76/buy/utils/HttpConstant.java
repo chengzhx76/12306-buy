@@ -43,7 +43,7 @@ public abstract class HttpConstant {
         public static final String CAPTCHA_IMG = "https://kyfw.12306.cn/passport/captcha/captcha-image?login_site=E&module=login&rand=sjrand";
 
         public static final String CHECK_CAPTCHA = "https://kyfw.12306.cn/passport/captcha/captcha-check";
-        //public static final String CHECK_CAPTCHA = "http://localhost/ServletMVC/index?method=test";
+        //public static final String CHECK_CAPTCHA = "https://kyfw.12306.cn/otn/passcodeNew/checkRandCodeAnsyn";
 
         public static final String LOGIN = "https://kyfw.12306.cn/passport/web/login";
 

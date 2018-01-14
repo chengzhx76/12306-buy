@@ -5,7 +5,6 @@ import com.github.chengzhx76.buy.model.Request;
 import com.github.chengzhx76.buy.proxy.Proxy;
 import com.github.chengzhx76.buy.utils.HttpConstant;
 import com.github.chengzhx76.buy.utils.UrlUtils;
-import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthState;
 import org.apache.http.auth.ChallengeState;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -75,9 +74,9 @@ public class HttpUriRequestConverter {
                     .setCookieSpec(CookieSpecs.STANDARD);
         }
 
-        if (proxy != null) {
+        /*if (proxy != null) {
             requestConfigBuilder.setProxy(new HttpHost(proxy.getHost(), proxy.getPort()));
-        }
+        }*/
         requestBuilder.setConfig(requestConfigBuilder.build());
         HttpUriRequest httpUriRequest = requestBuilder.build();
         if (request.getHeaders() != null && !request.getHeaders().isEmpty()) {
