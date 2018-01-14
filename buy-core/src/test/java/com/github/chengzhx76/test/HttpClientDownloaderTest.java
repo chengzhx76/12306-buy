@@ -10,6 +10,7 @@ import com.github.chengzhx76.buy.utils.OperationType;
 import com.github.dreamhead.moco.HttpServer;
 import com.github.dreamhead.moco.Runnable;
 import com.github.dreamhead.moco.Runner;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -155,11 +156,13 @@ public class HttpClientDownloaderTest {
         //data = org.apache.http.client.fluent.Request.Post("https://kyfw.12306.cn/otn/login/checkUser")
         //        .execute().returnContent().asString();
 
-        Request request = new Request();
-        request.setUrl(checkUser);
-        request.setMethod(HttpConstant.Method.POST);
-        HttpUriRequestConverter httpUriRequestConverter = new HttpUriRequestConverter();
-        HttpUriRequest httpUriRequest = httpUriRequestConverter.convert(request, Site.me(), null).getHttpUriRequest();
+        HttpUriRequest httpUriRequest = new HttpPost(checkUser);
+
+        //Request request = new Request();
+        //request.setUrl(checkUser);
+        //request.setMethod(HttpConstant.Method.POST);
+        //HttpUriRequestConverter httpUriRequestConverter = new HttpUriRequestConverter();
+        //HttpUriRequest httpUriRequest = httpUriRequestConverter.convert(request, Site.me(), null).getHttpUriRequest();
         data = EntityUtils.toString(HttpClients.custom().build().execute(httpUriRequest).getEntity(), "UTF-8");
 
         System.out.println(data);

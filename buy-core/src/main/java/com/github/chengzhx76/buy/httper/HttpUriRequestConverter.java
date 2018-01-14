@@ -59,17 +59,24 @@ public class HttpUriRequestConverter {
 
     private HttpUriRequest convertHttpUriRequest(Request request, Site site, Proxy proxy) {
         return RequestBuilder.post().setUri(request.getUrl()).build();
-        /*HttpPost httpPost = new HttpPost(request.getUrl());
-        *//*RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
-        if (site != null) {
-            requestConfigBuilder.setConnectionRequestTimeout(site.getTimeOut())
-                    .setSocketTimeout(site.getTimeOut())
-                    .setConnectTimeout(site.getTimeOut())
-                    .setCookieSpec(CookieSpecs.STANDARD);
-        }
-        httpPost.setConfig(requestConfigBuilder.build());*//*
-
-        return httpPost;*/
+        //HttpPost httpPost = new HttpPost(request.getUrl());
+        //RequestConfig.Builder requestConfigBuilder = RequestConfig.custom();
+        //if (site != null) {
+        //    requestConfigBuilder.setConnectionRequestTimeout(site.getTimeOut())
+        //            .setSocketTimeout(site.getTimeOut())
+        //            .setConnectTimeout(site.getTimeOut())
+        //            .setCookieSpec(CookieSpecs.STANDARD);
+        //}
+        //httpPost.setConfig(requestConfigBuilder.build());
+        ////httpPost.setHeader();
+        ////httpPost.setEntity();
+        ////
+        ////HttpGet httpGet = new HttpGet();
+        ////httpGet.setConfig();
+        ////httpGet.setHeader();
+        //
+        //
+        //return httpPost;
     }
 
     private HttpUriRequest convertHttpUriRequest1(Request request, Site site, Proxy proxy) {
