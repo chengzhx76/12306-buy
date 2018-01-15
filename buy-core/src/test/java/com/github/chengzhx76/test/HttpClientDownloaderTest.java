@@ -2,7 +2,7 @@ package com.github.chengzhx76.test;
 
 import com.github.chengzhx76.buy.Site;
 import com.github.chengzhx76.buy.httper.HttpClientDownloader;
-import com.github.chengzhx76.buy.httper.HttpUriRequestConverter;
+import com.github.chengzhx76.buy.model.HttpRequestBody;
 import com.github.chengzhx76.buy.model.Request;
 import com.github.chengzhx76.buy.model.Response;
 import com.github.chengzhx76.buy.utils.HttpConstant;
@@ -21,7 +21,9 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.github.dreamhead.moco.Moco.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -100,7 +102,7 @@ public class HttpClientDownloaderTest {
         Runner.running(server, new Runnable() {
             @Override
             public void run() throws Exception {
-                /*HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
+                HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
                 Request request = new Request();
                 Map<String, Object> params = new HashMap<>();
                 params.put("q","webmagic");
@@ -111,17 +113,7 @@ public class HttpClientDownloaderTest {
 
                 Response response =httpClientDownloader.request(request, Site.me());
                 System.out.println(response.getRawText());
-                assertThat(response.getRawText()).isEqualTo("post");*/
-
-                //HttpUriRequest httpUriRequest = httpUriRequestConverter.convert(request, Site.me(), null).getHttpUriRequest();
-                //assertThat(EntityUtils.toString(HttpClients.custom().build().execute(httpUriRequest).getEntity())).isEqualTo("post");
-
-                //String data = org.apache.http.client.fluent.Request.Post("https://kyfw.12306.cn/passport/captcha/captcha-check")
-                String data = org.apache.http.client.fluent.Request.Post("https://kyfw.12306.cn/otn/login/checkUser")
-                        .execute().returnContent().asString();
-
-                System.out.println(data);
-
+                assertThat(response.getRawText()).isEqualTo("post");
             }
         });
 
@@ -130,26 +122,22 @@ public class HttpClientDownloaderTest {
     @Test
     public void test_postMethod() throws IOException {
         String checkUser = "https://kyfw.12306.cn/otn/login/checkUser";
-        //String checkUser = "http://localhost/ServletMVC/index?method=index";
+        //String checkUser = "https://kyfw.12306.cn/passport/captcha/captcha-check";
         String data = "";
-        //data = org.apache.http.client.fluent.Request.Post("https://kyfw.12306.cn/otn/login/checkUser")
-        //        .execute().returnContent().asString();
-
         Request request = new Request();
         request.setUrl(checkUser);
         request.setMethod(HttpConstant.Method.POST);
-        //Map<String, Object> params = new HashMap<>();
-        //params.put("q","webmagic");
-        //request.setRequestBody(HttpRequestBody.form(params, "utf-8"));
+        Map<String, Object> params = new HashMap<>();
+        params.put("q","webmagic");
+        request.setRequestBody(HttpRequestBody.form(params, "utf-8"));
 
-        /*HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
+        HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
         Response response =httpClientDownloader.request(request, Site.me());
-        data = response.getRawText();*/
+        data = response.getRawText();
 
-        HttpUriRequestConverter httpUriRequestConverter = new HttpUriRequestConverter();
-        HttpUriRequest httpUriRequest = httpUriRequestConverter.convert(request, Site.me(), null).getHttpUriRequest();
-        //HttpUriRequest httpUriRequest = new HttpGet(checkUser);
-        data = EntityUtils.toString(HttpClients.custom().build().execute(httpUriRequest).getEntity(), "UTF-8");
+        //HttpUriRequestConverter httpUriRequestConverter = new HttpUriRequestConverter();
+        //HttpUriRequest httpUriRequest = httpUriRequestConverter.convert(request, Site.me(), null).getHttpUriRequest();
+        //data = EntityUtils.toString(HttpClients.custom().build().execute(httpUriRequest).getEntity(), "UTF-8");
 
         System.out.println(data);
     }
