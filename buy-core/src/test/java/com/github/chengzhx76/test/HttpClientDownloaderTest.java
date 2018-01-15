@@ -12,6 +12,7 @@ import com.github.dreamhead.moco.Runnable;
 import com.github.dreamhead.moco.Runner;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.junit.Test;
@@ -151,6 +152,9 @@ public class HttpClientDownloaderTest {
 
     @Test
     public void test_postMethod_2() throws IOException {
+
+//        CloseableHttpClient client = HttpClientBuilder.create().setProxy(new HttpHost("127.0.0.1", 8888)).build();
+
         String checkUser = "https://kyfw.12306.cn/otn/login/checkUser";
         String data = "";
         //data = org.apache.http.client.fluent.Request.Post("https://kyfw.12306.cn/otn/login/checkUser")
@@ -167,5 +171,30 @@ public class HttpClientDownloaderTest {
 
         System.out.println(data);
     }
+
+    @Test
+    public void test_postMethod_3() throws IOException {
+//        String url = "http://account.xici.net/login";
+        String url = "https://kyfw.12306.cn/otn/login/checkUser";
+        String data = "";
+        /*data = org.apache.http.client.fluent.Request.Post(url)
+                .setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
+                .setHeader("token", "123456")
+                .execute().returnContent().asString();*/
+
+        data = EntityUtils.toString(
+                HttpClients.custom().build()
+                .execute(
+                        RequestBuilder
+                                .post()
+                                .addHeader("Content-Length","0")
+                                .setUri(url)
+                                .build()
+                ).getEntity(), "UTF-8");
+
+
+        System.out.println(data);
+    }
+
 
 }
