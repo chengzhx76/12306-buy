@@ -71,7 +71,7 @@ public class HttpClientDownloader implements Downloader {
         try {
             httpResponse = httpClient.execute(requestContext.getHttpUriRequest(), requestContext.getHttpClientContext());
             response = handleResponse(httpResponse, site, request);
-            getCookies(requestContext, request);
+            //getCookies(requestContext, request);
             onSuccess(request);
             //logger.info("downloading page success {}", request.getOperation());
             return response;

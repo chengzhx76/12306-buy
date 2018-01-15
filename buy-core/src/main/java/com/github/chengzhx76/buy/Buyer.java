@@ -224,7 +224,7 @@ public class Buyer {
         if (request == null) {
             request = new Request();
         }
-        request.setOperation(OperationType.CHECK_CAPTCHA);
+        request.setOperation(OperationType.QUERY);
 
         if (processor == null) {
             processor = new SimpleProcessor();

@@ -7,7 +7,6 @@ import com.github.chengzhx76.buy.model.Request;
 import com.github.chengzhx76.buy.model.Response;
 import com.github.chengzhx76.buy.model.ValidateMsg;
 import com.github.chengzhx76.buy.utils.FileUtils;
-import com.github.chengzhx76.buy.utils.HttpConstant;
 import com.github.chengzhx76.buy.utils.OperationType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 /**
  * @desc:
@@ -36,35 +36,26 @@ public class SimpleProcessor implements Processor {
                     .replace("{TRAINDATE}", buyer.getStationDate())
                     .replace("{FROMSTATION}", buyer.getFromStationCode())
                     .replace("{TOSTATION}", buyer.getToStationCode()));
+            request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
         }else if (OperationType.CHECK_USER.equals(operation)) {
             request.setUrl(operation.getUrl());
             request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
             Map<String, Object> params = new HashMap<>();
             params.put("json_att", "");
-            HttpRequestBody.form(params, "UTF-8");
+            request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         }else if (OperationType.CHECK_CAPTCHA.equals(operation)) {
             request.setUrl(operation.getUrl());
             System.out.println("输入图片坐标：");
-            /*Scanner scan = new Scanner(System.in);
-            String read = scan.nextLine();*/
-            String read = "41,41";
+            Scanner scan = new Scanner(System.in);
+            String read = scan.nextLine();
+            //String read = "41,41";
 
             Map<String, Object> params = new HashMap<>();
             params.put("answer", read);
             params.put("login_site", "E");
             params.put("rand", "sjrand");
             params.put("_json_att", "");
-
-            /*params.put("randCode", read);
-            params.put("rand", "sjrand");*/
-            HttpRequestBody.form(params, "UTF-8");
-
-            request.addHeader("Content-Type", "application/x-www-form-urlencoded;application/json;charset=utf-8");
-            request.addHeader("X-Requested-With", "xmlHttpRequest");
-            request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
-            request.addHeader("Accept", "*/*");
-            request.addHeader("User-Agent", HttpConstant.UserAgent.CHROME);
-
+            request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else {
             request.setUrl(operation.getUrl());
         }
@@ -119,14 +110,12 @@ public class SimpleProcessor implements Processor {
             }*/
             request.setOperation(OperationType.CHECK_USER);
         } else if (OperationType.CHECK_USER.equals(operation)) {
-
             ValidateMsg validateMsg = parseObject(response, ValidateMsg.class);
             if (validateMsg.getData().getFlag()) {
                 System.out.println("----------开始尝试下单-------------");
             } else {
                 request.setOperation(OperationType.CAPTCHA_IMG);
             }
-
         } else if (OperationType.CAPTCHA_IMG.equals(operation)) {
             try {
                 FileUtils.writeToLocal(".\\s1.png", response.getContent());
@@ -137,12 +126,40 @@ public class SimpleProcessor implements Processor {
             request.setOperation(OperationType.CHECK_CAPTCHA);
         } else if (OperationType.CHECK_CAPTCHA.equals(operation)) {
             System.out.println("-----检查验证码-----");
-            System.out.println(response.getRawText());
 
+            //- 校验验证码
+            //  - 没携带cookie：         {"result_message":"验证码校验失败,信息为空","result_code":"8"}
+            //  - 携带cookie但点错了：    {"result_message":"验证码校验失败","result_code":"5"}
+            //  - 携带cookie并且点击正确： {"result_message":"验证码校验成功","result_code":"4"}
+            //  - 停留时间过长：           {"result_message":"验证码已经过期","result_code":"7"}
 
-            request.setOperation(OperationType.CHECK_CAPTCHA);
+            ValidateMsg validateMsg = parseObject(response, ValidateMsg.class);
+            if ("4".equals(validateMsg.getResult_code())) { // 验证码校验成功
+                request.setOperation(OperationType.LOGIN);
+            } else if ("5".equals(validateMsg.getResult_code())) {
+
+            } else if ("7".equals(validateMsg.getResult_code())) {
+
+            } else if ("8".equals(validateMsg.getResult_code())) {
+
+            }
+
+            request.setOperation(OperationType.END);
         } else if (OperationType.LOGIN.equals(operation)) {
             System.out.println("-----用户登陆-----");
+
+            //- 校验用户名密码：
+            //  - 密码输入错误：   {"result_message":"密码输入错误。如果输错次数超过4次，用户将被锁定。","result_code":1}
+            //  - 用户不存在：     {"result_message":"登录名不存在。","result_code":1}
+            //  - 密码输入正确：   {"result_message":"登录成功","result_code":0,"uamtk":"tWDQtPie_z22IWMknmFOymUpDRzvLE4CfzREJBzS9NwrwL2L0"}
+
+            ValidateMsg validateMsg = parseObject(response, ValidateMsg.class);
+            if ("1".equals(validateMsg.getResult_code())) {
+
+            } else if ("0".equals(validateMsg.getResult_code())) {
+
+            }
+
             request.setOperation(OperationType.END);
         } else if (OperationType.END.equals(operation)) {
             System.out.println("-----end-----");

@@ -9,7 +9,7 @@ public enum OperationType {
     // 查询
     LOG(HttpConstant.URL.LOG, HttpConstant.Method.GET),
     QUERY(HttpConstant.URL.QUERY, HttpConstant.Method.GET),
-    CHECK_USER(HttpConstant.URL.CHECK_USER, HttpConstant.Method.GET),
+    CHECK_USER(HttpConstant.URL.CHECK_USER, HttpConstant.Method.POST),
     CAPTCHA_IMG(HttpConstant.URL.CAPTCHA_IMG, HttpConstant.Method.GET),
     CHECK_CAPTCHA(HttpConstant.URL.CHECK_CAPTCHA, HttpConstant.Method.POST),
     LOGIN(HttpConstant.URL.LOGIN, HttpConstant.Method.POST),

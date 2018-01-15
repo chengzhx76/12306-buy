@@ -21,6 +21,9 @@ public class ValidateMsg implements Serializable {
     private Object validateMessages;
     private Flag data;
 
+    private String result_message;
+    private String result_code;
+
     public String getValidateMessagesShowId() {
         return validateMessagesShowId;
     }
@@ -69,6 +72,22 @@ public class ValidateMsg implements Serializable {
         this.data = data;
     }
 
+    public String getResult_message() {
+        return result_message;
+    }
+
+    public void setResult_message(String result_message) {
+        this.result_message = result_message;
+    }
+
+    public String getResult_code() {
+        return result_code;
+    }
+
+    public void setResult_code(String result_code) {
+        this.result_code = result_code;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("ValidateMsg{");
@@ -77,6 +96,9 @@ public class ValidateMsg implements Serializable {
         sb.append(", httpstatus=").append(httpstatus);
         sb.append(", messages=").append(messages);
         sb.append(", validateMessages=").append(validateMessages);
+        sb.append(", data=").append(data);
+        sb.append(", result_message='").append(result_message).append('\'');
+        sb.append(", result_code='").append(result_code).append('\'');
         sb.append('}');
         return sb.toString();
     }
