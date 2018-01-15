@@ -10,14 +10,18 @@ import com.github.chengzhx76.buy.utils.OperationType;
 import com.github.dreamhead.moco.HttpServer;
 import com.github.dreamhead.moco.Runnable;
 import com.github.dreamhead.moco.Runner;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.github.dreamhead.moco.Moco.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -174,15 +178,23 @@ public class HttpClientDownloaderTest {
 
     @Test
     public void test_postMethod_3() throws IOException {
-//        String url = "http://account.xici.net/login";
-        String url = "https://kyfw.12306.cn/otn/login/checkUser";
+        String url = "http://account.xici.net/login";
+        //String url = "https://kyfw.12306.cn/otn/login/checkUser";
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+        BasicNameValuePair pair = new BasicNameValuePair("cheng", "guangcan");
+        nameValuePairs.add(pair);
         String data = "";
-        /*data = org.apache.http.client.fluent.Request.Post(url)
+        data = org.apache.http.client.fluent.Request.Post(url)
                 .setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
                 .setHeader("token", "123456")
-                .execute().returnContent().asString();*/
+                .setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+                .bodyForm(nameValuePairs)
+                .execute().returnContent().asString();
 
-        data = EntityUtils.toString(
+        byte[] b = URLEncodedUtils.format(nameValuePairs, "UTF-8").getBytes("UTF-8");
+        System.out.println(b.length);
+
+        /*data = EntityUtils.toString(
                 HttpClients.custom().build()
                 .execute(
                         RequestBuilder
@@ -190,7 +202,7 @@ public class HttpClientDownloaderTest {
                                 .addHeader("Content-Length","0")
                                 .setUri(url)
                                 .build()
-                ).getEntity(), "UTF-8");
+                ).getEntity(), "UTF-8");*/
 
 
         System.out.println(data);
