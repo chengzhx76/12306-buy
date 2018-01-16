@@ -144,6 +144,7 @@ public class SimpleProcessor implements Processor {
                                     buyer.getToStation() + " 席别：" + seatCn + "-" + seat + " 安全码：" + secretStr);
                             if (!"无".equals(seat)) {
                                 request.setOperation(OperationType.CHECK_USER);
+                                break;
                             }
                         }
                     }
