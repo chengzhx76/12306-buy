@@ -40,8 +40,10 @@ public class SimpleProcessor implements Processor {
             request.addHeader("Accept", "*/*");
             request.addHeader("Accept-Encoding", "gzip, deflate, br");
             request.addHeader("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8");
+
             request.addHeader("Cache-Control", "no-cache");
             request.addHeader("Connection", "keep-alive");
+
             request.addHeader("Host", "kyfw.12306.cn");
             request.addHeader("If-Modified-Since", "0");
             request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
@@ -72,7 +74,8 @@ public class SimpleProcessor implements Processor {
             //String read = "41,41";
 
             Map<String, Object> params = new HashMap<>();
-            params.put("answer", getCaptchaXY(read));
+//            params.put("answer", getCaptchaXY(read));
+            params.put("answer", read);
             params.put("login_site", "E");
             params.put("rand", "sjrand");
             params.put("_json_att", "");
@@ -177,12 +180,14 @@ public class SimpleProcessor implements Processor {
             if ("4".equals(validateMsg.getResult_code())) { // 验证码校验成功
                 request.setOperation(OperationType.LOGIN);
             } else if ("5".equals(validateMsg.getResult_code())) {
-                throw new RuntimeException(validateMsg.getResult_message());
+                LOG.info("验证码校验失败,重新认证");
+                request.setOperation(OperationType.END);
             } else if ("7".equals(validateMsg.getResult_code())) {
-                throw new RuntimeException(validateMsg.getResult_message());
+                LOG.info("验证码已经过期,重新获取");
+                request.setOperation(OperationType.CAPTCHA_IMG);
             } else if ("8".equals(validateMsg.getResult_code())) {
                 throw new RuntimeException(validateMsg.getResult_message());
-            } else { // 正常不走这里
+            } else { // 正常不走这里，避免死循环
                 request.setOperation(OperationType.END);
             }
         } else if (OperationType.LOGIN.equals(operation)) {
@@ -193,14 +198,18 @@ public class SimpleProcessor implements Processor {
             //  - 用户不存在：     {"result_message":"登录名不存在。","result_code":1}
             //  - 密码输入正确：   {"result_message":"登录成功","result_code":0,"uamtk":"tWDQtPie_z22IWMknmFOymUpDRzvLE4CfzREJBzS9NwrwL2L0"}
 
-            /*ValidateMsg validateMsg = parseObject(response, ValidateMsg.class);
-            if ("1".equals(validateMsg.getResult_code())) {
-
-            } else if ("0".equals(validateMsg.getResult_code())) {
-
-            }*/
-            System.out.println(response.getRawText());
-            request.setOperation(OperationType.END);
+            ValidateMsg validateMsg = parseObject(response, ValidateMsg.class);
+            if ("0".equals(validateMsg.getResult_code())) {
+                System.out.println(validateMsg.getResult_message());
+                System.out.println("登录成功---->开始下单");
+                request.setOperation(OperationType.END);
+            } else if ("1".equals(validateMsg.getResult_code())) {
+                System.out.println(validateMsg.getResult_message());
+                System.out.println("登录失败---->重新登录");
+                request.setOperation(OperationType.CAPTCHA_IMG);
+            } else { // 正常不走这里，避免死循环
+                request.setOperation(OperationType.END);
+            }
         } else if (OperationType.END.equals(operation)) {
             System.out.println("-----end-----");
             response.destroy();
@@ -263,9 +272,10 @@ public class SimpleProcessor implements Processor {
             }
             offsetsXY.append(offsetsY)
                     .append(",")
-                    .append(offsetsX);
+                    .append(offsetsX)
+                    .append(",");
         }
-        return offsetsXY.toString();
+        return offsetsXY.deleteCharAt(offsetsXY.length()-1).toString();
     }
 
 }

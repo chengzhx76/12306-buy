@@ -2882,16 +2882,10 @@ var intervalTime;
         }
         bZ(cq);
         $.ajax({
-            type: "get",
-            isTakeParam: false,
-            beforeSend: function (cs) {
+            type: "get", isTakeParam: false, beforeSend: function (cs) {
                 cs.setRequestHeader("If-Modified-Since", "0");
                 cs.setRequestHeader("Cache-Control", "no-cache")
-            },
-            url: ctx + CLeftTicketUrl,
-            data: cq,
-            timeout: 10000,
-            error: function (cs, cu, ct) {
+            }, url: ctx + CLeftTicketUrl, data: cq, timeout: 10000, error: function (cs, cu, ct) {
                 dhtmlx.modalbox.hide(cr);
                 if ("timeout" == cu || "No Transport" == cu || "abort" == cu) {
                     if ($("#auto_query").is(":checked")) {
@@ -6341,16 +6335,10 @@ var intervalTime;
                 };
                 aV();
                 $.ajax({
-                    type: "get",
-                    isTakeParam: false,
-                    beforeSend: function (cv) {
+                    type: "get", isTakeParam: false, beforeSend: function (cv) {
                         cv.setRequestHeader("If-Modified-Since", "0");
                         cv.setRequestHeader("Cache-Control", "no-cache")
-                    },
-                    url: ctx + CLeftTicketUrl,
-                    data: ct,
-                    timeout: 10000,
-                    success: function (cx) {
+                    }, url: ctx + CLeftTicketUrl, data: ct, timeout: 10000, success: function (cx) {
                         if (cx.status) {
                             if (cx.data == null || cx.data.length == 0) {
                                 cp(3);
@@ -7471,18 +7459,11 @@ var intervalTime;
     function bZ(cq) {
         if (isSaveQueryLog == "Y") {
             $.ajax({
-                type: "get",
-                isTakeParam: false,
-                beforeSend: function (cr) {
+                type: "get", isTakeParam: false, beforeSend: function (cr) {
                     cr.setRequestHeader("If-Modified-Since", "0");
                     cr.setRequestHeader("Cache-Control", "no-cache")
-                },
-                url: ctx + "leftTicket/log",
-                data: cq,
-                timeout: 15000,
-                error: function (cr, ct, cs) {
-                },
-                success: function (cr) {
+                }, url: ctx + "leftTicket/log", data: cq, timeout: 15000, error: function (cr, ct, cs) {
+                }, success: function (cr) {
                 }
             })
         }

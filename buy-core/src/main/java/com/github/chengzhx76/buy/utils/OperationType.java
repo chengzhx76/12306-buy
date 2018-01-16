@@ -13,6 +13,7 @@ public enum OperationType {
     CAPTCHA_IMG(HttpConstant.URL.CAPTCHA_IMG, HttpConstant.Method.GET),
     CHECK_CAPTCHA(HttpConstant.URL.CHECK_CAPTCHA, HttpConstant.Method.POST),
     LOGIN(HttpConstant.URL.LOGIN, HttpConstant.Method.POST),
+    AUTH_UAMTK(HttpConstant.URL.AUTH_UAMTK, HttpConstant.Method.POST),
     TEST(HttpConstant.URL.TEST, HttpConstant.Method.GET),
 
     END("success", "success");

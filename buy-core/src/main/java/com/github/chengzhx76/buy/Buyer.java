@@ -228,7 +228,7 @@ public class Buyer {
         if (request == null) {
             request = new Request();
         }
-        request.setOperation(OperationType.LOGIN);
+        request.setOperation(OperationType.QUERY);
 
         if (processor == null) {
             processor = new SimpleProcessor();

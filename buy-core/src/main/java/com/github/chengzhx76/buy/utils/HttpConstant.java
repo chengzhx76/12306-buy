@@ -47,6 +47,8 @@ public abstract class HttpConstant {
 
         public static final String LOGIN = "https://kyfw.12306.cn/passport/web/login";
 
+        public static final String AUTH_UAMTK = "https://kyfw.12306.cn/passport/web/auth/uamtk";
+
         public static final String TEST = "http://127.0.0.1:9091";
     }
 
