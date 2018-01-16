@@ -20,11 +20,11 @@ public class HttpRequestBody implements Serializable {
 
     public static abstract class ContentType {
 
-        public static final String JSON = "application/json";
+        public static final String JSON = "application/json; charset=UTF-8";
 
         public static final String XML = "text/xml";
 
-        public static final String FORM = "application/x-www-form-urlencoded";
+        public static final String FORM = "application/x-www-form-urlencoded; charset=UTF-8";
 
     }
 

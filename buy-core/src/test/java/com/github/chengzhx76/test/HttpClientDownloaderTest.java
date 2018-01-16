@@ -207,16 +207,36 @@ public class HttpClientDownloaderTest {
         request.setUrl(url);
         request.setMethod(HttpConstant.Method.POST);
         Map<String, Object> params = new HashMap<>();
-        params.put("username", "cheng");
-        params.put("password", "cheng13");
+        params.put("username", "chengzhx67");
+        params.put("password", "cgc1027689");
         params.put("appid", "otn");
         params.put("_json_att", "");
         request.setRequestBody(HttpRequestBody.form(params, "utf-8"));
+
+        request.addCookie("BIGipServerpool_passport", "233636362.50215.0000");
+        request.addCookie("_passport_ct", "b225878ee0cf465190d1edf0a56eaab2t5545");
+        request.addCookie("_passport_session", "7bd182fc3ef349e686d9ddca2373eedd9871");
+
+        request.addHeader("Accept", "application/json, text/javascript, */*; q=0.01");
+        request.addHeader("Accept-Encoding", "gzip, deflate, br");
+        request.addHeader("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8");
+        request.addHeader("Connection", "keep-alive");
+        request.addHeader("Host", "kyfw.12306.cn");
+        request.addHeader("Origin", "https://kyfw.12306.cn");
+        request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
+        request.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36");
+        request.addHeader("X-Requested-With", "XMLHttpRequest");
 
         HttpClientDownloader httpClientDownloader = new HttpClientDownloader();
         Response response =httpClientDownloader.request(request, Site.me().setUserAgent(HttpConstant.UserAgent.CHROME));
         data = response.getRawText();
         System.out.println(data);
+    }
+
+    @Test
+    public void test_byte() {
+        byte[] b = new String("_json_att=11111&username=chengzhx76&appid=otn&password=123456").getBytes();
+        System.out.println(b.length);
     }
 
 

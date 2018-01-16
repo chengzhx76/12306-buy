@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,11 +46,18 @@ public class SimpleProcessor implements Processor {
             request.addHeader("If-Modified-Since", "0");
             request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
             request.addHeader("X-Requested-With", "XMLHttpRequest");
-//            request.addCookie("_jc_save_fromStation", "%u5317%u4EAC%2CBJP");
-//            request.addCookie("_jc_save_toStation", "%u66F9%u53BF%2CCXK");
-//            request.addCookie("_jc_save_fromDate", "2018-01-16");
-//            request.addCookie("_jc_save_toDate", "2018-01-16");
-//            request.addCookie("_jc_save_wfdc_flag", "dc");
+            if (OperationType.QUERY.equals(operation)) {
+                try {
+                    request.addCookie("_jc_save_fromStation", URLEncoder.encode(buyer.getFromStation()+","+buyer.getFromStationCode(), "UTF-8"));
+                    request.addCookie("_jc_save_fromDate", buyer.getStationDate());
+                    request.addCookie("_jc_save_toStation", URLEncoder.encode(buyer.getToStation()+","+buyer.getToStationCode(), "UTF-8"));
+                    request.addCookie("_jc_save_toDate", buyer.getStationDate());
+                    request.addCookie("_jc_save_wfdc_flag", "dc");
+                } catch (UnsupportedEncodingException e) {
+                    LOG.error("编码失败", e);
+                    throw new RuntimeException("编码失败");
+                }
+            }
         }else if (OperationType.CHECK_USER.equals(operation)) {
             request.setUrl(operation.getUrl());
             request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
@@ -63,18 +72,29 @@ public class SimpleProcessor implements Processor {
             //String read = "41,41";
 
             Map<String, Object> params = new HashMap<>();
-            params.put("answer", read);
+            params.put("answer", getCaptchaXY(read));
             params.put("login_site", "E");
             params.put("rand", "sjrand");
             params.put("_json_att", "");
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         }else if (OperationType.LOGIN.equals(operation)){
             request.setUrl(operation.getUrl());
+
+            request.addHeader("Accept", "application/json, text/javascript, */*; q=0.01");
+            request.addHeader("Accept-Encoding", "gzip, deflate, br");
+            request.addHeader("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8");
+            request.addHeader("Connection", "keep-alive");
+            request.addHeader("Host", "kyfw.12306.cn");
+            request.addHeader("Origin", "https://kyfw.12306.cn");
+            request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
+            request.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36");
+            request.addHeader("X-Requested-With", "XMLHttpRequest");
+
             Map<String, Object> params = new HashMap<>();
             params.put("username", buyer.getUsername());
             params.put("password", buyer.getPassword());
             params.put("appid", "otn");
-            params.put("_json_att", "");
+            params.put("_json_att", "11111");
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else {
             request.setUrl(operation.getUrl());
@@ -173,12 +193,12 @@ public class SimpleProcessor implements Processor {
             //  - 用户不存在：     {"result_message":"登录名不存在。","result_code":1}
             //  - 密码输入正确：   {"result_message":"登录成功","result_code":0,"uamtk":"tWDQtPie_z22IWMknmFOymUpDRzvLE4CfzREJBzS9NwrwL2L0"}
 
-            ValidateMsg validateMsg = parseObject(response, ValidateMsg.class);
+            /*ValidateMsg validateMsg = parseObject(response, ValidateMsg.class);
             if ("1".equals(validateMsg.getResult_code())) {
 
             } else if ("0".equals(validateMsg.getResult_code())) {
 
-            }
+            }*/
             System.out.println(response.getRawText());
             request.setOperation(OperationType.END);
         } else if (OperationType.END.equals(operation)) {
@@ -197,4 +217,55 @@ public class SimpleProcessor implements Processor {
             throw new RuntimeException(e.getMessage());
         }
     }
+
+
+    private String getCaptchaXY(String positions) {
+        StringBuffer offsetsXY = new StringBuffer();
+        String posArr[] = positions.split("\\,");
+        for (String pos : posArr) {
+            int offsetsX = 0;
+            int offsetsY = 0;
+            switch (pos) {
+                case "1":
+                    offsetsY = 46;
+                    offsetsX = 46;
+                    break;
+                case "2":
+                    offsetsY = 46;
+                    offsetsX = 105;
+                    break;
+                case "3":
+                    offsetsY = 46;
+                    offsetsX = 184;
+                    break;
+                case "4":
+                    offsetsY = 46;
+                    offsetsX = 256;
+                    break;
+                case "5":
+                    offsetsY = 36;
+                    offsetsX = 117;
+                    break;
+                case "6":
+                    offsetsY = 112;
+                    offsetsX = 115;
+                    break;
+                case "7":
+                    offsetsY = 114;
+                    offsetsX = 181;
+                    break;
+                case "8":
+                    offsetsY = 111;
+                    offsetsX = 252;
+                    break;
+                default:
+                    break;
+            }
+            offsetsXY.append(offsetsY)
+                    .append(",")
+                    .append(offsetsX);
+        }
+        return offsetsXY.toString();
+    }
+
 }
