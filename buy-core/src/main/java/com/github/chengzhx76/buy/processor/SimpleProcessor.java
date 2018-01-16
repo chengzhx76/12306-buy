@@ -74,8 +74,8 @@ public class SimpleProcessor implements Processor {
             //String read = "41,41";
 
             Map<String, Object> params = new HashMap<>();
-//            params.put("answer", getCaptchaXY(read));
-            params.put("answer", read);
+            params.put("answer", getCaptchaXY(read));
+            //params.put("answer", read);
             params.put("login_site", "E");
             params.put("rand", "sjrand");
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
@@ -143,6 +143,7 @@ public class SimpleProcessor implements Processor {
                             LOG.info("车次：" + trainNo + " 始发车站：" + buyer.getFromStation() + " 终点车站：" +
                                     buyer.getToStation() + " 席别：" + seatCn + "-" + seat + " 安全码：" + secretStr);
                             if (!"无".equals(seat)) {
+                                //request.setOperation(OperationType.END);
                                 request.setOperation(OperationType.CHECK_USER);
                                 break;
                             }
@@ -150,6 +151,7 @@ public class SimpleProcessor implements Processor {
                     }
                 }
             }
+            //request.setOperation(OperationType.END);
             request.setOperation(OperationType.CHECK_USER);
         } else if (OperationType.CHECK_USER.equals(operation)) {
             ValidateMsg validateMsg = parseObject(response, ValidateMsg.class);
@@ -180,7 +182,7 @@ public class SimpleProcessor implements Processor {
                 request.setOperation(OperationType.LOGIN);
             } else if ("5".equals(validateMsg.getResult_code())) {
                 LOG.info("验证码校验失败,重新认证");
-                request.setOperation(OperationType.END);
+                request.setOperation(OperationType.CAPTCHA_IMG);
             } else if ("7".equals(validateMsg.getResult_code())) {
                 LOG.info("验证码已经过期,重新获取");
                 request.setOperation(OperationType.CAPTCHA_IMG);
@@ -269,9 +271,9 @@ public class SimpleProcessor implements Processor {
                 default:
                     break;
             }
-            offsetsXY.append(offsetsY)
+            offsetsXY.append(offsetsX)
                     .append(",")
-                    .append(offsetsX)
+                    .append(offsetsY)
                     .append(",");
         }
         return offsetsXY.deleteCharAt(offsetsXY.length()-1).toString();

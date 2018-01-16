@@ -11,8 +11,11 @@ import com.github.dreamhead.moco.HttpServer;
 import com.github.dreamhead.moco.Runnable;
 import com.github.dreamhead.moco.Runner;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -237,6 +240,49 @@ public class HttpClientDownloaderTest {
     public void test_byte() {
         byte[] b = new String("_json_att=11111&username=chengzhx76&appid=otn&password=123456").getBytes();
         System.out.println(b.length);
+    }
+
+    @Test
+    public void test_query() throws IOException {
+        String url = "https://kyfw.12306.cn/otn/leftTicket/queryZ?leftTicketDTO.train_date=2018-01-17&leftTicketDTO.from_station=BJP&leftTicketDTO.to_station=CXK&purpose_codes=ADULT";
+        String data = "";
+        data = org.apache.http.client.fluent.Request.Get(url)
+                .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
+                .setHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+                .execute().returnContent().asString();
+
+    }
+
+    @Test
+    public void test_query_cookies() throws IOException {
+        String url = "https://kyfw.12306.cn/otn/leftTicket/queryZ?leftTicketDTO.train_date=2018-01-17&leftTicketDTO.from_station=BJP&leftTicketDTO.to_station=CXK&purpose_codes=ADULT";
+        CookieStore cookieStore = new BasicCookieStore();
+
+        /*BasicClientCookie cookie1 = new BasicClientCookie("_jc_save_fromStation", URLEncoder.encode("BJP,北京", "UTF-8"));
+        cookie1.setDomain("https://kyfw.12306.cn");
+        BasicClientCookie cookie2 = new BasicClientCookie("_jc_save_fromDate", URLEncoder.encode("2018-01-17", "UTF-8"));
+        cookie2.setDomain("https://kyfw.12306.cn");
+        BasicClientCookie cookie3 = new BasicClientCookie("_jc_save_toStation", URLEncoder.encode("CXK,曹县", "UTF-8"));
+        cookie3.setDomain("https://kyfw.12306.cn");
+        BasicClientCookie cookie4 = new BasicClientCookie("_jc_save_toDate", URLEncoder.encode("2018-01-17", "UTF-8"));
+        cookie4.setDomain("https://kyfw.12306.cn");
+        BasicClientCookie cookie5 = new BasicClientCookie("_jc_save_wfdc_flag", "dc");
+        cookie5.setDomain("https://kyfw.12306.cn");
+
+        cookieStore.addCookie(cookie1);
+        cookieStore.addCookie(cookie2);
+        cookieStore.addCookie(cookie3);
+        cookieStore.addCookie(cookie4);
+        cookieStore.addCookie(cookie5);*/
+        Executor executor = Executor.newInstance();
+        String data = executor.use(cookieStore)
+                .execute(
+                        org.apache.http.client.fluent.Request.Get(url)
+                        .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
+                )
+                .returnContent()
+                .asString();
+        System.out.println(data);
     }
 
 
