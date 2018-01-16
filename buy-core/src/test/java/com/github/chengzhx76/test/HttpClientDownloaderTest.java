@@ -2,6 +2,7 @@ package com.github.chengzhx76.test;
 
 import com.github.chengzhx76.buy.Site;
 import com.github.chengzhx76.buy.httper.HttpClientDownloader;
+import com.github.chengzhx76.buy.httper.HttpUriRequestConverter;
 import com.github.chengzhx76.buy.model.HttpRequestBody;
 import com.github.chengzhx76.buy.model.Request;
 import com.github.chengzhx76.buy.model.Response;
@@ -299,6 +300,35 @@ public class HttpClientDownloaderTest {
                 )
                 .returnContent()
                 .asString(Charset.forName("UTF-8"));
+        System.out.println(data);
+    }
+
+    @Test
+    public void test_query_cookies_2() throws IOException {
+        String url = "https://kyfw.12306.cn/otn/leftTicket/queryZ?leftTicketDTO.train_date=2018-01-17&leftTicketDTO.from_station=BJP&leftTicketDTO.to_station=CXK&purpose_codes=ADULT";
+        //String url = "https://kyfw.12306.cn/otn/leftTicket/queryZ?leftTicketDTO.train_date=2018-01-17&leftTicketDTO.from_station=BJP&leftTicketDTO.to_station=CXK&purpose_codes=ADULT";
+        CookieStore cookieStore = new BasicCookieStore();
+
+        BasicClientCookie cookie1 = new BasicClientCookie("_jc_save_fromStation", URLEncoder.encode("BJP,北京", "UTF-8"));
+        cookie1.setDomain("https://kyfw.12306.cn");
+        BasicClientCookie cookie2 = new BasicClientCookie("_jc_save_fromDate", URLEncoder.encode("2018-01-17", "UTF-8"));
+        cookie2.setDomain("https://kyfw.12306.cn");
+        BasicClientCookie cookie3 = new BasicClientCookie("_jc_save_toStation", URLEncoder.encode("CXK,曹县", "UTF-8"));
+        cookie3.setDomain("https://kyfw.12306.cn");
+        BasicClientCookie cookie4 = new BasicClientCookie("_jc_save_toDate", URLEncoder.encode("2018-01-17", "UTF-8"));
+        cookie4.setDomain("https://kyfw.12306.cn");
+        BasicClientCookie cookie5 = new BasicClientCookie("_jc_save_wfdc_flag", "dc");
+        cookie5.setDomain("https://kyfw.12306.cn");
+
+        cookieStore.addCookie(cookie1);
+        cookieStore.addCookie(cookie2);
+        cookieStore.addCookie(cookie3);
+        cookieStore.addCookie(cookie4);
+        cookieStore.addCookie(cookie5);
+
+        HttpUriRequestConverter httpUriRequestConverter = new HttpUriRequestConverter();
+        HttpUriRequest httpUriRequest = httpUriRequestConverter.convert(request, Site.me(), null).getHttpUriRequest();
+        String data = EntityUtils.toString(HttpClients.custom().build().execute(httpUriRequest).getEntity(), "UTF-8");
         System.out.println(data);
     }
 
