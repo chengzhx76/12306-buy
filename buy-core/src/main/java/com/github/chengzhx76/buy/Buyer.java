@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -85,6 +86,9 @@ public class Buyer {
         if (CollectionUtils.isEmpty(getStationTrains())) {
             if (StringUtils.contains(stationTrains, "|")) {
                 this.stationTrains = Arrays.asList(StringUtils.split(stationTrains, "|"));
+            }else {
+                this.stationTrains = new ArrayList<>();
+                this.stationTrains.add(stationTrains);
             }
         }
         return this;
@@ -224,7 +228,7 @@ public class Buyer {
         if (request == null) {
             request = new Request();
         }
-        request.setOperation(OperationType.QUERY);
+        request.setOperation(OperationType.LOGIN);
 
         if (processor == null) {
             processor = new SimpleProcessor();
@@ -295,6 +299,9 @@ public class Buyer {
             if (CollectionUtils.isEmpty(getStationTrains())) {
                 if (StringUtils.contains(stationTrain, "|")) {
                     stationTrains = Arrays.asList(StringUtils.split(stationTrain, "|"));
+                }else {
+                    stationTrains = new ArrayList<>();
+                    stationTrains.add(stationTrain);
                 }
             }
             if (CollectionUtils.isEmpty(getStationTrains())) {

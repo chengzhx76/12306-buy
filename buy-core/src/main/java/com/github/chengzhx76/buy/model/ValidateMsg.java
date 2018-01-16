@@ -24,6 +24,8 @@ public class ValidateMsg implements Serializable {
     private String result_message;
     private String result_code;
 
+    private String uamtk;
+
     public String getValidateMessagesShowId() {
         return validateMessagesShowId;
     }
@@ -88,6 +90,14 @@ public class ValidateMsg implements Serializable {
         this.result_code = result_code;
     }
 
+    public String getUamtk() {
+        return uamtk;
+    }
+
+    public void setUamtk(String uamtk) {
+        this.uamtk = uamtk;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("ValidateMsg{");
@@ -99,6 +109,7 @@ public class ValidateMsg implements Serializable {
         sb.append(", data=").append(data);
         sb.append(", result_message='").append(result_message).append('\'');
         sb.append(", result_code='").append(result_code).append('\'');
+        sb.append(", uamtk='").append(uamtk).append('\'');
         sb.append('}');
         return sb.toString();
     }

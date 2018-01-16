@@ -2,17 +2,16 @@ package com.github.chengzhx76.buy.processor;
 
 import com.alibaba.fastjson.JSON;
 import com.github.chengzhx76.buy.Buyer;
-import com.github.chengzhx76.buy.model.HttpRequestBody;
-import com.github.chengzhx76.buy.model.Request;
-import com.github.chengzhx76.buy.model.Response;
-import com.github.chengzhx76.buy.model.ValidateMsg;
+import com.github.chengzhx76.buy.model.*;
 import com.github.chengzhx76.buy.utils.FileUtils;
 import com.github.chengzhx76.buy.utils.OperationType;
+import com.github.chengzhx76.buy.utils.TicketConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -36,7 +35,20 @@ public class SimpleProcessor implements Processor {
                     .replace("{TRAINDATE}", buyer.getStationDate())
                     .replace("{FROMSTATION}", buyer.getFromStationCode())
                     .replace("{TOSTATION}", buyer.getToStationCode()));
+            request.addHeader("Accept", "*/*");
+            request.addHeader("Accept-Encoding", "gzip, deflate, br");
+            request.addHeader("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8");
+            request.addHeader("Cache-Control", "no-cache");
+            request.addHeader("Connection", "keep-alive");
+            request.addHeader("Host", "kyfw.12306.cn");
+            request.addHeader("If-Modified-Since", "0");
             request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
+            request.addHeader("X-Requested-With", "XMLHttpRequest");
+//            request.addCookie("_jc_save_fromStation", "%u5317%u4EAC%2CBJP");
+//            request.addCookie("_jc_save_toStation", "%u66F9%u53BF%2CCXK");
+//            request.addCookie("_jc_save_fromDate", "2018-01-16");
+//            request.addCookie("_jc_save_toDate", "2018-01-16");
+//            request.addCookie("_jc_save_wfdc_flag", "dc");
         }else if (OperationType.CHECK_USER.equals(operation)) {
             request.setUrl(operation.getUrl());
             request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
@@ -54,6 +66,14 @@ public class SimpleProcessor implements Processor {
             params.put("answer", read);
             params.put("login_site", "E");
             params.put("rand", "sjrand");
+            params.put("_json_att", "");
+            request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
+        }else if (OperationType.LOGIN.equals(operation)){
+            request.setUrl(operation.getUrl());
+            Map<String, Object> params = new HashMap<>();
+            params.put("username", buyer.getUsername());
+            params.put("password", buyer.getPassword());
+            params.put("appid", "otn");
             params.put("_json_att", "");
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else {
@@ -77,7 +97,7 @@ public class SimpleProcessor implements Processor {
 
         } else if (OperationType.QUERY.equals(operation)) {
 
-            /*Query query = parseObject(response, Query.class);
+            Query query = parseObject(response, Query.class);
             if (query == null ||
                     query.getData() == null ||
                     query.getData().getResult().isEmpty()) {
@@ -107,7 +127,7 @@ public class SimpleProcessor implements Processor {
                         }
                     }
                 }
-            }*/
+            }
             request.setOperation(OperationType.CHECK_USER);
         } else if (OperationType.CHECK_USER.equals(operation)) {
             ValidateMsg validateMsg = parseObject(response, ValidateMsg.class);
@@ -137,14 +157,14 @@ public class SimpleProcessor implements Processor {
             if ("4".equals(validateMsg.getResult_code())) { // 验证码校验成功
                 request.setOperation(OperationType.LOGIN);
             } else if ("5".equals(validateMsg.getResult_code())) {
-
+                throw new RuntimeException(validateMsg.getResult_message());
             } else if ("7".equals(validateMsg.getResult_code())) {
-
+                throw new RuntimeException(validateMsg.getResult_message());
             } else if ("8".equals(validateMsg.getResult_code())) {
-
+                throw new RuntimeException(validateMsg.getResult_message());
+            } else { // 正常不走这里
+                request.setOperation(OperationType.END);
             }
-
-            request.setOperation(OperationType.END);
         } else if (OperationType.LOGIN.equals(operation)) {
             System.out.println("-----用户登陆-----");
 
@@ -159,7 +179,7 @@ public class SimpleProcessor implements Processor {
             } else if ("0".equals(validateMsg.getResult_code())) {
 
             }
-
+            System.out.println(response.getRawText());
             request.setOperation(OperationType.END);
         } else if (OperationType.END.equals(operation)) {
             System.out.println("-----end-----");
