@@ -68,7 +68,7 @@ public class SimpleProcessor implements Processor {
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         }else if (OperationType.CHECK_CAPTCHA.equals(operation)) {
             request.setUrl(operation.getUrl());
-            System.out.println("输入图片坐标：");
+            System.out.print("输入图片位置：");
             Scanner scan = new Scanner(System.in);
             String read = scan.nextLine();
             //String read = "41,41";
@@ -200,16 +200,20 @@ public class SimpleProcessor implements Processor {
             //  - 密码输入正确：   {"result_message":"登录成功","result_code":0,"uamtk":"tWDQtPie_z22IWMknmFOymUpDRzvLE4CfzREJBzS9NwrwL2L0"}
 
             ValidateMsg validateMsg = parseObject(response, ValidateMsg.class);
-            if ("0".equals(validateMsg.getResult_code())) {
-                System.out.println(validateMsg.getResult_message());
-                System.out.println("登录成功---->开始下单");
-                request.setOperation(OperationType.END);
-            } else if ("1".equals(validateMsg.getResult_code())) {
-                System.out.println(validateMsg.getResult_message());
-                System.out.println("登录失败---->重新登录");
-                request.setOperation(OperationType.CAPTCHA_IMG);
-            } else { // 正常不走这里，避免死循环
-                request.setOperation(OperationType.END);
+            if (validateMsg == null) {
+                request.setOperation(OperationType.CHECK_USER);
+            }else {
+                if ("0".equals(validateMsg.getResult_code())) {
+                    System.out.println(validateMsg.getResult_message());
+                    System.out.println("登录成功---->开始下单");
+                    request.setOperation(OperationType.END);
+                } else if ("1".equals(validateMsg.getResult_code())) {
+                    System.out.println(validateMsg.getResult_message());
+                    System.out.println("登录失败---->重新登录");
+                    request.setOperation(OperationType.CAPTCHA_IMG);
+                } else { // 正常不走这里，避免死循环
+                    request.setOperation(OperationType.END);
+                }
             }
         } else if (OperationType.END.equals(operation)) {
             System.out.println("-----end-----");
@@ -238,7 +242,7 @@ public class SimpleProcessor implements Processor {
             switch (pos) {
                 case "1":
                     offsetsY = 46;
-                    offsetsX = 46;
+                    offsetsX = 42;
                     break;
                 case "2":
                     offsetsY = 46;

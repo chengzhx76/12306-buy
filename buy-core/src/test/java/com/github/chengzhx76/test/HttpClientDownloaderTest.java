@@ -17,11 +17,14 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -256,9 +259,10 @@ public class HttpClientDownloaderTest {
     @Test
     public void test_query_cookies() throws IOException {
         String url = "https://kyfw.12306.cn/otn/leftTicket/queryZ?leftTicketDTO.train_date=2018-01-17&leftTicketDTO.from_station=BJP&leftTicketDTO.to_station=CXK&purpose_codes=ADULT";
+        //String url = "https://kyfw.12306.cn/otn/leftTicket/queryZ?leftTicketDTO.train_date=2018-01-17&leftTicketDTO.from_station=BJP&leftTicketDTO.to_station=CXK&purpose_codes=ADULT";
         CookieStore cookieStore = new BasicCookieStore();
 
-        /*BasicClientCookie cookie1 = new BasicClientCookie("_jc_save_fromStation", URLEncoder.encode("BJP,北京", "UTF-8"));
+        BasicClientCookie cookie1 = new BasicClientCookie("_jc_save_fromStation", URLEncoder.encode("BJP,北京", "UTF-8"));
         cookie1.setDomain("https://kyfw.12306.cn");
         BasicClientCookie cookie2 = new BasicClientCookie("_jc_save_fromDate", URLEncoder.encode("2018-01-17", "UTF-8"));
         cookie2.setDomain("https://kyfw.12306.cn");
@@ -273,15 +277,28 @@ public class HttpClientDownloaderTest {
         cookieStore.addCookie(cookie2);
         cookieStore.addCookie(cookie3);
         cookieStore.addCookie(cookie4);
-        cookieStore.addCookie(cookie5);*/
+        cookieStore.addCookie(cookie5);
         Executor executor = Executor.newInstance();
         String data = executor.use(cookieStore)
                 .execute(
                         org.apache.http.client.fluent.Request.Get(url)
-                        .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
+                                .userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36")
+                                //.addHeader("Accept", "*/*")
+                                //.addHeader("Accept-Encoding", "gzip, deflate, br")
+                                //.addHeader("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8")
+                                //.addHeader("Cache-Control", "no-cache")
+                                //.addHeader("Connection", "keep-alive")
+                                //.addHeader("Host", "kyfw.12306.cn")
+                                //.addHeader("If-Modified-Since", "0")
+                                //.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init")
+                                //.addHeader("X-Requested-With", "XMLHttpRequest")
+                                .addHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8")
+                                .addHeader("X-Requested-With", "xmlHttpRequest")
+                                .addHeader("Referer", "https://kyfw.12306.cn/otn/confirmPassenger/initDc")
+                                .addHeader("Accept", "*/*")
                 )
                 .returnContent()
-                .asString();
+                .asString(Charset.forName("UTF-8"));
         System.out.println(data);
     }
 
