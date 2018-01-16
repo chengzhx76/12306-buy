@@ -78,7 +78,6 @@ public class SimpleProcessor implements Processor {
             params.put("answer", read);
             params.put("login_site", "E");
             params.put("rand", "sjrand");
-            params.put("_json_att", "");
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         }else if (OperationType.LOGIN.equals(operation)){
             request.setUrl(operation.getUrl());
@@ -97,7 +96,6 @@ public class SimpleProcessor implements Processor {
             params.put("username", buyer.getUsername());
             params.put("password", buyer.getPassword());
             params.put("appid", "otn");
-            params.put("_json_att", "11111");
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else {
             request.setUrl(operation.getUrl());

@@ -84,9 +84,9 @@ public class HttpClientDownloader implements Downloader {
                 //ensure the connection is released back to pool
                 EntityUtils.consumeQuietly(httpResponse.getEntity());
             }
-            if (proxyProvider != null && proxy != null) {
+            /*if (proxyProvider != null && proxy != null) {
                 proxyProvider.returnProxy(proxy, response, site);
-            }
+            }*/
         }
     }
 
