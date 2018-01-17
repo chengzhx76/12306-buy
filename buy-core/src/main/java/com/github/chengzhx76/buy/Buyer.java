@@ -1,7 +1,7 @@
 package com.github.chengzhx76.buy;
 
 import com.github.chengzhx76.buy.httper.Downloader;
-import com.github.chengzhx76.buy.httper.HttpClientDownloader;
+import com.github.chengzhx76.buy.httper.HttpClientFluent;
 import com.github.chengzhx76.buy.model.Request;
 import com.github.chengzhx76.buy.model.Response;
 import com.github.chengzhx76.buy.pipeline.ConsolePipeline;
@@ -223,7 +223,8 @@ public class Buyer {
     private void initComponent() {
         checkConfig();
         if (downloader == null) {
-            downloader = new HttpClientDownloader();
+//            downloader = new HttpClientDownloader();
+            downloader = new HttpClientFluent();
         }
         if (request == null) {
             request = new Request();

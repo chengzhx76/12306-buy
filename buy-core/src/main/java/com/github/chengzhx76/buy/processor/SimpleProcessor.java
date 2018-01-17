@@ -2,8 +2,10 @@ package com.github.chengzhx76.buy.processor;
 
 import com.alibaba.fastjson.JSON;
 import com.github.chengzhx76.buy.Buyer;
+import com.github.chengzhx76.buy.Site;
 import com.github.chengzhx76.buy.model.*;
 import com.github.chengzhx76.buy.utils.FileUtils;
+import com.github.chengzhx76.buy.utils.HttpConstant;
 import com.github.chengzhx76.buy.utils.OperationType;
 import com.github.chengzhx76.buy.utils.TicketConstant;
 import org.slf4j.Logger;
@@ -143,16 +145,16 @@ public class SimpleProcessor implements Processor {
                             LOG.info("车次：" + trainNo + " 始发车站：" + buyer.getFromStation() + " 终点车站：" +
                                     buyer.getToStation() + " 席别：" + seatCn + "-" + seat + " 安全码：" + secretStr);
                             if (!"无".equals(seat)) {
-                                //request.setOperation(OperationType.END);
-                                request.setOperation(OperationType.CHECK_USER);
+                                request.setOperation(OperationType.END);
+//                                request.setOperation(OperationType.CHECK_USER);
                                 break;
                             }
                         }
                     }
                 }
             }
-            //request.setOperation(OperationType.END);
-            request.setOperation(OperationType.CHECK_USER);
+            request.setOperation(OperationType.END);
+//            request.setOperation(OperationType.CHECK_USER);
         } else if (OperationType.CHECK_USER.equals(operation)) {
             ValidateMsg validateMsg = parseObject(response, ValidateMsg.class);
             if (validateMsg.getData().getFlag()) {
@@ -281,6 +283,11 @@ public class SimpleProcessor implements Processor {
                     .append(",");
         }
         return offsetsXY.deleteCharAt(offsetsXY.length()-1).toString();
+    }
+
+    public static void main(String[] args) {
+        Site site = Site.me().setSleepTime(600L).setUserAgent(HttpConstant.UserAgent.CHROME);
+        Buyer.create(site).go();
     }
 
 }
