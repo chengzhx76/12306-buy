@@ -1,7 +1,8 @@
-package com.github.chengzhx76.buy.httper;
+package com.github.chengzhx76.buy.httper.fluent;
 
 
 import com.github.chengzhx76.buy.Site;
+import com.github.chengzhx76.buy.httper.Downloader;
 import com.github.chengzhx76.buy.model.Request;
 import com.github.chengzhx76.buy.model.Response;
 import com.github.chengzhx76.buy.utils.HttpConstant;
@@ -10,6 +11,7 @@ import org.apache.http.Header;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.fluent.Content;
 import org.apache.http.client.fluent.Executor;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.cookie.BasicClientCookie;
@@ -23,14 +25,17 @@ import java.util.Map;
 public class HttpClientFluent implements Downloader {
 
     private final static Logger LOG = LoggerFactory.getLogger(HttpClientFluent.class);
+    private HttpClientFluentGenerator httpClientGenerator = new HttpClientFluentGenerator();
+    CookieStore cookieStore = new BasicCookieStore();
 
     @Override
     public Response request(Request request, Site site) {
 
         Response response = null;
-        Executor executor = Executor.newInstance();
+        Executor executor = Executor.newInstance(httpClientGenerator.getClient());
+        setCookie(request);
         try {
-            Content content = executor.use(setCookie(request))
+            Content content = executor.use(cookieStore)
                     .execute(
                             selectRequestMethod(request)
                                     .userAgent(site.getUserAgent())
@@ -38,22 +43,24 @@ public class HttpClientFluent implements Downloader {
                     )
                     .returnContent();
             response = handleResponse(content, site, request);
+            getCookies(cookieStore, request);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return response;
     }
 
-    private CookieStore setCookie(Request request) {
-        CookieStore cookieStore = new BasicCookieStore();
+    private void setCookie(Request request) {
+//        CookieStore cookieStore = new BasicCookieStore();
         if (request.getCookies() != null && !request.getCookies().isEmpty()) {
             for (Map.Entry<String, String> cookieEntry : request.getCookies().entrySet()) {
                 BasicClientCookie cookie = new BasicClientCookie(cookieEntry.getKey(), cookieEntry.getValue());
                 cookie.setDomain(UrlUtils.getDomain(request.getUrl()));
+                cookie.setPath("/");
                 cookieStore.addCookie(cookie);
             }
         }
-        return cookieStore;
+//        return cookieStore;
     }
 
     private Header[] setHeader(Request request) {
@@ -97,4 +104,9 @@ public class HttpClientFluent implements Downloader {
         return request;
     }
 
+    private void getCookies(CookieStore cookieStore, Request request) {
+        for (Cookie cookie : cookieStore.getCookies()) {
+            System.out.println(cookie);
+        }
+    }
 }

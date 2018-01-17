@@ -2,10 +2,8 @@ package com.github.chengzhx76.buy.processor;
 
 import com.alibaba.fastjson.JSON;
 import com.github.chengzhx76.buy.Buyer;
-import com.github.chengzhx76.buy.Site;
 import com.github.chengzhx76.buy.model.*;
 import com.github.chengzhx76.buy.utils.FileUtils;
-import com.github.chengzhx76.buy.utils.HttpConstant;
 import com.github.chengzhx76.buy.utils.OperationType;
 import com.github.chengzhx76.buy.utils.TicketConstant;
 import org.slf4j.Logger;
@@ -119,8 +117,14 @@ public class SimpleProcessor implements Processor {
             }
 
         } else if (OperationType.QUERY.equals(operation)) {
-
-            Query query = parseObject(response, Query.class);
+            Query query = null;
+            try {
+                query = parseObject(response, Query.class);
+            }catch (Exception e) {
+                request.setOperation(OperationType.QUERY);
+                LOG.warn("解析JSON出错{}", e.getMessage());
+                return;
+            }
             if (query == null ||
                     query.getData() == null ||
                     query.getData().getResult().isEmpty()) {
@@ -145,16 +149,16 @@ public class SimpleProcessor implements Processor {
                             LOG.info("车次：" + trainNo + " 始发车站：" + buyer.getFromStation() + " 终点车站：" +
                                     buyer.getToStation() + " 席别：" + seatCn + "-" + seat + " 安全码：" + secretStr);
                             if (!"无".equals(seat)) {
-                                request.setOperation(OperationType.END);
-//                                request.setOperation(OperationType.CHECK_USER);
+//                                request.setOperation(OperationType.END);
+                                request.setOperation(OperationType.CHECK_USER);
                                 break;
                             }
                         }
                     }
                 }
             }
-            request.setOperation(OperationType.END);
-//            request.setOperation(OperationType.CHECK_USER);
+//            request.setOperation(OperationType.END);
+            request.setOperation(OperationType.CHECK_USER);
         } else if (OperationType.CHECK_USER.equals(operation)) {
             ValidateMsg validateMsg = parseObject(response, ValidateMsg.class);
             if (validateMsg.getData().getFlag()) {
@@ -234,45 +238,44 @@ public class SimpleProcessor implements Processor {
         }
     }
 
-
     private String getCaptchaXY(String positions) {
-        StringBuffer offsetsXY = new StringBuffer();
+        StringBuilder offsetsXY = new StringBuilder();
         String posArr[] = positions.split("\\,");
         for (String pos : posArr) {
             int offsetsX = 0;
             int offsetsY = 0;
             switch (pos) {
                 case "1":
-                    offsetsY = 46;
-                    offsetsX = 42;
+                    offsetsX = 37;
+                    offsetsY = 45;
                     break;
                 case "2":
-                    offsetsY = 46;
-                    offsetsX = 105;
+                    offsetsX = 110;
+                    offsetsY = 45;
                     break;
                 case "3":
-                    offsetsY = 46;
-                    offsetsX = 184;
+                    offsetsX = 186;
+                    offsetsY = 45;
                     break;
                 case "4":
-                    offsetsY = 46;
-                    offsetsX = 256;
+                    offsetsX = 254;
+                    offsetsY = 45;
                     break;
                 case "5":
-                    offsetsY = 36;
-                    offsetsX = 117;
+                    offsetsX = 37;
+                    offsetsY = 120;
                     break;
                 case "6":
-                    offsetsY = 112;
-                    offsetsX = 115;
+                    offsetsX = 110;
+                    offsetsY = 113;
                     break;
                 case "7":
-                    offsetsY = 114;
-                    offsetsX = 181;
+                    offsetsX = 186;
+                    offsetsY = 118;
                     break;
                 case "8":
-                    offsetsY = 111;
-                    offsetsX = 252;
+                    offsetsX = 254;
+                    offsetsY = 116;
                     break;
                 default:
                     break;
@@ -283,11 +286,6 @@ public class SimpleProcessor implements Processor {
                     .append(",");
         }
         return offsetsXY.deleteCharAt(offsetsXY.length()-1).toString();
-    }
-
-    public static void main(String[] args) {
-        Site site = Site.me().setSleepTime(600L).setUserAgent(HttpConstant.UserAgent.CHROME);
-        Buyer.create(site).go();
     }
 
 }

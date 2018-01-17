@@ -2,8 +2,8 @@ package com.github.chengzhx76.test;
 
 import com.github.chengzhx76.buy.Site;
 import com.github.chengzhx76.buy.httper.Downloader;
-import com.github.chengzhx76.buy.httper.HttpClientDownloader;
-import com.github.chengzhx76.buy.httper.HttpClientFluent;
+import com.github.chengzhx76.buy.httper.client.HttpClientDownloader;
+import com.github.chengzhx76.buy.httper.fluent.HttpClientFluent;
 import com.github.chengzhx76.buy.model.HttpRequestBody;
 import com.github.chengzhx76.buy.model.Request;
 import com.github.chengzhx76.buy.model.Response;
@@ -336,15 +336,15 @@ public class HttpClientDownloaderTest {
 
     @Test
     public void test_download_fluent() throws UnsupportedEncodingException {
-        String url = "https://kyfw.12306.cn/otn/leftTicket/queryZ?leftTicketDTO.train_date=2018-01-18&leftTicketDTO.from_station=BJP&leftTicketDTO.to_station=CXK&purpose_codes=ADULT";
+        String url = "https://kyfw.12306.cn/otn/leftTicket/queryZ?leftTicketDTO.train_date=2018-01-17&leftTicketDTO.from_station=BJP&leftTicketDTO.to_station=CXK&purpose_codes=ADULT";
         Site site = Site.me().setUserAgent(HttpConstant.UserAgent.FIREFOX);
         Request request = new Request();
         request.setUrl(url);
         request.setMethod(HttpConstant.Method.GET);
         request.addCookie("_jc_save_fromStation", URLEncoder.encode("BJP,北京", "UTF-8"));
-        request.addCookie("_jc_save_fromStation", URLEncoder.encode("2018-01-18", "UTF-8"));
+        request.addCookie("_jc_save_fromStation", URLEncoder.encode("2018-01-17", "UTF-8"));
         request.addCookie("_jc_save_fromStation", URLEncoder.encode("CXK,曹县", "UTF-8"));
-        request.addCookie("_jc_save_fromStation", URLEncoder.encode("2018-01-18", "UTF-8"));
+        request.addCookie("_jc_save_fromStation", URLEncoder.encode("2018-01-17", "UTF-8"));
 
         request.addHeader("Content-Type", "application/x-www-form-urlencoded; charset=utf-8");
         request.addHeader("X-Requested-With", "xmlHttpRequest");
@@ -354,6 +354,14 @@ public class HttpClientDownloaderTest {
         Downloader downloader = new HttpClientFluent();
         Response response = downloader.request(request, site);
         System.out.println(response.getRawText());
+    }
+
+    @Test
+    public void test() throws UnsupportedEncodingException, InterruptedException {
+        while (true) {
+            test_download_fluent();
+            Thread.sleep(500);
+        }
     }
 
 

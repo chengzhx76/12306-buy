@@ -1,7 +1,7 @@
 package com.github.chengzhx76.buy;
 
 import com.github.chengzhx76.buy.httper.Downloader;
-import com.github.chengzhx76.buy.httper.HttpClientFluent;
+import com.github.chengzhx76.buy.httper.fluent.HttpClientFluent;
 import com.github.chengzhx76.buy.model.Request;
 import com.github.chengzhx76.buy.model.Response;
 import com.github.chengzhx76.buy.pipeline.ConsolePipeline;
