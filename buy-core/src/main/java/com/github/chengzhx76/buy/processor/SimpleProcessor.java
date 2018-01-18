@@ -287,11 +287,16 @@ public class SimpleProcessor implements Processor {
             }
             if ("N".equals(submitOrder.getData())) {
                 LOG.info("开始订单确认");
-                request.setOperation(OperationType.END);
+                request.setOperation(OperationType.INIT_DC);
             } else {
                 LOG.info("无法确认订单");
-                request.setOperation(OperationType.END);
+                throw new RuntimeException("无法确认订单");
             }
+        } else if (OperationType.INIT_DC.equals(operation)) {
+            System.out.println("提交订单结果--> "+ response.getRawText());
+
+        } else if (OperationType.END.equals(operation)) {
+
         } else {
             System.out.println("SimpleProcessor--> ---------");
         }
