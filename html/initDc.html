@@ -1,0 +1,129 @@
+
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="/otn/resources/css/validation.css" rel="stylesheet" />
+    <link href="/otn/resources/merged/common_css.css?cssVersion=1.9045" rel="stylesheet" />
+    <link rel="icon" href="/otn/resources/images/ots/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/otn/resources/images/ots/favicon.ico" type="image/x-icon" />
+    <script>
+        /*<![CDATA[*/
+        var ctx='/otn/';
+        var globalRepeatSubmitToken = 'b73ca29c9307b5573875a64fd9b166d9';
+        var global_lang = 'zh_CN';
+        var sessionInit = '\u7A0B\u5149\u707F';
+        var isShowNotice = null;
+        var CLeftTicketUrl = null;
+        var isTestFlow = null;
+        var isMobileCheck = null;
+        var passport_appId = 'otn';
+        var passport_login = 'https://kyfw.12306.cn/passport/web/login';
+        var passport_captcha = 'https://kyfw.12306.cn/passport/captcha/captcha-image';
+        var passport_authuam = 'https://kyfw.12306.cn/passport/web/auth/uamtk';
+        var passport_captcha_check = 'https://kyfw.12306.cn/passport/captcha/captcha-check';
+        var passport_authclient = 'uamauthclient';
+        var passport_loginPage = 'login/init';
+        var passport_okPage = 'index/initMy12306';
+        var passport_proxy_captcha =  'login/init';
+        /*]]>*/
+    </script>
+    <script src="/otn/resources/merged/common_js.js?scriptVersion=1.9070" type="text/javascript"></script>
+    <!-- js i18n -->
+    <!-- jquery validation i18n -->
+    <!-- head and footer -->
+    <script src="/otn/HttpZF/GetJS" type="text/javascript"></script>
+</head>
+<body><!--header start-->
+<div class="header"><div style="z-index: 2000" class="header-bd"><a href="http://www.12306.cn/"><h1 class="logo">中国铁路客户服务中心-客运中心</h1>
+</a>
+    <div class="login-info"><div class="phone-link"><a href="/otn/appDownload/init" target="true">手机版</a>
+    </div>
+        <div class="menu"><a href="/otn/index/initMy12306" class="menu-bd" id="js-my">我的12306<b></b>
+        </a>
+            <div class="menu-list"><b></b>
+                <ul><li><a href="/otn/queryOrder/initNoComplete">未完成订单</a>
+                </li>
+                    <li><a href="/otn/queryOrder/init">已完成订单(改/退)</a>
+                    </li>
+                    <li class="line"></li>
+                    <li><a href="https://exservice.12306.cn/excater/queryMyOrder.html" target="_blank">我的餐饮•特产</a>
+                    </li>
+                    <li><a href="/otn/insurance/init">我的保险</a>
+                    </li>
+                    <li><a href="https://cx.12306.cn/tlcx/welcome.html" target="_blank">我的会员</a>
+                    </li>
+                    <li class="line"></li>
+                    <li><a href="/otn/modifyUser/initQueryUserInfo">查看个人信息</a>
+                    </li>
+                    <li><a href="/otn/userSecurity/init">账户安全</a>
+                    </li>
+                    <li class="line"></li>
+                    <li><a href="/otn/passengers/init">常用联系人</a>
+                    </li>
+                    <li><a href="/otn/address/init">车票快递地址</a>
+                    </li>
+                    <li class="line"></li>
+                    <li><a href="/otn/icentre/serviceQuery">温馨服务查询</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <span class="login-txt" style="color: #666666;"><span>意见反馈:<a class="cursor colorA" href="mailto:12306yjfk@rails.com.cn">12306yjfk@rails.com.cn</a>
+          您好，</span>
+<a id="login_user" href="/otn/index/initMy12306" class="colorA" style="margin-left:-0.5px;"><span style="width:50px;">程光灿</span>
+</a>
+| <a id="regist_out" href="/otn/login/loginOut">退出</a>
+</span>
+    </div>
+    <div class="nav"><ul><li><a href="/otn/index/init">客运首页</a>
+    </li>
+        <li id="selectYuding"><a href="/otn/leftTicket/init">车票预订</a>
+        </li>
+        <li><a href="/otn/lcQuery/init">接续换乘</a>
+        </li>
+        <li><a href="https://cx.12306.cn/tlcx/index.html" target="_blank">铁路畅行</a>
+        </li>
+        <li><a href="https://exservice.12306.cn/excater/index.html" target="_blank">餐饮•特产</a>
+        </li>
+        <li style="width: 71px;" id="js-xd" class="nav-guide"><a href="javascript:">出行向导</a>
+            <div class="nav-list"><ul style="font-weight:normal"><li><a href="/otn/queryTrainInfo/init">车次查询</a>
+            </li>
+                <li><a href="/otn/leftTicketPrice/init">票价查询</a>
+                </li>
+                <li><a href="/otn/leftTicketPrice/initPublicPrice">公布票价查询</a>
+                </li>
+                <li><a href="/otn/czxx/init">车站车次查询</a>
+                </li>
+                <li><a href="/otn/zzzcx/init">中转查询</a>
+                </li>
+                <li><a href="/otn/zwdch/init">正晚点查询</a>
+                </li>
+                <li><a href="/otn/queryAgencySellTicket/init">代售点查询</a>
+                </li>
+            </ul>
+            </div>
+        </li>
+        <li id="selectHelp"><a href="/otn/gonggao/help.html">信息服务</a>
+        </li>
+    </ul>
+    </div>
+</div>
+</div>
+<!--header end-->
+<!--主体 开始-->
+<div class="content"><div class="w-box"><div class="tit error" id="ERROR">系统忙，请稍后重试</div>
+    <p>现在是系统例行维护时间（<strong class="colorA">23:00-06:00</strong>
+        ），在此期间不受理订票和改签业务。</p>
+    <p> 在<strong class="colorA">23:00-24:00</strong>
+        期间您仍可办理未完成订单的继续支付和退票业务。</p>
+</div>
+</div>
+<!--主体 结束-->
+<!--页面底部  开始-->
+<div class="footer"><p><a href="http://www.12306.cn/mormhweb/gljd/gywm" target="true">关于我们</a>
+    |<a href="http://www.12306.cn/mormhweb/gljd/wzls/" target="true">网站声明</a>
+</p>
+    <p>版权所有 © 2008-2017 中国铁路信息技术中心 中国铁道科学研究院</p>
+    <p>京ICP备15003716号-3&nbsp;&nbsp;|&nbsp;&nbsp;京ICP证150437号</p>
+</div>
+<!--页面底部  结束-->
+</body>
+</html>

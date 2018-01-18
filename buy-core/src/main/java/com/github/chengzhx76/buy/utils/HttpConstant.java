@@ -43,19 +43,29 @@ public abstract class HttpConstant {
         public static final String CAPTCHA_IMG = "https://kyfw.12306.cn/passport/captcha/captcha-image?login_site=E&module=login&rand=sjrand";
 
         public static final String CHECK_CAPTCHA = "https://kyfw.12306.cn/passport/captcha/captcha-check";
-        //public static final String CHECK_CAPTCHA = "https://kyfw.12306.cn/otn/passcodeNew/checkRandCodeAnsyn";
 
         public static final String LOGIN = "https://kyfw.12306.cn/passport/web/login";
 
         public static final String AUTH_UAMTK = "https://kyfw.12306.cn/passport/web/auth/uamtk";
-        // https://kyfw.12306.cn/passport/web/auth/uamtk?callback=jQuery191033498948723597777_1516253656156
-        // jQuery191033498948723597777_1516253656156({"result_message":"验证通过","result_code":0,"apptk":null,"newapptk":"eQO2aJzqlEJE4QyTddHCir_EqPg32XyYAyKf3Aafc2c0"});
 
         public static final String UAM_AUTH_CLIENT = "https://kyfw.12306.cn/otn/uamauthclient";
-        // {"apptk":"eQO2aJzqlEJE4QyTddHCir_EqPg32XyYAyKf3Aafc2c0","result_code":0,"result_message":"验证通过","username":"程光灿"}
 
         public static final String SUBMIT_ORDER = "https://kyfw.12306.cn/otn/leftTicket/submitOrderRequest";
-        // {"validateMessagesShowId":"_validatorMessage","status":true,"httpstatus":200,"data":"N","messages":[],"validateMessages":{}}
+
+        public static final String INIT_DC = "https://kyfw.12306.cn/otn/confirmPassenger/initDc";
+
+        public static final String PASSENGER = "https://kyfw.12306.cn/otn/confirmPassenger/getPassengerDTOs";
+
+        public static final String CHECK_ORDER = "https://kyfw.12306.cn/otn/confirmPassenger/checkOrderInfo";
+        // {"validateMessagesShowId":"_validatorMessage","status":true,"httpstatus":200,"data":{"ifShowPassCode":"N","canChooseBeds":"N","canChooseSeats":"N","choose_Seats":"MOP9","isCanChooseMid":"N","ifShowPassCodeTime":"1","submitStatus":true,"smokeStr":""},"messages":[],"validateMessages":{}}
+
+        public static final String QUEUE_COUNT = "https://kyfw.12306.cn/otn/confirmPassenger/getQueueCount";
+
+        public static final String CONFIRM_SINGLE_FOR_QUEUE = "https://kyfw.12306.cn/otn/confirmPassenger/confirmSingleForQueue";
+
+        public static final String QUERY_ORDER_WAIT_TIME = "https://kyfw.12306.cn/otn/confirmPassenger/queryOrderWaitTime?random=1516263801759&tourFlag=dc&_json_att=&REPEAT_SUBMIT_TOKEN=f4e27709efa051cc4aa61cbbb12bcc68";
+
+        public static final String RESULT_ORDER_FOR_DC_QUEUE = "https://kyfw.12306.cn/otn/confirmPassenger/resultOrderForDcQueue";
 
         public static final String TEST = "http://127.0.0.1:9091";
     }

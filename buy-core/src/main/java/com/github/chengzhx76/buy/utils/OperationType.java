@@ -16,6 +16,13 @@ public enum OperationType {
     AUTH_UAMTK(HttpConstant.URL.AUTH_UAMTK, HttpConstant.Method.POST),
     UAM_AUTH_CLIENT(HttpConstant.URL.UAM_AUTH_CLIENT, HttpConstant.Method.POST),
     SUBMIT_ORDER(HttpConstant.URL.SUBMIT_ORDER, HttpConstant.Method.POST),
+    INIT_DC(HttpConstant.URL.INIT_DC, HttpConstant.Method.POST),
+    PASSENGER(HttpConstant.URL.PASSENGER, HttpConstant.Method.POST),
+    CHECK_ORDER(HttpConstant.URL.CHECK_ORDER, HttpConstant.Method.POST),
+    QUEUE_COUNT(HttpConstant.URL.QUEUE_COUNT, HttpConstant.Method.POST),
+    CONFIRM_SINGLE_FOR_QUEUE(HttpConstant.URL.CONFIRM_SINGLE_FOR_QUEUE, HttpConstant.Method.POST),
+    QUERY_ORDER_WAIT_TIME(HttpConstant.URL.QUERY_ORDER_WAIT_TIME, HttpConstant.Method.GET),
+    RESULT_ORDER_FOR_DC_QUEUE(HttpConstant.URL.RESULT_ORDER_FOR_DC_QUEUE, HttpConstant.Method.POST),
     TEST(HttpConstant.URL.TEST, HttpConstant.Method.GET),
 
     END("success", "success");
