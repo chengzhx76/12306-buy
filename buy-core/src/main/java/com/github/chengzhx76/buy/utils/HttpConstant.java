@@ -48,6 +48,14 @@ public abstract class HttpConstant {
         public static final String LOGIN = "https://kyfw.12306.cn/passport/web/login";
 
         public static final String AUTH_UAMTK = "https://kyfw.12306.cn/passport/web/auth/uamtk";
+        // https://kyfw.12306.cn/passport/web/auth/uamtk?callback=jQuery191033498948723597777_1516253656156
+        // jQuery191033498948723597777_1516253656156({"result_message":"验证通过","result_code":0,"apptk":null,"newapptk":"eQO2aJzqlEJE4QyTddHCir_EqPg32XyYAyKf3Aafc2c0"});
+
+        public static final String UAM_AUTH_CLIENT = "https://kyfw.12306.cn/otn/uamauthclient";
+        // {"apptk":"eQO2aJzqlEJE4QyTddHCir_EqPg32XyYAyKf3Aafc2c0","result_code":0,"result_message":"验证通过","username":"程光灿"}
+
+        public static final String SUBMIT_ORDER = "https://kyfw.12306.cn/otn/leftTicket/submitOrderRequest";
+        // {"validateMessagesShowId":"_validatorMessage","status":true,"httpstatus":200,"data":"N","messages":[],"validateMessages":{}}
 
         public static final String TEST = "http://127.0.0.1:9091";
     }

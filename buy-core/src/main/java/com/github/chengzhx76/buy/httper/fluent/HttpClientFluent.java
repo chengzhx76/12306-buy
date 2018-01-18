@@ -26,7 +26,7 @@ public class HttpClientFluent implements Downloader {
 
     private final static Logger LOG = LoggerFactory.getLogger(HttpClientFluent.class);
     private HttpClientFluentGenerator httpClientGenerator = new HttpClientFluentGenerator();
-    CookieStore cookieStore = new BasicCookieStore();
+    private CookieStore cookieStore = new BasicCookieStore();
 
     @Override
     public Response request(Request request, Site site) {
@@ -34,12 +34,13 @@ public class HttpClientFluent implements Downloader {
         Response response = null;
         Executor executor = Executor.newInstance(httpClientGenerator.getClient());
         setCookie(request);
+        deleteCookie(request, executor);
         try {
             Content content = executor.use(cookieStore)
                     .execute(
                             selectRequestMethod(request)
-                                    .userAgent(site.getUserAgent())
-                                    .setHeaders(setHeader(request))
+                            .userAgent(site.getUserAgent())
+                            .setHeaders(setHeader(request))
                     )
                     .returnContent();
             response = handleResponse(content, site, request);
@@ -51,7 +52,6 @@ public class HttpClientFluent implements Downloader {
     }
 
     private void setCookie(Request request) {
-//        CookieStore cookieStore = new BasicCookieStore();
         if (request.getCookies() != null && !request.getCookies().isEmpty()) {
             for (Map.Entry<String, String> cookieEntry : request.getCookies().entrySet()) {
                 BasicClientCookie cookie = new BasicClientCookie(cookieEntry.getKey(), cookieEntry.getValue());
@@ -60,7 +60,18 @@ public class HttpClientFluent implements Downloader {
                 cookieStore.addCookie(cookie);
             }
         }
-//        return cookieStore;
+    }
+
+    private void deleteCookie(Request request, Executor executor) {
+        if (request.isDisableCookieManagement()) {
+            executor.clearCookies();
+        }
+    }
+
+    private void getCookies(CookieStore cookieStore, Request request) {
+        for (Cookie cookie : cookieStore.getCookies()) {
+            System.out.println(cookie);
+        }
     }
 
     private Header[] setHeader(Request request) {
@@ -104,9 +115,4 @@ public class HttpClientFluent implements Downloader {
         return request;
     }
 
-    private void getCookies(CookieStore cookieStore, Request request) {
-        for (Cookie cookie : cookieStore.getCookies()) {
-            System.out.println(cookie);
-        }
-    }
 }

@@ -39,6 +39,25 @@ public class Request implements Serializable {
     public Request() {
     }
 
+    public void destroy() {
+        url = null;
+        method = null;
+//        operation = null; // 传递业务类型 不能销毁
+        requestBody = null;
+        disableCookieManagement = false;
+        sleepTime = 0L;
+        if (extras != null) {
+            extras.clear();
+        }
+        if (cookies != null) {
+            cookies.clear();
+        }
+        if (headers != null) {
+            headers.clear();
+        }
+    }
+
+
     public String getUrl() {
         return url;
     }
@@ -66,7 +85,7 @@ public class Request implements Serializable {
 
     public Request putExtra(String key, Object value) {
         if (extras == null) {
-            extras = new HashMap<String, Object>();
+            extras = new HashMap<>();
         }
         extras.put(key, value);
         return this;
@@ -78,15 +97,6 @@ public class Request implements Serializable {
 
     public Request setOperation(OperationType operation) {
         this.operation = operation;
-        return this;
-    }
-
-    public Map<String, Object> getExtras() {
-        return extras;
-    }
-
-    public Request setExtras(Map<String, Object> extras) {
-        this.extras = extras;
         return this;
     }
 

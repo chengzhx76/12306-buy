@@ -86,6 +86,7 @@ public class SimpleProcessor implements Processor {
             request.addHeader("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8");
             request.addHeader("Connection", "keep-alive");
             request.addHeader("Host", "kyfw.12306.cn");
+            request.addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
             request.addHeader("Origin", "https://kyfw.12306.cn");
             request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
             request.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36");
@@ -95,7 +96,47 @@ public class SimpleProcessor implements Processor {
             params.put("username", buyer.getUsername());
             params.put("password", buyer.getPassword());
             params.put("appid", "otn");
+            params.put("_json_att", "");
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
+        } else if (OperationType.AUTH_UAMTK.equals(operation)) {
+            request.setUrl(operation.getUrl());
+
+            request.addHeader("Accept", "application/json, text/javascript, */*; q=0.01");
+            request.addHeader("Accept-Encoding", "gzip, deflate, br");
+            request.addHeader("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8");
+            request.addHeader("Connection", "keep-alive");
+            request.addHeader("Host", "kyfw.12306.cn");
+            request.addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+            request.addHeader("Origin", "https://kyfw.12306.cn");
+            request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
+            request.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36");
+            request.addHeader("X-Requested-With", "XMLHttpRequest");
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("appid", "otn");
+            params.put("_json_att", "");
+            request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
+        } else if (OperationType.UAM_AUTH_CLIENT.equals(operation)) {
+            request.setUrl(operation.getUrl());
+
+            request.addHeader("Accept", "*/*");
+            request.addHeader("Accept-Encoding", "gzip, deflate, br");
+            request.addHeader("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8");
+            request.addHeader("Connection", "keep-alive");
+            request.addHeader("Host", "kyfw.12306.cn");
+            request.addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+            request.addHeader("Origin", "https://kyfw.12306.cn");
+            request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
+            request.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36");
+            request.addHeader("X-Requested-With", "XMLHttpRequest");
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("tk", request.getExtra("tk"));
+            params.put("_json_att", "");
+            request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
+        } else if (OperationType.SUBMIT_ORDER.equals(operation)) {
+            request.setUrl(operation.getUrl());
+
         } else {
             request.setUrl(operation.getUrl());
         }
@@ -186,9 +227,12 @@ public class SimpleProcessor implements Processor {
             if ("4".equals(validateMsg.getResult_code())) { // 验证码校验成功
                 request.setOperation(OperationType.LOGIN);
             } else if ("5".equals(validateMsg.getResult_code())) {
+                // 移除_passport_ctCookies
+                request.setDisableCookieManagement(true);
                 LOG.info("验证码校验失败,重新认证");
                 request.setOperation(OperationType.CAPTCHA_IMG);
             } else if ("7".equals(validateMsg.getResult_code())) {
+                // 移除_passport_ctCookies
                 LOG.info("验证码已经过期,重新获取");
                 request.setOperation(OperationType.CAPTCHA_IMG);
             } else if ("8".equals(validateMsg.getResult_code())) {
@@ -202,16 +246,21 @@ public class SimpleProcessor implements Processor {
             //- 校验用户名密码：
             //  - 密码输入错误：   {"result_message":"密码输入错误。如果输错次数超过4次，用户将被锁定。","result_code":1}
             //  - 用户不存在：     {"result_message":"登录名不存在。","result_code":1}
-            //  - 密码输入正确：   {"result_message":"登录成功","result_code":0,"uamtk":"tWDQtPie_z22IWMknmFOymUpDRzvLE4CfzREJBzS9NwrwL2L0"}
-
-            ValidateMsg validateMsg = parseObject(response, ValidateMsg.class);
+            //  - 密码输入正确：   {"result_message":"登录成功","result_code":0,"uamtk":"0HPOXSv6Wdr4P9Ru0TQsYtAWyadxAtVWPHKB0Qplc2c0"}
+            ValidateMsg validateMsg = null;
+            try {
+                validateMsg = parseObject(response, ValidateMsg.class);
+            } catch (Exception e) {
+                LOG.warn("登录出错 - 重新登录", e);
+                request.setOperation(OperationType.LOGIN);
+            }
             if (validateMsg == null) {
                 request.setOperation(OperationType.CHECK_USER);
             }else {
                 if ("0".equals(validateMsg.getResult_code())) {
                     System.out.println(validateMsg.getResult_message());
-                    System.out.println("登录成功---->开始下单");
-                    request.setOperation(OperationType.END);
+                    System.out.println("登录成功---->开始认证-1");
+                    request.setOperation(OperationType.AUTH_UAMTK);
                 } else if ("1".equals(validateMsg.getResult_code())) {
                     System.out.println(validateMsg.getResult_message());
                     System.out.println("登录失败---->重新登录");
@@ -220,9 +269,25 @@ public class SimpleProcessor implements Processor {
                     request.setOperation(OperationType.END);
                 }
             }
-        } else if (OperationType.END.equals(operation)) {
-            System.out.println("-----end-----");
-            response.destroy();
+        } else if (OperationType.AUTH_UAMTK.equals(operation)) {
+            System.out.println("认证-1" + "结果--> "+ response.getRawText());
+            // {"result_message":"验证通过","result_code":0,"apptk":null,"newapptk":"eQO2aJzqlEJE4QyTddHCir_EqPg32XyYAyKf3Aafc2c0"}
+
+            ValidateMsg validateMsg = null;
+            try {
+                validateMsg = parseObject(response, ValidateMsg.class);
+            } catch (Exception e) {
+                LOG.warn("认证-1出错", e);
+                throw new RuntimeException("认证-1出错");
+            }
+            request.putExtra("tk", validateMsg.getNewapptk());
+            request.setOperation(OperationType.END);
+        } else if (OperationType.UAM_AUTH_CLIENT.equals(operation)) {
+            System.out.println("认证-2" + "结果--> "+ response.getRawText());
+            request.setOperation(OperationType.END);
+        } else if (OperationType.SUBMIT_ORDER.equals(operation)) {
+            System.out.println("提交订单" + "结果--> "+ response.getRawText());
+            request.setOperation(OperationType.END);
         } else {
             System.out.println("SimpleProcessor--> ---------");
         }

@@ -14,6 +14,8 @@ public enum OperationType {
     CHECK_CAPTCHA(HttpConstant.URL.CHECK_CAPTCHA, HttpConstant.Method.POST),
     LOGIN(HttpConstant.URL.LOGIN, HttpConstant.Method.POST),
     AUTH_UAMTK(HttpConstant.URL.AUTH_UAMTK, HttpConstant.Method.POST),
+    UAM_AUTH_CLIENT(HttpConstant.URL.UAM_AUTH_CLIENT, HttpConstant.Method.POST),
+    SUBMIT_ORDER(HttpConstant.URL.SUBMIT_ORDER, HttpConstant.Method.POST),
     TEST(HttpConstant.URL.TEST, HttpConstant.Method.GET),
 
     END("success", "success");

@@ -5604,6 +5604,7 @@ var intervalTime;
         })
     };
 
+    // TODO 调用登录开始
     function S(cD, cw) {
         var cq = "";
         if ($("#dc").is(":checked")) {
@@ -6807,6 +6808,7 @@ var intervalTime;
         }
     }
 
+    // TODO 登录
     function aa(cr, cq) {
         $("#loginSubAsyn").unbind("click");
         $("#loginSubAsyn").click(function () {
@@ -6945,6 +6947,7 @@ var intervalTime;
         })
     }
 
+    // TODO 登录
     function Z() {
         var cq = false;
         $("#loginSubAsyn").unbind("click");
@@ -7666,9 +7669,12 @@ function checkG1234(g, f, c, h, b) {
     }
 }
 
-// TODO 登录开始
+// TODO 验证验证码
 function checkRandCodeUAM(e) {
-    var b = false, a = e.value, c = "sjrand", d = TouClick.get("touclick-" + e.id);
+    var b = false,
+        a = e.value,
+        c = "sjrand",
+        d = TouClick.get("touclick-" + e.id);
     $.ajax({
         url: passport_captcha_check,
         type: "post",

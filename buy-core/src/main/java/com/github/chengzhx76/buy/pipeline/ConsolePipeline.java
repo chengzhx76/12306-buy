@@ -11,12 +11,12 @@ import com.github.chengzhx76.buy.model.Response;
 public class ConsolePipeline implements Pipeline {
     @Override
     public void process(Request request, Response response) {
-        if (response.isDestroy()) {
-            return;
+        if (!response.isDestroy()) {
+            System.out.println(response.getOperation()+"\r\n" +
+                    "msg--> "+response.getRawText()+"\r\n" +
+                    "url--> "+request.getUrl()+"\r\n" +
+                    "method--> "+request.getMethod());
         }
-        System.out.println(response.getOperation()+"\r\n" +
-                "msg--> "+response.getRawText()+"\r\n" +
-                "url--> "+request.getUrl()+"\r\n" +
-                "method--> "+request.getMethod());
+        request.destroy(); // 处理完成之后把Request销毁，交给下一业务赋值
     }
 }

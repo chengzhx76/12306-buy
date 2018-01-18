@@ -26,6 +26,10 @@ public class ValidateMsg implements Serializable {
 
     private String uamtk;
 
+    private String apptk;
+
+    private String newapptk;
+
     public String getValidateMessagesShowId() {
         return validateMessagesShowId;
     }
@@ -98,6 +102,24 @@ public class ValidateMsg implements Serializable {
         this.uamtk = uamtk;
     }
 
+    public String getApptk() {
+        return apptk;
+    }
+
+    public ValidateMsg setApptk(String apptk) {
+        this.apptk = apptk;
+        return this;
+    }
+
+    public String getNewapptk() {
+        return newapptk;
+    }
+
+    public ValidateMsg setNewapptk(String newapptk) {
+        this.newapptk = newapptk;
+        return this;
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("ValidateMsg{");
@@ -110,6 +132,8 @@ public class ValidateMsg implements Serializable {
         sb.append(", result_message='").append(result_message).append('\'');
         sb.append(", result_code='").append(result_code).append('\'');
         sb.append(", uamtk='").append(uamtk).append('\'');
+        sb.append(", apptk='").append(apptk).append('\'');
+        sb.append(", newapptk='").append(newapptk).append('\'');
         sb.append('}');
         return sb.toString();
     }
