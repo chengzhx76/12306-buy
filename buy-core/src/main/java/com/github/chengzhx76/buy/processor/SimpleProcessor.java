@@ -12,10 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * @desc:
@@ -66,6 +63,8 @@ public class SimpleProcessor implements Processor {
             Map<String, Object> params = new HashMap<>();
             params.put("json_att", "");
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
+        }else if (OperationType.CAPTCHA_IMG.equals(operation)) {
+            request.setUrl(operation.getUrl()+"&"+new Random().nextDouble());
         }else if (OperationType.CHECK_CAPTCHA.equals(operation)) {
             request.setUrl(operation.getUrl());
             System.out.print("输入图片位置：");
@@ -240,7 +239,7 @@ public class SimpleProcessor implements Processor {
 
     private String getCaptchaXY(String positions) {
         StringBuilder offsetsXY = new StringBuilder();
-        String posArr[] = positions.split("\\,");
+        String posArr[] = positions.split("\\ ");
         for (String pos : posArr) {
             int offsetsX = 0;
             int offsetsY = 0;
