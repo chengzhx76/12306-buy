@@ -1,5 +1,6 @@
 package com.github.chengzhx76.buy.model;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -8,7 +9,7 @@ import java.util.Map;
  * Author: 光灿
  * Date: 2018/1/13
  */
-public class Ticket {
+public class Ticket implements Serializable {
     private String flag;
     private Map<String, String> map;
     private List<String> result;

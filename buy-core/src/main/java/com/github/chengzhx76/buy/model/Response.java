@@ -3,8 +3,9 @@ package com.github.chengzhx76.buy.model;
 import com.github.chengzhx76.buy.utils.OperationType;
 
 import java.io.IOException;
+import java.io.Serializable;
 
-public class Response {
+public class Response implements Serializable {
 
     private byte[] content;
 

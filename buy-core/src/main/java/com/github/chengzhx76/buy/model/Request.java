@@ -46,9 +46,9 @@ public class Request implements Serializable {
         requestBody = null;
         disableCookieManagement = false;
         sleepTime = 0L;
-        if (extras != null) {
-            extras.clear();
-        }
+//        if (extras != null) { // 传递安全码 不能销毁
+//            extras.clear();
+//        }
         if (cookies != null) {
             cookies.clear();
         }

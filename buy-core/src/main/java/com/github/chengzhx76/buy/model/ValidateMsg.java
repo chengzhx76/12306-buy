@@ -9,8 +9,6 @@ import java.util.List;
  * Desc:
  * Author: 光灿
  * Date: 2018/1/13
- * {"validateMessagesShowId":"_validatorMessage","status":true,
- * "httpstatus":200,"data":{"flag":false},"messages":[],"validateMessages":{}}
  */
 public class ValidateMsg implements Serializable {
 
@@ -29,6 +27,8 @@ public class ValidateMsg implements Serializable {
     private String apptk;
 
     private String newapptk;
+
+    private String username;
 
     public String getValidateMessagesShowId() {
         return validateMessagesShowId;
@@ -106,18 +106,24 @@ public class ValidateMsg implements Serializable {
         return apptk;
     }
 
-    public ValidateMsg setApptk(String apptk) {
+    public void setApptk(String apptk) {
         this.apptk = apptk;
-        return this;
     }
 
     public String getNewapptk() {
         return newapptk;
     }
 
-    public ValidateMsg setNewapptk(String newapptk) {
+    public void setNewapptk(String newapptk) {
         this.newapptk = newapptk;
-        return this;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override
@@ -134,6 +140,7 @@ public class ValidateMsg implements Serializable {
         sb.append(", uamtk='").append(uamtk).append('\'');
         sb.append(", apptk='").append(apptk).append('\'');
         sb.append(", newapptk='").append(newapptk).append('\'');
+        sb.append(", username='").append(username).append('\'');
         sb.append('}');
         return sb.toString();
     }

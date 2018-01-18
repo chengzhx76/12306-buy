@@ -3,6 +3,7 @@ package com.github.chengzhx76.buy.processor;
 import com.alibaba.fastjson.JSON;
 import com.github.chengzhx76.buy.Buyer;
 import com.github.chengzhx76.buy.model.*;
+import com.github.chengzhx76.buy.utils.EncodeUtils;
 import com.github.chengzhx76.buy.utils.FileUtils;
 import com.github.chengzhx76.buy.utils.OperationType;
 import com.github.chengzhx76.buy.utils.TicketConstant;
@@ -82,15 +83,7 @@ public class SimpleProcessor implements Processor {
             request.setUrl(operation.getUrl());
 
             request.addHeader("Accept", "application/json, text/javascript, */*; q=0.01");
-            request.addHeader("Accept-Encoding", "gzip, deflate, br");
-            request.addHeader("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8");
-            request.addHeader("Connection", "keep-alive");
-            request.addHeader("Host", "kyfw.12306.cn");
-            request.addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-            request.addHeader("Origin", "https://kyfw.12306.cn");
-            request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
-            request.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36");
-            request.addHeader("X-Requested-With", "XMLHttpRequest");
+            setHeader(request);
 
             Map<String, Object> params = new HashMap<>();
             params.put("username", buyer.getUsername());
@@ -102,15 +95,7 @@ public class SimpleProcessor implements Processor {
             request.setUrl(operation.getUrl());
 
             request.addHeader("Accept", "application/json, text/javascript, */*; q=0.01");
-            request.addHeader("Accept-Encoding", "gzip, deflate, br");
-            request.addHeader("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8");
-            request.addHeader("Connection", "keep-alive");
-            request.addHeader("Host", "kyfw.12306.cn");
-            request.addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-            request.addHeader("Origin", "https://kyfw.12306.cn");
-            request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
-            request.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36");
-            request.addHeader("X-Requested-With", "XMLHttpRequest");
+            setHeader(request);
 
             Map<String, Object> params = new HashMap<>();
             params.put("appid", "otn");
@@ -120,15 +105,7 @@ public class SimpleProcessor implements Processor {
             request.setUrl(operation.getUrl());
 
             request.addHeader("Accept", "*/*");
-            request.addHeader("Accept-Encoding", "gzip, deflate, br");
-            request.addHeader("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8");
-            request.addHeader("Connection", "keep-alive");
-            request.addHeader("Host", "kyfw.12306.cn");
-            request.addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-            request.addHeader("Origin", "https://kyfw.12306.cn");
-            request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
-            request.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36");
-            request.addHeader("X-Requested-With", "XMLHttpRequest");
+            setHeader(request);
 
             Map<String, Object> params = new HashMap<>();
             params.put("tk", request.getExtra("tk"));
@@ -137,10 +114,22 @@ public class SimpleProcessor implements Processor {
         } else if (OperationType.SUBMIT_ORDER.equals(operation)) {
             request.setUrl(operation.getUrl());
 
+            request.addHeader("Accept", "*/*");
+            setHeader(request);
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("secretStr", request.getExtra("secretStr"));
+            params.put("train_date", buyer.getStationDate());
+            params.put("back_train_date", buyer.getStationDate());
+            params.put("tour_flag", "dc");
+            params.put("purpose_codes", "ADULT");
+            params.put("query_from_station_name", buyer.getFromStation());
+            params.put("query_to_station_name", buyer.getToStation());
+            params.put("undefined:", "");
+            request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else {
             request.setUrl(operation.getUrl());
         }
-
     }
 
     @Override
@@ -189,7 +178,7 @@ public class SimpleProcessor implements Processor {
                             LOG.info("车次：" + trainNo + " 始发车站：" + buyer.getFromStation() + " 终点车站：" +
                                     buyer.getToStation() + " 席别：" + seatCn + "-" + seat + " 安全码：" + secretStr);
                             if (!"无".equals(seat)) {
-//                                request.setOperation(OperationType.END);
+                                request.putExtra("secretStr", EncodeUtils.decodeURL(secretStr));
                                 request.setOperation(OperationType.CHECK_USER);
                                 break;
                             }
@@ -197,8 +186,7 @@ public class SimpleProcessor implements Processor {
                     }
                 }
             }
-//            request.setOperation(OperationType.END);
-            request.setOperation(OperationType.CHECK_USER);
+//            request.setOperation(OperationType.CHECK_USER);
         } else if (OperationType.CHECK_USER.equals(operation)) {
             ValidateMsg validateMsg = parseObject(response, ValidateMsg.class);
             if (validateMsg.getData().getFlag()) {
@@ -253,26 +241,21 @@ public class SimpleProcessor implements Processor {
             } catch (Exception e) {
                 LOG.warn("登录出错 - 重新登录", e);
                 request.setOperation(OperationType.LOGIN);
+                return;
             }
-            if (validateMsg == null) {
-                request.setOperation(OperationType.CHECK_USER);
-            }else {
-                if ("0".equals(validateMsg.getResult_code())) {
-                    System.out.println(validateMsg.getResult_message());
-                    System.out.println("登录成功---->开始认证-1");
-                    request.setOperation(OperationType.AUTH_UAMTK);
-                } else if ("1".equals(validateMsg.getResult_code())) {
-                    System.out.println(validateMsg.getResult_message());
-                    System.out.println("登录失败---->重新登录");
-                    request.setOperation(OperationType.CAPTCHA_IMG);
-                } else { // 正常不走这里，避免死循环
-                    request.setOperation(OperationType.END);
-                }
+            if ("0".equals(validateMsg.getResult_code())) {
+                System.out.println(validateMsg.getResult_message());
+                System.out.println("登录成功---->开始认证-1");
+                request.setOperation(OperationType.AUTH_UAMTK);
+            } else if ("1".equals(validateMsg.getResult_code())) {
+                System.out.println(validateMsg.getResult_message());
+                System.out.println("登录失败---->重新登录");
+                request.setOperation(OperationType.CAPTCHA_IMG);
+            } else { // 正常不走这里，避免死循环
+                request.setOperation(OperationType.END);
             }
         } else if (OperationType.AUTH_UAMTK.equals(operation)) {
             System.out.println("认证-1" + "结果--> "+ response.getRawText());
-            // {"result_message":"验证通过","result_code":0,"apptk":null,"newapptk":"eQO2aJzqlEJE4QyTddHCir_EqPg32XyYAyKf3Aafc2c0"}
-
             ValidateMsg validateMsg = null;
             try {
                 validateMsg = parseObject(response, ValidateMsg.class);
@@ -281,13 +264,34 @@ public class SimpleProcessor implements Processor {
                 throw new RuntimeException("认证-1出错");
             }
             request.putExtra("tk", validateMsg.getNewapptk());
-            request.setOperation(OperationType.END);
+            request.setOperation(OperationType.UAM_AUTH_CLIENT);
         } else if (OperationType.UAM_AUTH_CLIENT.equals(operation)) {
             System.out.println("认证-2" + "结果--> "+ response.getRawText());
-            request.setOperation(OperationType.END);
+            ValidateMsg validateMsg = null;
+            try {
+                validateMsg = parseObject(response, ValidateMsg.class);
+            } catch (Exception e) {
+                LOG.warn("认证-2出错", e);
+                throw new RuntimeException("认证-2出错");
+            }
+            request.setOperation(OperationType.SUBMIT_ORDER);
         } else if (OperationType.SUBMIT_ORDER.equals(operation)) {
-            System.out.println("提交订单" + "结果--> "+ response.getRawText());
-            request.setOperation(OperationType.END);
+            System.out.println("提交订单结果--> "+ response.getRawText());
+
+            SubmitOrder submitOrder = null;
+            try {
+                submitOrder = parseObject(response, SubmitOrder.class);
+            } catch (Exception e) {
+                LOG.warn("提交订单出错", e);
+                throw new RuntimeException("提交订单出错");
+            }
+            if ("N".equals(submitOrder.getData())) {
+                LOG.info("开始订单确认");
+                request.setOperation(OperationType.END);
+            } else {
+                LOG.info("无法确认订单");
+                request.setOperation(OperationType.END);
+            }
         } else {
             System.out.println("SimpleProcessor--> ---------");
         }
@@ -350,6 +354,18 @@ public class SimpleProcessor implements Processor {
                     .append(",");
         }
         return offsetsXY.deleteCharAt(offsetsXY.length()-1).toString();
+    }
+
+    private void setHeader(Request request) {
+        request.addHeader("Accept-Encoding", "gzip, deflate, br");
+        request.addHeader("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8");
+        request.addHeader("Connection", "keep-alive");
+        request.addHeader("Host", "kyfw.12306.cn");
+        request.addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+        request.addHeader("Origin", "https://kyfw.12306.cn");
+        request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
+        request.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36");
+        request.addHeader("X-Requested-With", "XMLHttpRequest");
     }
 
 }
