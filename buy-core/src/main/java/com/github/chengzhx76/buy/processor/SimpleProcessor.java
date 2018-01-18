@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * @desc:
@@ -274,7 +275,12 @@ public class SimpleProcessor implements Processor {
                 LOG.warn("认证-2出错", e);
                 throw new RuntimeException("认证-2出错");
             }
-            request.setOperation(OperationType.SUBMIT_ORDER);
+            if ("0".equals(validateMsg.getResult_code())) {
+                LOG.info("认证-2成功-{}", validateMsg.getUsername());
+                request.setOperation(OperationType.SUBMIT_ORDER);
+            } else {
+                throw new RuntimeException(validateMsg.getResult_message());
+            }
         } else if (OperationType.SUBMIT_ORDER.equals(operation)) {
             System.out.println("提交订单结果--> "+ response.getRawText());
 
@@ -293,7 +299,12 @@ public class SimpleProcessor implements Processor {
                 throw new RuntimeException("无法确认订单");
             }
         } else if (OperationType.INIT_DC.equals(operation)) {
-            System.out.println("提交订单结果--> "+ response.getRawText());
+            System.out.println("获取token结果--> "+ response.getRawText());
+            String regex = "var globalRepeatSubmitToken = '(\\S+)'";
+            Pattern pattern = Pattern.compile(regex);
+            String token = pattern.matcher(response.getRawText()).group(1);
+
+
 
         } else if (OperationType.END.equals(operation)) {
 
