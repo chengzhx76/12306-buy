@@ -26,7 +26,7 @@ public class Request implements Serializable {
     /**
      * Store additional information in extras.
      */
-    private Map<String, Object> extras;
+    private Map<String, String> extras;
 
     /**
      * cookies for current url, if not set use Site's cookies
@@ -76,14 +76,14 @@ public class Request implements Serializable {
         return this;
     }
 
-    public Object getExtra(String key) {
+    public String getExtra(String key) {
         if (extras == null) {
             return null;
         }
         return extras.get(key);
     }
 
-    public Request putExtra(String key, Object value) {
+    public Request putExtra(String key, String value) {
         if (extras == null) {
             extras = new HashMap<>();
         }

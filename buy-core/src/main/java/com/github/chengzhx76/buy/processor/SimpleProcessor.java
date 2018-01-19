@@ -7,6 +7,7 @@ import com.github.chengzhx76.buy.utils.EncodeUtils;
 import com.github.chengzhx76.buy.utils.FileUtils;
 import com.github.chengzhx76.buy.utils.OperationType;
 import com.github.chengzhx76.buy.utils.TicketConstant;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,6 +85,7 @@ public class SimpleProcessor implements Processor {
             request.setUrl(operation.getUrl());
 
             request.addHeader("Accept", "application/json, text/javascript, */*; q=0.01");
+            request.addHeader("X-Requested-With", "XMLHttpRequest");
             setHeader(request);
 
             Map<String, Object> params = new HashMap<>();
@@ -96,6 +98,7 @@ public class SimpleProcessor implements Processor {
             request.setUrl(operation.getUrl());
 
             request.addHeader("Accept", "application/json, text/javascript, */*; q=0.01");
+            request.addHeader("X-Requested-With", "XMLHttpRequest");
             setHeader(request);
 
             Map<String, Object> params = new HashMap<>();
@@ -106,6 +109,7 @@ public class SimpleProcessor implements Processor {
             request.setUrl(operation.getUrl());
 
             request.addHeader("Accept", "*/*");
+            request.addHeader("X-Requested-With", "XMLHttpRequest");
             setHeader(request);
 
             Map<String, Object> params = new HashMap<>();
@@ -116,6 +120,7 @@ public class SimpleProcessor implements Processor {
             request.setUrl(operation.getUrl());
 
             request.addHeader("Accept", "*/*");
+            request.addHeader("X-Requested-With", "XMLHttpRequest");
             setHeader(request);
 
             Map<String, Object> params = new HashMap<>();
@@ -127,6 +132,17 @@ public class SimpleProcessor implements Processor {
             params.put("query_from_station_name", buyer.getFromStation());
             params.put("query_to_station_name", buyer.getToStation());
             params.put("undefined:", "");
+            request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
+        } else if (OperationType.INIT_DC.equals(operation)) {
+            request.setUrl(operation.getUrl());
+            request.addCookie("tk", request.getExtra("tk"));
+
+            request.addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
+            request.addHeader("Cache-Control", "max-age=0");
+            request.addHeader("Upgrade-Insecure-Requests", "1");
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("_json_att", "");
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else {
             request.setUrl(operation.getUrl());
@@ -291,21 +307,29 @@ public class SimpleProcessor implements Processor {
                 LOG.warn("提交订单出错", e);
                 throw new RuntimeException("提交订单出错");
             }
-            if ("N".equals(submitOrder.getData())) {
-                LOG.info("开始订单确认");
+            if (submitOrder.getStatus()) {
+                if ("N".equals(submitOrder.getData())) {
+                    LOG.info("开始订单确认");
+                } else if ("Y".equals(submitOrder.getData())){
+                    LOG.info("您选择的列车距开车时间很近了，请确保有足够的时间抵达车站。");
+                }
                 request.setOperation(OperationType.INIT_DC);
-            } else {
+            }else {
                 LOG.info("无法确认订单");
                 throw new RuntimeException("无法确认订单");
             }
+
         } else if (OperationType.INIT_DC.equals(operation)) {
             System.out.println("获取token结果--> "+ response.getRawText());
             String regex = "var globalRepeatSubmitToken = '(\\S+)'";
             Pattern pattern = Pattern.compile(regex);
             String token = pattern.matcher(response.getRawText()).group(1);
-
-
-
+            if (StringUtils.isNotBlank(token)) {
+                request.putExtra("token", token);
+                request.setOperation(OperationType.PASSENGER);
+            } else {
+                request.setOperation(OperationType.INIT_DC);
+            }
         } else if (OperationType.END.equals(operation)) {
 
         } else {
@@ -381,7 +405,6 @@ public class SimpleProcessor implements Processor {
         request.addHeader("Origin", "https://kyfw.12306.cn");
         request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
         request.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36");
-        request.addHeader("X-Requested-With", "XMLHttpRequest");
     }
 
 }
