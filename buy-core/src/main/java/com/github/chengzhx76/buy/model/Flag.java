@@ -1,4 +1,4 @@
-package com.github.chengzhx76.buy.utils;
+package com.github.chengzhx76.buy.model;
 
 import java.io.Serializable;
 

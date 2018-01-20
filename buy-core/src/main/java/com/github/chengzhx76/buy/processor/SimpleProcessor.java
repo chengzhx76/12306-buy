@@ -3,10 +3,7 @@ package com.github.chengzhx76.buy.processor;
 import com.alibaba.fastjson.JSON;
 import com.github.chengzhx76.buy.Buyer;
 import com.github.chengzhx76.buy.model.*;
-import com.github.chengzhx76.buy.utils.EncodeUtils;
-import com.github.chengzhx76.buy.utils.FileUtils;
-import com.github.chengzhx76.buy.utils.OperationType;
-import com.github.chengzhx76.buy.utils.TicketConstant;
+import com.github.chengzhx76.buy.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +12,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -144,6 +142,16 @@ public class SimpleProcessor implements Processor {
             Map<String, Object> params = new HashMap<>();
             params.put("_json_att", "");
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
+        } else if (OperationType.PASSENGER.equals(operation)){
+            request.setUrl(operation.getUrl());
+
+            request.addHeader("Accept", "*/*");
+            request.addHeader("X-Requested-With", "XMLHttpRequest");
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("REPEAT_SUBMIT_TOKEN", request.getExtra("token"));
+            params.put("_json_att", "");
+            request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else {
             request.setUrl(operation.getUrl());
         }
@@ -154,8 +162,8 @@ public class SimpleProcessor implements Processor {
         OperationType operation = response.getOperation();
         if (OperationType.LOG.equals(operation)) {
 
-            ValidateMsg validateMsg = parseObject(response, ValidateMsg.class);
-            if (validateMsg.getStatus()) {
+            ValidateMsg<String> validateMsg = parseObject(response, ValidateMsg.class);
+            if (validateMsg.getStatus() || validateMsg.getData().equals("1")) {
                 request.setSleepTime(0L);
                 request.setOperation(OperationType.QUERY);
             } else {
@@ -163,9 +171,19 @@ public class SimpleProcessor implements Processor {
             }
 
         } else if (OperationType.QUERY.equals(operation)) {
-            Query query = null;
+            /*Query query = null;
             try {
                 query = parseObject(response, Query.class);
+            }catch (Exception e) {
+                request.setOperation(OperationType.QUERY);
+                LOG.warn("解析JSON出错{}", e.getMessage());
+                return;
+            }*/
+
+
+            ValidateMsg<Ticket> query = null;
+            try {
+                query = parseObject(response, ValidateMsg.class);
             }catch (Exception e) {
                 request.setOperation(OperationType.QUERY);
                 LOG.warn("解析JSON出错{}", e.getMessage());
@@ -205,7 +223,7 @@ public class SimpleProcessor implements Processor {
             }
 //            request.setOperation(OperationType.CHECK_USER);
         } else if (OperationType.CHECK_USER.equals(operation)) {
-            ValidateMsg validateMsg = parseObject(response, ValidateMsg.class);
+            ValidateMsg<Flag> validateMsg = parseObject(response, ValidateMsg.class);
             if (validateMsg.getData().getFlag()) {
                 System.out.println("----------开始尝试下单-------------");
             } else {
@@ -228,7 +246,7 @@ public class SimpleProcessor implements Processor {
             //  - 携带cookie并且点击正确： {"result_message":"验证码校验成功","result_code":"4"}
             //  - 停留时间过长：           {"result_message":"验证码已经过期","result_code":"7"}
 
-            ValidateMsg validateMsg = parseObject(response, ValidateMsg.class);
+            ValidateMsg<String> validateMsg = parseObject(response, ValidateMsg.class);
             if ("4".equals(validateMsg.getResult_code())) { // 验证码校验成功
                 request.setOperation(OperationType.LOGIN);
             } else if ("5".equals(validateMsg.getResult_code())) {
@@ -252,7 +270,7 @@ public class SimpleProcessor implements Processor {
             //  - 密码输入错误：   {"result_message":"密码输入错误。如果输错次数超过4次，用户将被锁定。","result_code":1}
             //  - 用户不存在：     {"result_message":"登录名不存在。","result_code":1}
             //  - 密码输入正确：   {"result_message":"登录成功","result_code":0,"uamtk":"0HPOXSv6Wdr4P9Ru0TQsYtAWyadxAtVWPHKB0Qplc2c0"}
-            ValidateMsg validateMsg = null;
+            ValidateMsg<String> validateMsg = null;
             try {
                 validateMsg = parseObject(response, ValidateMsg.class);
             } catch (Exception e) {
@@ -273,7 +291,7 @@ public class SimpleProcessor implements Processor {
             }
         } else if (OperationType.AUTH_UAMTK.equals(operation)) {
             System.out.println("认证-1" + "结果--> "+ response.getRawText());
-            ValidateMsg validateMsg = null;
+            ValidateMsg<String> validateMsg = null;
             try {
                 validateMsg = parseObject(response, ValidateMsg.class);
             } catch (Exception e) {
@@ -284,7 +302,7 @@ public class SimpleProcessor implements Processor {
             request.setOperation(OperationType.UAM_AUTH_CLIENT);
         } else if (OperationType.UAM_AUTH_CLIENT.equals(operation)) {
             System.out.println("认证-2" + "结果--> "+ response.getRawText());
-            ValidateMsg validateMsg = null;
+            ValidateMsg<String> validateMsg = null;
             try {
                 validateMsg = parseObject(response, ValidateMsg.class);
             } catch (Exception e) {
@@ -300,9 +318,9 @@ public class SimpleProcessor implements Processor {
         } else if (OperationType.SUBMIT_ORDER.equals(operation)) {
             System.out.println("提交订单结果--> "+ response.getRawText());
 
-            SubmitOrder submitOrder = null;
+            ValidateMsg<String> submitOrder = null;
             try {
-                submitOrder = parseObject(response, SubmitOrder.class);
+                submitOrder = parseObject(response, ValidateMsg.class);
             } catch (Exception e) {
                 LOG.warn("提交订单出错", e);
                 throw new RuntimeException("提交订单出错");
@@ -323,16 +341,24 @@ public class SimpleProcessor implements Processor {
             System.out.println("获取token结果--> "+ response.getRawText());
             String regex = "var globalRepeatSubmitToken = '(\\S+)'";
             Pattern pattern = Pattern.compile(regex);
-            String token = pattern.matcher(response.getRawText()).group(1);
+            Matcher matcher = pattern.matcher(response.getRawText());
+            String token = "";
+            if (matcher.find()) {
+                token = matcher.group(1);
+            }else {
+                LOG.warn("未查找到TOKEN");
+            }
             if (StringUtils.isNotBlank(token)) {
                 request.putExtra("token", token);
                 request.setOperation(OperationType.PASSENGER);
             } else {
                 request.setOperation(OperationType.INIT_DC);
             }
+        } else if (OperationType.PASSENGER.equals(operation)) {
+
         } else if (OperationType.END.equals(operation)) {
 
-        } else {
+        }  else {
             System.out.println("SimpleProcessor--> ---------");
         }
     }

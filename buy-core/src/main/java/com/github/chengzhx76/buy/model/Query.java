@@ -7,6 +7,7 @@ import java.io.Serializable;
  * Author: 光灿
  * Date: 2018/1/13
  */
+@Deprecated
 public class Query implements Serializable {
     private Ticket data;
     private Integer httpstatus;

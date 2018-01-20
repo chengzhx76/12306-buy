@@ -8,6 +8,7 @@ import java.util.List;
  * @author: hp
  * @date: 2018/1/18
  */
+@Deprecated
 public class SubmitOrder implements Serializable {
 
     private String validateMessagesShowId;
