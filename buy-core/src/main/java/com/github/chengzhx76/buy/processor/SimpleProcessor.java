@@ -24,6 +24,8 @@ public class SimpleProcessor implements Processor {
 
     private final static Logger LOG = LoggerFactory.getLogger(SimpleProcessor.class);
 
+    List<Passenger> passengers = null;
+
 
     @Override
     public void preHandle(Buyer buyer, Request request) {
@@ -355,6 +357,10 @@ public class SimpleProcessor implements Processor {
                 request.setOperation(OperationType.INIT_DC);
             }
         } else if (OperationType.PASSENGER.equals(operation)) {
+            ValidateMsg<Passengers> passengers = parseObject(response, ValidateMsg.class);
+            this.passengers = passengers.getData().getNormal_passengers();
+
+
 
         } else if (OperationType.END.equals(operation)) {
 
@@ -420,6 +426,46 @@ public class SimpleProcessor implements Processor {
                     .append(",");
         }
         return offsetsXY.deleteCharAt(offsetsXY.length()-1).toString();
+    }
+
+    private String getSeatType(String seatCn) {
+        String seatType = "";
+        if ("一等座".equals(seatCn)) {
+            seatType = "M";
+        } else if ("特等座".equals(seatCn)) {
+            seatType = "P";
+        } else if ("二等座".equals(seatCn)) {
+            seatType = "O";
+        } else if ("商务座".equals(seatCn)) {
+            seatType = "9";
+        } else if ("硬座".equals(seatCn) || "无座".equals(seatCn)) {
+            seatType = "1";
+        } else if ("软卧".equals(seatCn)) {
+            seatType = "4";
+        } else if ("硬卧".equals(seatCn)) {
+            seatType = "3";
+        }
+        return seatType;
+    }
+
+    private String passengerTicketStr(Buyer buyer) {
+        StringBuilder passengerTicket = new StringBuilder();
+        Passenger passenger = getPassenger(buyer.getFromStation())
+        String seatType = getSeatType(buyer.getSetType().get(0));
+        passengerTicket.append(seatType).append("0").append()
+
+
+
+        return "座位编号,0,票类型,乘客名,证件类型,证件号,手机号码,保存常用联系人(Y或N)";
+    }
+
+    private Passenger getPassenger(String passengerName) {
+        for (Passenger passenger : passengers) {
+            if (passengerName.equals(passenger.getPassenger_name())) {
+
+            }
+        }
+
     }
 
     private void setHeader(Request request) {
