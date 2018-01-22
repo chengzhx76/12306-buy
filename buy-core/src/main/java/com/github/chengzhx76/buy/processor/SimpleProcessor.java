@@ -190,6 +190,29 @@ public class SimpleProcessor implements Processor {
             params.put("_json_att", "");
             params.put("REPEAT_SUBMIT_TOKEN", request.getExtra("token"));
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
+        } else if (OperationType.QUEUE_COUNT.equals(operation)){
+            request.setUrl(operation.getUrl());
+
+            request.addHeader("Accept", "application/json, text/javascript, */*; q=0.01");
+            request.addHeader("X-Requested-With", "XMLHttpRequest");
+            request.addHeader("Referer", "https://kyfw.12306.cn/otn/confirmPassenger/initDc");
+            setHeader(request);
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("train_date", "2");
+            params.put("train_no", "2");
+            params.put("stationTrainCode", "2");
+            params.put("seatType", "2");
+            params.put("fromStationTelecode", "2");
+            params.put("toStationTelecode", "2");
+            params.put("leftTicket", "2");
+            params.put("purpose_codes", "2");
+            params.put("train_location", "2");
+            params.put("_json_att", "2");
+            params.put("REPEAT_SUBMIT_TOKEN", request.getExtra("token"));
+
+
+
         } else {
             request.setUrl(operation.getUrl());
         }
@@ -367,21 +390,47 @@ public class SimpleProcessor implements Processor {
 
         } else if (OperationType.INIT_DC.equals(operation)) {
             System.out.println("获取token结果--> "+ response.getRawText());
-            String regex = "var globalRepeatSubmitToken = '(\\S+)'";
-            Pattern pattern = Pattern.compile(regex);
-            Matcher matcher = pattern.matcher(response.getRawText());
+            String tokenRegex = "var globalRepeatSubmitToken = '(\\S+)'";
+            Pattern tokenPattern = Pattern.compile(tokenRegex);
+            Matcher tokenMatcher = tokenPattern.matcher(response.getRawText());
             String token = "";
-            if (matcher.find()) {
-                token = matcher.group(1);
+            if (tokenMatcher.find()) {
+                token = tokenMatcher.group(1);
             }else {
                 LOG.warn("未查找到TOKEN");
             }
+
+            String ticketInfoForPassengerFormRegex = "var ticketInfoForPassengerForm=(\\{.+\\})?";
+            Pattern ticketInfoForPassengerFormPattern = Pattern.compile(ticketInfoForPassengerFormRegex);
+            Matcher ticketInfoForPassengerFormMatcher = ticketInfoForPassengerFormPattern.matcher(response.getRawText());
+
+            String ticketInfoForPassenger = "";
+            if (ticketInfoForPassengerFormMatcher.find()) {
+                ticketInfoForPassenger = ticketInfoForPassengerFormMatcher.group();
+            }else {
+                LOG.warn("未查找到乘客信息");
+            }
+
+            String orderRequestParamsRegex = "var ticketInfoForPassengerForm=(\\{.+\\})?";
+            Pattern orderRequestParamsPattern = Pattern.compile(orderRequestParamsRegex);
+            Matcher orderRequestParamsMatcher = orderRequestParamsPattern.matcher(response.getRawText());
+
+            String orderRequestParams = "";
+            if (orderRequestParamsMatcher.find()) {
+                orderRequestParams = orderRequestParamsMatcher.group();
+            }else {
+                LOG.warn("未查找到参数信息");
+            }
+
             if (StringUtils.isNotBlank(token)) {
                 request.putExtra("token", token);
+                request.putExtra("ticketInfoForPassenger", ticketInfoForPassenger);
+                request.putExtra("orderRequestParams", orderRequestParams);
                 request.setOperation(OperationType.PASSENGER);
             } else {
                 request.setOperation(OperationType.INIT_DC);
             }
+
         } else if (OperationType.PASSENGER.equals(operation)) {
             ValidateMsg<Passengers> passengers = parseObject(response, ValidateMsg.class);
             this.passengers = passengers.getData().getNormal_passengers();
@@ -390,6 +439,14 @@ public class SimpleProcessor implements Processor {
             ValidateMsg<CheckOrder> checkOrder = parseObject(response, ValidateMsg.class);
             if (!checkOrder.getStatus()) {
                 throw new RuntimeException("失败");
+            }
+            if (StringUtils.isNotBlank(checkOrder.getData().getIfShowPassCode())
+                    && "Y".equals(checkOrder.getData().getIfShowPassCode())) {
+                // TODO 验证码实现
+                throw new RuntimeException("需要验证码");
+            }
+            if (checkOrder.getData().getSubmitStatus()) {
+                System.out.println("车票提交通过，正在尝试排队");
             }
         } else if (OperationType.END.equals(operation)) {
 
