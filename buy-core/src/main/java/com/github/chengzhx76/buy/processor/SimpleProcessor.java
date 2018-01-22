@@ -450,11 +450,21 @@ public class SimpleProcessor implements Processor {
 
     private String passengerTicketStr(Buyer buyer) {
         StringBuilder passengerTicket = new StringBuilder();
-        Passenger passenger = getPassenger(buyer.getFromStation())
-        String seatType = getSeatType(buyer.getSetType().get(0));
-        passengerTicket.append(seatType).append("0").append()
-
-
+        for (String ticketPeople : buyer.getTickePeoples()) {
+            String seatType = getSeatType(buyer.getSetType().get(0));
+            Passenger passenger = getPassenger(ticketPeople);
+            if (passenger == null) {
+                throw new RuntimeException("没查到该乘客");
+            }
+            passengerTicket.append(seatType)
+                    .append("0")
+                    .append(passenger.getPassenger_type())
+                    .append(passenger.getPassenger_name())
+                    .append(passenger.getPassenger_id_type_code())
+                    .append(passenger.getPassenger_id_no())
+                    .append(passenger.getMobile_no())
+                    .append("N");
+        }
 
         return "座位编号,0,票类型,乘客名,证件类型,证件号,手机号码,保存常用联系人(Y或N)";
     }
@@ -462,10 +472,10 @@ public class SimpleProcessor implements Processor {
     private Passenger getPassenger(String passengerName) {
         for (Passenger passenger : passengers) {
             if (passengerName.equals(passenger.getPassenger_name())) {
-
+                return passenger;
             }
         }
-
+        return null;
     }
 
     private void setHeader(Request request) {

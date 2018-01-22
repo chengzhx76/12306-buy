@@ -40,6 +40,8 @@ public class Buyer {
     private String toStation;
     /** 席别 **/
     private List<String> setType;
+    /** 乘客 **/
+    private List<String> tickePeoples;
     /** 12306帐号 **/
     private String username;
     /** 12306密码 **/
@@ -126,6 +128,22 @@ public class Buyer {
             }
         }
 
+        return this;
+    }
+
+    public List<String> getTickePeoples() {
+        return tickePeoples;
+    }
+
+    public Buyer setTickePeoples(String tickePeoples) {
+        if (StringUtils.contains(tickePeoples, ",")) {
+            this.tickePeoples = Arrays.asList(StringUtils.split(tickePeoples, ","));
+        }
+        if (CollectionUtils.isEmpty(getSetType())) {
+            if (StringUtils.contains(tickePeoples, "|")) {
+                this.tickePeoples = Arrays.asList(StringUtils.split(tickePeoples, "|"));
+            }
+        }
         return this;
     }
 
@@ -340,6 +358,25 @@ public class Buyer {
                 throw new RuntimeException("席别不能为空");
             }
         }
+
+        if (CollectionUtils.isEmpty(getTickePeoples())) {
+            String tickePeoples = properties.getProperty("tickePeoples");
+            if (StringUtils.contains(tickePeoples, ",")) {
+                this.tickePeoples = Arrays.asList(StringUtils.split(tickePeoples, ","));
+            }
+            if (CollectionUtils.isEmpty(getStationTrains())) {
+                if (StringUtils.contains(tickePeoples, "|")) {
+                    this.tickePeoples = Arrays.asList(StringUtils.split(tickePeoples, "|"));
+                }else {
+                    this.tickePeoples = new ArrayList<>();
+                    this.tickePeoples.add(tickePeoples);
+                }
+            }
+            if (CollectionUtils.isEmpty(getTickePeoples())) {
+                throw new RuntimeException("乘客不能为空");
+            }
+        }
+
         if (StringUtils.isBlank(getUsername())) {
             username = properties.getProperty("username");
             if (StringUtils.isBlank(username)) {
