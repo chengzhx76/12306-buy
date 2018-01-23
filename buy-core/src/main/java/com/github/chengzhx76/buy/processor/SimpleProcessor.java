@@ -546,7 +546,7 @@ public class SimpleProcessor implements Processor {
             JSONObject data = queryOrder.getJSONObject("data");
             if (queryOrder.getBoolean("status")) {
                 if (data.getBoolean("submitStatus")) {
-                    System.out.println("----订票流程结束----");
+                    System.out.println("----");
                 }
             }
             request.setOperation(OperationType.END);
