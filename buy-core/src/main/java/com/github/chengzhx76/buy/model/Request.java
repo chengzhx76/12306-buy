@@ -46,7 +46,7 @@ public class Request implements Serializable {
         requestBody = null;
         disableCookieManagement = false;
         sleepTime = 0L;
-//        if (extras != null) { // 传递安全码 不能销毁
+//        if (extras != null) { // 传递信息 不能销毁
 //            extras.clear();
 //        }
         if (cookies != null) {
@@ -107,6 +107,11 @@ public class Request implements Serializable {
 
     public Request addHeader(String name, String value) {
         headers.put(name, value);
+        return this;
+    }
+
+    public Request setHeaders(Map<String, String> headers) {
+        this.headers = headers;
         return this;
     }
 

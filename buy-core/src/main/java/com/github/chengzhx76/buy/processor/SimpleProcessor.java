@@ -32,19 +32,14 @@ public class SimpleProcessor implements Processor {
     public void preHandle(Buyer buyer, Request request) {
         OperationType operation = request.getOperation();
         request.setMethod(operation.getMethod());
+        request.setHeaders(operation.getHeader());
+
         if (OperationType.LOG.equals(operation) ||
                 OperationType.QUERY.equals(operation)) {
             request.setUrl(operation.getUrl()
                     .replace("{TRAINDATE}", buyer.getStationDate())
                     .replace("{FROMSTATION}", buyer.getFromStationCode())
                     .replace("{TOSTATION}", buyer.getToStationCode()));
-
-            request.addHeader("Accept", "*/*");
-            request.addHeader("Cache-Control", "no-cache");
-            request.addHeader("If-Modified-Since", "0");
-            request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
-            request.addHeader("X-Requested-With", "XMLHttpRequest");
-            setHeader(request);
 
             if (OperationType.QUERY.equals(operation)) {
                 try {
@@ -61,25 +56,13 @@ public class SimpleProcessor implements Processor {
         }else if (OperationType.CHECK_USER.equals(operation)) {
             request.setUrl(operation.getUrl());
 
-            request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
-            setHeader(request);
-
             Map<String, Object> params = new HashMap<>();
             params.put("json_att", "");
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else if (OperationType.CAPTCHA_IMG.equals(operation)) {
             request.setUrl(operation.getUrl()+"&"+new Random().nextDouble());
-
-            request.addHeader("Accept", "image/webp,image/apng,image/*,*/*;q=0.8");
-            request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
-            setHeader(request);
         } else if (OperationType.CHECK_CAPTCHA.equals(operation)) {
             request.setUrl(operation.getUrl());
-
-            request.addHeader("Accept", "application/json, text/javascript, */*; q=0.01");
-            request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
-            request.addHeader("X-Requested-With", "XMLHttpRequest");
-            setHeader(request);
 
             System.out.print("输入图片位置：");
             Scanner scan = new Scanner(System.in);
@@ -93,11 +76,6 @@ public class SimpleProcessor implements Processor {
         }else if (OperationType.LOGIN.equals(operation)){
             request.setUrl(operation.getUrl());
 
-            request.addHeader("Accept", "application/json, text/javascript, */*; q=0.01");
-            request.addHeader("X-Requested-With", "XMLHttpRequest");
-            request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
-            setHeader(request);
-
             Map<String, Object> params = new HashMap<>();
             params.put("username", buyer.getUsername());
             params.put("password", buyer.getPassword());
@@ -107,11 +85,6 @@ public class SimpleProcessor implements Processor {
         } else if (OperationType.AUTH_UAMTK.equals(operation)) {
             request.setUrl(operation.getUrl());
 
-            request.addHeader("Accept", "application/json, text/javascript, */*; q=0.01");
-            request.addHeader("X-Requested-With", "XMLHttpRequest");
-            request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
-            setHeader(request);
-
             Map<String, Object> params = new HashMap<>();
             params.put("appid", "otn");
             params.put("_json_att", "");
@@ -119,22 +92,12 @@ public class SimpleProcessor implements Processor {
         } else if (OperationType.UAM_AUTH_CLIENT.equals(operation)) {
             request.setUrl(operation.getUrl());
 
-            request.addHeader("Accept", "*/*");
-            request.addHeader("X-Requested-With", "XMLHttpRequest");
-            request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
-            setHeader(request);
-
             Map<String, Object> params = new HashMap<>();
             params.put("tk", request.getExtra("tk"));
             params.put("_json_att", "");
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else if (OperationType.SUBMIT_ORDER.equals(operation)) {
             request.setUrl(operation.getUrl());
-
-            request.addHeader("Accept", "*/*");
-            request.addHeader("X-Requested-With", "XMLHttpRequest");
-            request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
-            setHeader(request);
 
             Map<String, Object> params = new HashMap<>();
             params.put("secretStr", request.getExtra("secretStr"));
@@ -150,22 +113,11 @@ public class SimpleProcessor implements Processor {
             request.setUrl(operation.getUrl());
             request.addCookie("tk", request.getExtra("tk"));
 
-            request.addHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
-            request.addHeader("Cache-Control", "max-age=0");
-            request.addHeader("Upgrade-Insecure-Requests", "1");
-            request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
-            setHeader(request);
-
             Map<String, Object> params = new HashMap<>();
             params.put("_json_att", "");
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else if (OperationType.PASSENGER.equals(operation)){
             request.setUrl(operation.getUrl());
-
-            request.addHeader("Accept", "*/*");
-            request.addHeader("X-Requested-With", "XMLHttpRequest");
-            request.addHeader("Referer", "https://kyfw.12306.cn/otn/confirmPassenger/initDc");
-            setHeader(request);
 
             Map<String, Object> params = new HashMap<>();
             params.put("REPEAT_SUBMIT_TOKEN", request.getExtra("token"));
@@ -173,11 +125,6 @@ public class SimpleProcessor implements Processor {
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else if (OperationType.CHECK_ORDER.equals(operation)){
             request.setUrl(operation.getUrl());
-
-            request.addHeader("Accept", "application/json, text/javascript, */*; q=0.01");
-            request.addHeader("X-Requested-With", "XMLHttpRequest");
-            request.addHeader("Referer", "https://kyfw.12306.cn/otn/confirmPassenger/initDc");
-            setHeader(request);
 
             Map<String, Object> params = new HashMap<>();
             params.put("cancel_flag", "2");
@@ -193,11 +140,6 @@ public class SimpleProcessor implements Processor {
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else if (OperationType.QUEUE_COUNT.equals(operation)){
             request.setUrl(operation.getUrl());
-
-            request.addHeader("Accept", "application/json, text/javascript, */*; q=0.01");
-            request.addHeader("X-Requested-With", "XMLHttpRequest");
-            request.addHeader("Referer", "https://kyfw.12306.cn/otn/confirmPassenger/initDc");
-            setHeader(request);
 
             Map<String, Object> params = new HashMap<>();
             String token = request.getExtra("token");
@@ -231,11 +173,6 @@ public class SimpleProcessor implements Processor {
         } else if (OperationType.CONFIRM_SINGLE_FOR_QUEUE.equals(operation)) {
             request.setUrl(operation.getUrl());
 
-            request.addHeader("Accept", "application/json, text/javascript, */*; q=0.01");
-            request.addHeader("Referer", "https://kyfw.12306.cn/otn/confirmPassenger/initDc");
-            request.addHeader("X-Requested-With", "XMLHttpRequest");
-            setHeader(request);
-
             Map<String, Object> params = new HashMap<>();
 
             String token = request.getExtra("token");
@@ -260,17 +197,7 @@ public class SimpleProcessor implements Processor {
                     .replace("{RANDOM}", System.currentTimeMillis()+"")
                     .replace("{TOURFLAG}", "dc")
                     .replace("{REPEAT_SUBMIT_TOKEN}", request.getExtra("token")));
-
-            request.addHeader("Accept", "application/json, text/javascript, */*; q=0.01");
-            request.addHeader("Referer", "https://kyfw.12306.cn/otn/confirmPassenger/initDc");
-            request.addHeader("X-Requested-With", "XMLHttpRequest");
-            setHeader(request);
         } else if (OperationType.RESULT_ORDER_FOR_DC_QUEUE.equals(operation)) {
-            request.addHeader("Accept", "application/json, text/javascript, */*; q=0.01");
-            request.addHeader("Referer", "https://kyfw.12306.cn/otn/confirmPassenger/initDc");
-            request.addHeader("X-Requested-With", "XMLHttpRequest");
-            setHeader(request);
-
             Map<String, Object> params = new HashMap<>();
 
             String token = request.getExtra("token");
