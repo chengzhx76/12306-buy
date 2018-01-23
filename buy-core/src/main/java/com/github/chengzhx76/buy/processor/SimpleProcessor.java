@@ -27,7 +27,6 @@ public class SimpleProcessor implements Processor {
 
     List<Passenger> passengers = null;
 
-
     @Override
     public void preHandle(Buyer buyer, Request request) {
         OperationType operation = request.getOperation();
@@ -53,7 +52,7 @@ public class SimpleProcessor implements Processor {
                     throw new RuntimeException("编码失败");
                 }
             }
-        }else if (OperationType.CHECK_USER.equals(operation)) {
+        } else if (OperationType.CHECK_USER.equals(operation)) {
             request.setUrl(operation.getUrl());
 
             Map<String, Object> params = new HashMap<>();
@@ -266,7 +265,6 @@ public class SimpleProcessor implements Processor {
                     }
                 }
             }
-//            request.setOperation(OperationType.CHECK_USER);
         } else if (OperationType.CHECK_USER.equals(operation)) {
             ValidateMsg<Flag> validateMsg = parseObject(response, ValidateMsg.class);
             if (validateMsg.getData().getFlag()) {
@@ -492,7 +490,13 @@ public class SimpleProcessor implements Processor {
     }
 
     private JSONObject parse(String text) {
-        return JSON.parseObject(text);
+        JSONObject msg = parse(text);
+        Boolean status = msg.getBoolean("status");
+        if (status == null || !status) {
+            LOG.warn("请求失败 Response {}", text);
+            throw new RuntimeException(text);
+        }
+        return msg.getJSONObject("data");
     }
 
     private String getCaptchaXY(String positions) {
@@ -610,9 +614,6 @@ public class SimpleProcessor implements Processor {
         return oldPassenger.toString();
     }
 
-
-
-
     private Passenger getPassenger(String passengerName) {
         for (Passenger passenger : passengers) {
             if (passengerName.equals(passenger.getPassenger_name())) {
@@ -620,16 +621,6 @@ public class SimpleProcessor implements Processor {
             }
         }
         return null;
-    }
-
-    private void setHeader(Request request) {
-        request.addHeader("Accept-Encoding", "gzip, deflate, br");
-        request.addHeader("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8");
-        request.addHeader("Connection", "keep-alive");
-        request.addHeader("Host", "kyfw.12306.cn");
-        request.addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-        request.addHeader("Origin", "https://kyfw.12306.cn");
-        request.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36");
     }
 
 }
