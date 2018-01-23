@@ -63,7 +63,7 @@ public abstract class HttpConstant {
 
         public static final String CONFIRM_SINGLE_FOR_QUEUE = "https://kyfw.12306.cn/otn/confirmPassenger/confirmSingleForQueue";
 
-        public static final String QUERY_ORDER_WAIT_TIME = "https://kyfw.12306.cn/otn/confirmPassenger/queryOrderWaitTime?random=1516263801759&tourFlag=dc&_json_att=&REPEAT_SUBMIT_TOKEN=f4e27709efa051cc4aa61cbbb12bcc68";
+        public static final String QUERY_ORDER_WAIT_TIME = "https://kyfw.12306.cn/otn/confirmPassenger/queryOrderWaitTime?random={RANDOM}&tourFlag={TOURFLAG}&_json_att=&REPEAT_SUBMIT_TOKEN={REPEAT_SUBMIT_TOKEN}";
 
         public static final String RESULT_ORDER_FOR_DC_QUEUE = "https://kyfw.12306.cn/otn/confirmPassenger/resultOrderForDcQueue";
 

@@ -1,0 +1,858 @@
+1.#################################################################################################
+General
+  Request URL:https://kyfw.12306.cn/otn/leftTicket/queryZ?leftTicketDTO.train_date=2018-01-23&leftTicketDTO.from_station=BJP&leftTicketDTO.to_station=CXK&purpose_codes=ADULT
+  Request Method:GET
+  Status Code:200 OK
+  Remote Address:42.81.28.75:443
+  Referrer Policy:no-referrer-when-downgrade
+
+Response Headers
+  Age:1
+  center:a3
+  Connection:keep-alive
+  Content-Length:610
+  Content-Type:application/json;charset=UTF-8
+  Date:Tue, 23 Jan 2018 07:43:22 GMT
+  X-Cdn-Src-Port:32371
+  X-Via:1.1 gdx57:6 (Cdn Cache Server V2.0)
+
+Rquest Headers
+  Accept:*/*
+  Accept-Encoding:gzip, deflate, br
+  Accept-Language:zh-CN,zh;q=0.9,en;q=0.8
+  Cache-Control:no-cache
+  Connection:keep-alive
+  Cookie:JSESSIONID=EEF69DCABEB534EFF32D2886143E2AB9; _jc_save_fromStation=%u5317%u4EAC%2CBJP; _jc_save_wfdc_flag=dc; _jc_save_toStation=%u66F9%u53BF%2CCXK; RAIL_EXPIRATION=1516901060874; RAIL_DEVICEID=U5CE8E03cUbs-Rmv6LL2zsK7mf8HM7lNyV2dYqzjAvJxfkKz09Jx6Exr6vfVvSkDzy74WwqPyLYKDxbtFzYP0uccq2q6eZnm66gtykAVk-fh4-y9HuWzJnpuVWpwNjdAu6Z_nReKIry-yHNO5iUbEwIJcx99TRl4; _jc_save_showIns=true; route=9036359bb8a8a461c164a04f8f50b252; BIGipServerotn=1893269770.64545.0000; _jc_save_fromDate=2018-01-23; _jc_save_toDate=2018-01-23; acw_tc=AQAAAHCpLCmRSQ4AORxRKgrTf0uzUgR5
+  Host:kyfw.12306.cn
+  If-Modified-Since:0
+  Referer:https://kyfw.12306.cn/otn/leftTicket/init
+  User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36
+  X-Requested-With:XMLHttpRequest
+
+Form Data
+  leftTicketDTO.train_date:2018-01-23
+  leftTicketDTO.from_station:BJP
+  leftTicketDTO.to_station:CXK
+  purpose_codes:ADULT
+
+Response
+  {
+    data: {
+      flag: "1", 
+      map: {
+        BXP: "北京西", 
+        CXK: "曹县"
+      }, 
+      result: [
+        "hewaS6YpvOXzWyI1vr05XZkyU2kNjQ6sPur7wIZ7mXGhLoQuL6tBnE1As6CdX%2FoLyxJJrr8N7mMq%0ARMcSEFdquuKkDcZioxYL3uu0ltNEe3tH2V031nJCKzTfVmbhUj9eP9XKLWcgouWJKHud8aozrqPT%0AXkxMCoEEbZPM1TQdz3Zg31nFY%2FatbThrSUUPB%2BsTprPh7xyAto%2BOWA%2BvsAQgwxh%2F57GEkzVTz3wr%0A5lngdZS%2BwY5Rdfd%2BOinoWkKiQUW47%2B3nQLv9qO4%3D|预订|24000013030O|1303|BXP|ZZF|BXP|CXK|22:35|06:11|07:36|Y|wH4gqLJZe080DxGLK9%2BLSwRwum61kC5M08RyQFrtrzuLo58GMmQ2J5v2BqM%3D|20180123|3|P3|01|06|0|0||||无|||有||无|无|||||10401030|1413|0"
+      ]
+    }, 
+    httpstatus: 200, 
+    messages: "", 
+    status: true
+  }
+
+2.#################################################################################################
+General
+  Request URL:https://kyfw.12306.cn/otn/login/checkUser
+  Request Method:POST
+  Status Code:200 OK
+  Remote Address:42.81.28.75:443
+  Referrer Policy:no-referrer-when-downgrade
+
+Response Headers
+  Connection:keep-alive
+  Content-Length:135
+  Content-Type:application/json;charset=UTF-8
+  ct:C1_217_112_8
+  Date:Tue, 23 Jan 2018 07:46:19 GMT
+  X-Cdn-Src-Port:32165
+  X-Via:1.1 gdx58:4 (Cdn Cache Server V2.0)
+
+Rquest Headers
+  Accept:*/*
+  Accept-Encoding:gzip, deflate, br
+  Accept-Language:zh-CN,zh;q=0.9,en;q=0.8
+  Cache-Control:no-cache
+  Connection:keep-alive
+  Content-Length:10
+  Content-Type:application/x-www-form-urlencoded; charset=UTF-8
+  Cookie:JSESSIONID=EEF69DCABEB534EFF32D2886143E2AB9; _jc_save_fromStation=%u5317%u4EAC%2CBJP; _jc_save_wfdc_flag=dc; _jc_save_toStation=%u66F9%u53BF%2CCXK; RAIL_EXPIRATION=1516901060874; RAIL_DEVICEID=U5CE8E03cUbs-Rmv6LL2zsK7mf8HM7lNyV2dYqzjAvJxfkKz09Jx6Exr6vfVvSkDzy74WwqPyLYKDxbtFzYP0uccq2q6eZnm66gtykAVk-fh4-y9HuWzJnpuVWpwNjdAu6Z_nReKIry-yHNO5iUbEwIJcx99TRl4; _jc_save_showIns=true; route=9036359bb8a8a461c164a04f8f50b252; BIGipServerotn=1893269770.64545.0000; _jc_save_fromDate=2018-01-23; _jc_save_toDate=2018-01-23; acw_tc=AQAAAHCpLCmRSQ4AORxRKgrTf0uzUgR5
+  Host:kyfw.12306.cn
+  If-Modified-Since:0
+  Origin:https://kyfw.12306.cn
+  Referer:https://kyfw.12306.cn/otn/leftTicket/init
+  User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36
+  X-Requested-With:XMLHttpRequest
+
+Form Data
+  _json_att:
+
+Response
+  {
+    validateMessagesShowId: "_validatorMessage", 
+    status: true, 
+    httpstatus: 200, 
+    data: {
+      flag: false
+    }, 
+    messages: [ ], 
+    validateMessages: { }
+  }
+
+3.#################################################################################################
+General
+  Request URL:https://kyfw.12306.cn/passport/captcha/captcha-image?login_site=E&module=login&rand=sjrand
+  Request Method:GET
+  Status Code:200 OK
+  Remote Address:42.81.28.75:443
+  Referrer Policy:no-referrer-when-downgrade
+
+Response Headers
+  Access-Control-Allow-Credentials:true
+  Cache-Control:no-cache
+  Connection:keep-alive
+  Content-Type:image/jpeg
+  ct:c1_57
+  Date:Tue, 23 Jan 2018 07:46:25 GMT
+  Expires:Thu, 01 Jan 1970 00:00:00 GMT
+  Pragma:No-cache
+  Set-Cookie:BIGipServerpassport=820510986.50215.0000; path=/
+  Set-Cookie:_passport_session=fc56859d634c41cf927f99d14dcd5f837066; Path=/passport
+  Set-Cookie:_passport_ct=0aeb8772053842faae03457e742777c4t3258; Path=/passport
+  Transfer-Encoding:chunked
+  X-Application-Context:application:prod:11280
+  X-Cdn-Src-Port:49301
+  X-Via:1.1 gdx59:3 (Cdn Cache Server V2.0)
+
+Rquest Headers
+  Accept:image/webp,image/apng,image/*,*/*;q=0.8
+  Accept-Encoding:gzip, deflate, br
+  Accept-Language:zh-CN,zh;q=0.9,en;q=0.8
+  Connection:keep-alive
+  Cookie:_jc_save_fromStation=%u5317%u4EAC%2CBJP; _jc_save_wfdc_flag=dc; _jc_save_toStation=%u66F9%u53BF%2CCXK; RAIL_EXPIRATION=1516901060874; RAIL_DEVICEID=U5CE8E03cUbs-Rmv6LL2zsK7mf8HM7lNyV2dYqzjAvJxfkKz09Jx6Exr6vfVvSkDzy74WwqPyLYKDxbtFzYP0uccq2q6eZnm66gtykAVk-fh4-y9HuWzJnpuVWpwNjdAu6Z_nReKIry-yHNO5iUbEwIJcx99TRl4; _jc_save_showIns=true; route=9036359bb8a8a461c164a04f8f50b252; BIGipServerotn=1893269770.64545.0000; _jc_save_fromDate=2018-01-23; _jc_save_toDate=2018-01-23; acw_tc=AQAAAHCpLCmRSQ4AORxRKgrTf0uzUgR5
+  Host:kyfw.12306.cn
+  Referer:https://kyfw.12306.cn/otn/leftTicket/init
+  User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36
+
+Form Data
+  login_site:E
+  module:login
+  rand:sjrand
+
+Response
+  IMG
+
+4.#################################################################################################
+General
+  Request URL:https://kyfw.12306.cn/passport/captcha/captcha-check
+  Request Method:POST
+  Status Code:200 OK
+  Remote Address:42.81.10.94:443
+  Referrer Policy:no-referrer-when-downgrade
+
+Response Headers
+  Access-Control-Allow-Credentials:true
+  Access-Control-Allow-Origin:https://kyfw.12306.cn
+  Connection:keep-alive
+  Content-Encoding:gzip
+  Content-Type:application/json;charset=UTF-8
+  ct:c1_58
+  Date:Tue, 23 Jan 2018 08:10:20 GMT
+  Transfer-Encoding:chunked
+  X-Application-Context:application:prod:11480
+  X-Cdn-Src-Port:56635
+  X-Via:1.1 angdianxin90:2 (Cdn Cache Server V2.0)
+
+Rquest Headers
+  Accept:application/json, text/javascript, */*; q=0.01
+  Accept-Encoding:gzip, deflate, br
+  Accept-Language:zh-CN,zh;q=0.9,en;q=0.8
+  Connection:keep-alive
+  Content-Length:62
+  Content-Type:application/x-www-form-urlencoded; charset=UTF-8
+  Cookie:_passport_session=5e2827e5ad24428f9833bb3001a826999391; _passport_ct=0e3d3fd31528429381a8ceab5ebe4f95t3711; _jc_save_fromStation=%u5317%u4EAC%2CBJP; _jc_save_wfdc_flag=dc; _jc_save_toStation=%u66F9%u53BF%2CCXK; RAIL_EXPIRATION=1516901060874; RAIL_DEVICEID=U5CE8E03cUbs-Rmv6LL2zsK7mf8HM7lNyV2dYqzjAvJxfkKz09Jx6Exr6vfVvSkDzy74WwqPyLYKDxbtFzYP0uccq2q6eZnm66gtykAVk-fh4-y9HuWzJnpuVWpwNjdAu6Z_nReKIry-yHNO5iUbEwIJcx99TRl4; _jc_save_showIns=true; route=9036359bb8a8a461c164a04f8f50b252; BIGipServerotn=1893269770.64545.0000; _jc_save_fromDate=2018-01-23; _jc_save_toDate=2018-01-23; acw_tc=AQAAAHCpLCmRSQ4AORxRKgrTf0uzUgR5; BIGipServerpassport=820510986.50215.0000
+  Host:kyfw.12306.cn
+  Origin:https://kyfw.12306.cn
+  Referer:https://kyfw.12306.cn/otn/leftTicket/init
+  User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36
+  X-Requested-With:XMLHttpRequest
+
+Form Data
+  answer:35,35,112,120
+  login_site:E
+  rand:sjrand
+  _json_att:
+
+Response
+  {
+    result_message: "验证码校验成功", 
+    result_code: "4"
+  }
+
+5.#################################################################################################
+General
+  Request URL:https://kyfw.12306.cn/passport/web/login
+  Request Method:POST
+  Status Code:200 OK
+  Remote Address:42.81.10.94:443
+  Referrer Policy:no-referrer-when-downgrade
+
+Response Headers
+  Access-Control-Allow-Credentials:true
+  Access-Control-Allow-Origin:https://kyfw.12306.cn
+  Connection:keep-alive
+  Content-Encoding:gzip
+  Content-Type:application/json;charset=UTF-8
+  ct:c1_54
+  Date:Tue, 23 Jan 2018 08:10:20 GMT
+  Set-Cookie:_passport_ct=; Max-Age=0; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Path=/passport
+  Set-Cookie:uamtk=0_-xQ95IGwPUwO7x6V-lbnapfsN4yJN3lXyTSAijc1c0; Path=/passport
+  Transfer-Encoding:chunked
+  X-Application-Context:application:prod:11180
+  X-Cdn-Src-Port:56635
+  X-Via:1.1 angdianxin90:2 (Cdn Cache Server V2.0)
+
+Rquest Headers
+  Accept:application/json, text/javascript, */*; q=0.01
+  Accept-Encoding:gzip, deflate, br
+  Accept-Language:zh-CN,zh;q=0.9,en;q=0.8
+  Connection:keep-alive
+  Content-Length:60
+  Content-Type:application/x-www-form-urlencoded; charset=UTF-8
+  Cookie:_passport_session=5e2827e5ad24428f9833bb3001a826999391; _passport_ct=0e3d3fd31528429381a8ceab5ebe4f95t3711; _jc_save_fromStation=%u5317%u4EAC%2CBJP; _jc_save_wfdc_flag=dc; _jc_save_toStation=%u66F9%u53BF%2CCXK; RAIL_EXPIRATION=1516901060874; RAIL_DEVICEID=U5CE8E03cUbs-Rmv6LL2zsK7mf8HM7lNyV2dYqzjAvJxfkKz09Jx6Exr6vfVvSkDzy74WwqPyLYKDxbtFzYP0uccq2q6eZnm66gtykAVk-fh4-y9HuWzJnpuVWpwNjdAu6Z_nReKIry-yHNO5iUbEwIJcx99TRl4; _jc_save_showIns=true; route=9036359bb8a8a461c164a04f8f50b252; BIGipServerotn=1893269770.64545.0000; _jc_save_fromDate=2018-01-23; _jc_save_toDate=2018-01-23; acw_tc=AQAAAHCpLCmRSQ4AORxRKgrTf0uzUgR5; BIGipServerpassport=820510986.50215.0000
+  Host:kyfw.12306.cn
+  Origin:https://kyfw.12306.cn
+  Referer:https://kyfw.12306.cn/otn/leftTicket/init
+  User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36
+  X-Requested-With:XMLHttpRequest
+
+Form Data
+  username:xxxx
+  password:xxxx
+  appid:otn
+  _json_att:
+
+Response
+  {
+    result_message: "登录成功", 
+    result_code: 0, 
+    uamtk: "0_-xQ95IGwPUwO7x6V-lbnapfsN4yJN3lXyTSAijc1c0"
+  }
+
+6.#################################################################################################
+General
+  Request URL:https://kyfw.12306.cn/passport/web/auth/uamtk?callback=jQuery19109253812454898931_1516694962458
+  Request Method:POST
+  Status Code:200 OK
+  Remote Address:42.81.10.94:443
+  Referrer Policy:no-referrer-when-downgrade
+
+Response Headers
+  Access-Control-Allow-Credentials:true
+  Access-Control-Allow-Origin:https://kyfw.12306.cn
+  Connection:keep-alive
+  Content-Encoding:gzip
+  Content-Type:application/json;charset=UTF-8
+  ct:c1_49
+  Date:Tue, 23 Jan 2018 08:10:25 GMT
+  Transfer-Encoding:chunked
+  X-Application-Context:application:prod:11380
+  X-Cdn-Src-Port:52170
+  X-Via:1.1 gangdxin88:9 (Cdn Cache Server V2.0)
+
+Rquest Headers
+  Accept:text/javascript, application/javascript, application/ecmascript, application/x-ecmascript, */*; q=0.01
+  Accept-Encoding:gzip, deflate, br
+  Accept-Language:zh-CN,zh;q=0.9,en;q=0.8
+  Connection:keep-alive
+  Content-Length:20
+  Content-Type:application/x-www-form-urlencoded; charset=UTF-8
+  Cookie:_passport_session=5e2827e5ad24428f9833bb3001a826999391; uamtk=0_-xQ95IGwPUwO7x6V-lbnapfsN4yJN3lXyTSAijc1c0; _jc_save_fromStation=%u5317%u4EAC%2CBJP; _jc_save_wfdc_flag=dc; _jc_save_toStation=%u66F9%u53BF%2CCXK; RAIL_EXPIRATION=1516901060874; RAIL_DEVICEID=U5CE8E03cUbs-Rmv6LL2zsK7mf8HM7lNyV2dYqzjAvJxfkKz09Jx6Exr6vfVvSkDzy74WwqPyLYKDxbtFzYP0uccq2q6eZnm66gtykAVk-fh4-y9HuWzJnpuVWpwNjdAu6Z_nReKIry-yHNO5iUbEwIJcx99TRl4; _jc_save_showIns=true; route=9036359bb8a8a461c164a04f8f50b252; BIGipServerotn=1893269770.64545.0000; _jc_save_fromDate=2018-01-23; _jc_save_toDate=2018-01-23; acw_tc=AQAAAHCpLCmRSQ4AORxRKgrTf0uzUgR5; BIGipServerpassport=820510986.50215.0000
+  Host:kyfw.12306.cn
+  Origin:https://kyfw.12306.cn
+  Referer:https://kyfw.12306.cn/otn/leftTicket/init
+  User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36
+  X-Requested-With:XMLHttpRequest
+
+Form Data
+    appid:otn
+  _json_att:
+
+Response
+  {
+    result_message: "验证通过", 
+    result_code: 0, 
+    apptk: null, 
+    newapptk: "iIQcDVgorOkg5CjpO27vKxV5AnPiEiv4ldAKuQ09c1c0"
+  }
+
+7.#################################################################################################
+General
+  Request URL:https://kyfw.12306.cn/otn/uamauthclient
+  Request Method:POST
+  Status Code:200 OK
+  Remote Address:42.81.10.94:443
+  Referrer Policy:no-referrer-when-downgrade
+
+Response Headers
+  Connection:keep-alive
+  Content-Encoding:gzip
+  Content-Type:application/json;charset=UTF-8
+  Date:Tue, 23 Jan 2018 08:10:26 GMT
+  Set-Cookie:tk=iIQcDVgorOkg5CjpO27vKxV5AnPiEiv4ldAKuQ09c1c0; Path=/otn
+  Transfer-Encoding:chunked
+  X-Cdn-Src-Port:56635
+  X-Via:1.1 angdianxin90:2 (Cdn Cache Server V2.0)
+
+Rquest Headers
+  Accept:*/*
+  Accept-Encoding:gzip, deflate, br
+  Accept-Language:zh-CN,zh;q=0.9,en;q=0.8
+  Connection:keep-alive
+  Content-Length:58
+  Content-Type:application/x-www-form-urlencoded; charset=UTF-8
+  Cookie:JSESSIONID=215BC07B20BFBD583D044D23188EB276; _jc_save_fromStation=%u5317%u4EAC%2CBJP; _jc_save_wfdc_flag=dc; _jc_save_toStation=%u66F9%u53BF%2CCXK; RAIL_EXPIRATION=1516901060874; RAIL_DEVICEID=U5CE8E03cUbs-Rmv6LL2zsK7mf8HM7lNyV2dYqzjAvJxfkKz09Jx6Exr6vfVvSkDzy74WwqPyLYKDxbtFzYP0uccq2q6eZnm66gtykAVk-fh4-y9HuWzJnpuVWpwNjdAu6Z_nReKIry-yHNO5iUbEwIJcx99TRl4; _jc_save_showIns=true; route=9036359bb8a8a461c164a04f8f50b252; BIGipServerotn=1893269770.64545.0000; _jc_save_fromDate=2018-01-23; _jc_save_toDate=2018-01-23; acw_tc=AQAAAHCpLCmRSQ4AORxRKgrTf0uzUgR5; BIGipServerpassport=820510986.50215.0000
+  Host:kyfw.12306.cn
+  Origin:https://kyfw.12306.cn
+  Referer:https://kyfw.12306.cn/otn/leftTicket/init
+  User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36
+  X-Requested-With:XMLHttpRequest
+
+Form Data
+  tk:iIQcDVgorOkg5CjpO27vKxV5AnPiEiv4ldAKuQ09c1c0
+  _json_att:
+
+Response
+  {
+    apptk: "iIQcDVgorOkg5CjpO27vKxV5AnPiEiv4ldAKuQ09c1c0", 
+    result_code: 0, 
+    result_message: "验证通过", 
+    username: "xxx"
+  }
+
+8.#################################################################################################
+General
+  Request URL:https://kyfw.12306.cn/otn/leftTicket/submitOrderRequest
+  Request Method:POST
+  Status Code:200 OK
+  Remote Address:42.81.10.94:443
+  Referrer Policy:no-referrer-when-downgrade
+
+Response Headers
+  Connection:keep-alive
+  Content-Length:124
+  Content-Type:application/json;charset=UTF-8
+  ct:C1_217_112_8
+  Date:Tue, 23 Jan 2018 08:10:28 GMT
+  X-Cdn-Src-Port:52170
+  X-Via:1.1 gangdxin88:4 (Cdn Cache Server V2.0)
+
+Rquest Headers
+  Accept:*/*
+  Accept-Encoding:gzip, deflate, br
+  Accept-Language:zh-CN,zh;q=0.9,en;q=0.8
+  Connection:keep-alive
+  Content-Length:465
+  Content-Type:application/x-www-form-urlencoded; charset=UTF-8
+  Cookie:JSESSIONID=215BC07B20BFBD583D044D23188EB276; tk=iIQcDVgorOkg5CjpO27vKxV5AnPiEiv4ldAKuQ09c1c0; _jc_save_fromStation=%u5317%u4EAC%2CBJP; _jc_save_wfdc_flag=dc; _jc_save_toStation=%u66F9%u53BF%2CCXK; RAIL_EXPIRATION=1516901060874; RAIL_DEVICEID=U5CE8E03cUbs-Rmv6LL2zsK7mf8HM7lNyV2dYqzjAvJxfkKz09Jx6Exr6vfVvSkDzy74WwqPyLYKDxbtFzYP0uccq2q6eZnm66gtykAVk-fh4-y9HuWzJnpuVWpwNjdAu6Z_nReKIry-yHNO5iUbEwIJcx99TRl4; _jc_save_showIns=true; route=9036359bb8a8a461c164a04f8f50b252; BIGipServerotn=1893269770.64545.0000; _jc_save_fromDate=2018-01-23; _jc_save_toDate=2018-01-23; acw_tc=AQAAAHCpLCmRSQ4AORxRKgrTf0uzUgR5; BIGipServerpassport=820510986.50215.0000
+  Host:kyfw.12306.cn
+  Origin:https://kyfw.12306.cn
+  Referer:https://kyfw.12306.cn/otn/leftTicket/init
+  User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36
+  X-Requested-With:XMLHttpRequest
+
+Form Data
+  secretStr:PlcTJo9bI+TzOZgE/1J9e76Z/NMnv9bfUn7t0IW2C/LE6aqXeTzoHUy3v4cgd4Lyw/pibSSK5sv7o/HYnJ1r021f6V+fizN2BE1NG7OeKbt9jUgje+E8XcG1x82VJTiPIcki5Xfxvdw+KOwc0RZdhKNJjg8w7hitkTPU6E5boukmPZX+6QDGQqNRas4Z1rkCHUzUPGMng+6+x5ebDmZKXZmqy28RfBX3nAH5nuSoVgd3rQpIRsfwskhShYC1eg2w644fDQssSJk=train_date:2018-01-23
+  back_train_date:2018-01-23
+  tour_flag:dc
+  purpose_codes:ADULT
+  query_from_station_name:北京
+  query_to_station_name:曹县
+  undefined:
+
+Response
+  {
+    validateMessagesShowId: "_validatorMessage", 
+    status: true, 
+    httpstatus: 200, 
+    data: "N", 
+    messages: [ ], 
+    validateMessages: { }
+  }
+
+9.#################################################################################################
+General
+  Request URL:https://kyfw.12306.cn/otn/confirmPassenger/initDc
+  Request Method:POST
+  Status Code:200 OK
+  Remote Address:42.81.28.75:443
+  Referrer Policy:no-referrer-when-downgrade
+
+Response Headers
+  Connection:keep-alive
+  Content-Encoding:gzip
+  Content-Language:zh-CN
+  Content-Type:text/html;charset=utf-8
+  ct:C1_217_91_7
+  Date:Tue, 23 Jan 2018 08:55:45 GMT
+  Set-Cookie:tk=3Jj-slhOjlt3x29dZI6hEkobtb1Y8pBU8yEhCgkoc1c0; Path=/otn
+  Transfer-Encoding:chunked
+  X-Cdn-Src-Port:55260
+  X-Via:1.1 gdx57:4 (Cdn Cache Server V2.0)
+
+Rquest Headers
+  Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
+  Accept-Encoding:gzip, deflate, br
+  Accept-Language:zh-CN,zh;q=0.9,en;q=0.8
+  Cache-Control:max-age=0
+  Connection:keep-alive
+  Content-Length:10
+  Content-Type:application/x-www-form-urlencoded
+  Cookie:JSESSIONID=0AD2E68D3B87C31E255AE7C7F39050A0; tk=2PytFSI0WecWZ9KyPufzdflahcbz7I0bKdCWFAkoc1c0; _jc_save_fromStation=%u5317%u4EAC%2CBJP; _jc_save_wfdc_flag=dc; _jc_save_toStation=%u66F9%u53BF%2CCXK; RAIL_EXPIRATION=1516901060874; RAIL_DEVICEID=U5CE8E03cUbs-Rmv6LL2zsK7mf8HM7lNyV2dYqzjAvJxfkKz09Jx6Exr6vfVvSkDzy74WwqPyLYKDxbtFzYP0uccq2q6eZnm66gtykAVk-fh4-y9HuWzJnpuVWpwNjdAu6Z_nReKIry-yHNO5iUbEwIJcx99TRl4; _jc_save_showIns=true; _jc_save_fromDate=2018-01-23; _jc_save_toDate=2018-01-23; route=6f50b51faa11b987e576cdb301e545c4; BIGipServerotn=1540948234.50210.0000; BIGipServerpassport=904397066.50215.0000
+  Host:kyfw.12306.cn
+  Origin:https://kyfw.12306.cn
+  Referer:https://kyfw.12306.cn/otn/leftTicket/init
+  Upgrade-Insecure-Requests:1
+  User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36
+
+Form Data
+  _json_att:
+
+Response
+  HTML
+
+10.#################################################################################################
+General
+  Request URL:https://kyfw.12306.cn/otn/confirmPassenger/getPassengerDTOs
+  Request Method:POST
+  Status Code:200 OK
+  Remote Address:42.81.28.75:443
+  Referrer Policy:no-referrer-when-downgrade
+
+Response Headers
+  Connection:keep-alive
+  Content-Encoding:gzip
+  Content-Type:application/json;charset=UTF-8
+  ct:C1_217_91_7
+  Date:Tue, 23 Jan 2018 08:55:48 GMT
+  Transfer-Encoding:chunked
+  X-Cdn-Src-Port:24073
+  X-Via:1.1 gdx58:4 (Cdn Cache Server V2.0)
+
+Rquest Headers
+  Accept:*/*
+  Accept-Encoding:gzip, deflate, br
+  Accept-Language:zh-CN,zh;q=0.9,en;q=0.8
+  Connection:keep-alive
+  Content-Length:63
+  Content-Type:application/x-www-form-urlencoded; charset=UTF-8
+  Cookie:JSESSIONID=0AD2E68D3B87C31E255AE7C7F39050A0; tk=3Jj-slhOjlt3x29dZI6hEkobtb1Y8pBU8yEhCgkoc1c0; _jc_save_fromStation=%u5317%u4EAC%2CBJP; _jc_save_wfdc_flag=dc; _jc_save_toStation=%u66F9%u53BF%2CCXK; RAIL_EXPIRATION=1516901060874; RAIL_DEVICEID=U5CE8E03cUbs-Rmv6LL2zsK7mf8HM7lNyV2dYqzjAvJxfkKz09Jx6Exr6vfVvSkDzy74WwqPyLYKDxbtFzYP0uccq2q6eZnm66gtykAVk-fh4-y9HuWzJnpuVWpwNjdAu6Z_nReKIry-yHNO5iUbEwIJcx99TRl4; _jc_save_showIns=true; _jc_save_fromDate=2018-01-23; _jc_save_toDate=2018-01-23; route=6f50b51faa11b987e576cdb301e545c4; BIGipServerotn=1540948234.50210.0000; BIGipServerpassport=904397066.50215.0000
+  Host:kyfw.12306.cn
+  Origin:https://kyfw.12306.cn
+  Referer:https://kyfw.12306.cn/otn/confirmPassenger/initDc
+  User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36
+  X-Requested-With:XMLHttpRequest
+
+Form Data
+  _json_att:
+  REPEAT_SUBMIT_TOKEN:743e01135ed7ae0d312bc063a0923832
+
+Response
+  {
+    "validateMessagesShowId": "_validatorMessage", 
+    "status": true, 
+    "httpstatus": 200, 
+    "data": {
+      "isExist": true, 
+      "exMsg": "", 
+      "two_isOpenClick": [
+        "93", 
+        "95", 
+        "97", 
+        "99"
+      ], 
+      "other_isOpenClick": [
+        "91", 
+        "93", 
+        "98", 
+        "99", 
+        "95", 
+        "97"
+      ], 
+      "normal_passengers": [
+        {
+          "code": "2", 
+          "passenger_name": "程xxxx", 
+          "sex_code": "M", 
+          "sex_name": "男", 
+          "born_date": "xxxxxx", 
+          "country_code": "CN", 
+          "passenger_id_type_code": "1", 
+          "passenger_id_type_name": "二代身份证", 
+          "passenger_id_no": "37xxxx", 
+          "passenger_type": "1", 
+          "passenger_flag": "0", 
+          "passenger_type_name": "成人", 
+          "mobile_no": "186xxx", 
+          "phone_no": "", 
+          "email": "xxxxx", 
+          "address": "", 
+          "postalcode": "", 
+          "first_letter": "CGC", 
+          "recordCount": "15", 
+          "total_times": "99", 
+          "index_id": "0"
+        }, 
+        {
+          "code": "4", 
+          "passenger_name": "程xxx", 
+          "sex_code": "M", 
+          "sex_name": "男", 
+          "born_date": "2013-09-17 00:00:00", 
+          "country_code": "CN", 
+          "passenger_id_type_code": "1", 
+          "passenger_id_type_name": "二代身份证", 
+          "passenger_id_no": "37xxxx", 
+          "passenger_type": "1", 
+          "passenger_flag": "0", 
+          "passenger_type_name": "成人", 
+          "mobile_no": "186xxx", 
+          "phone_no": "", 
+          "email": "", 
+          "address": "", 
+          "postalcode": "", 
+          "first_letter": "CG", 
+          "recordCount": "15", 
+          "total_times": "99", 
+          "index_id": "1"
+        }, 
+      ], 
+      "dj_passengers": [ ]
+    }, 
+    "messages": [ ], 
+    "validateMessages": { }
+  }
+
+11.#################################################################################################
+General
+  Request URL:https://kyfw.12306.cn/otn/passcodeNew/getPassCodeNew?module=passenger&rand=randp&0.9846832662550371
+  Request Method:GET
+  Status Code:200 OK
+  Remote Address:42.81.28.75:443
+  Referrer Policy:no-referrer-when-downgrade
+
+Response Headers
+  Cache-Control:no-cache
+  Connection:keep-alive
+  Content-Type:image/jpeg;charset=UTF-8
+  ct:C1_217_91_7
+  Date:Tue, 23 Jan 2018 08:55:48 GMT
+  Expires:Thu, 01 Jan 1970 00:00:00 GMT
+  Pragma:No-cache
+  Set-Cookie:current_captcha_type=Z; Path=/
+  Transfer-Encoding:chunked
+  X-Cdn-Src-Port:55262
+  X-Via:1.1 gdx57:4 (Cdn Cache Server V2.0)
+
+Rquest Headers
+  Accept:image/webp,image/apng,image/*,*/*;q=0.8
+  Accept-Encoding:gzip, deflate, br
+  Accept-Language:zh-CN,zh;q=0.9,en;q=0.8
+  Connection:keep-alive
+  Cookie:JSESSIONID=0AD2E68D3B87C31E255AE7C7F39050A0; tk=3Jj-slhOjlt3x29dZI6hEkobtb1Y8pBU8yEhCgkoc1c0; _jc_save_fromStation=%u5317%u4EAC%2CBJP; _jc_save_wfdc_flag=dc; _jc_save_toStation=%u66F9%u53BF%2CCXK; RAIL_EXPIRATION=1516901060874; RAIL_DEVICEID=U5CE8E03cUbs-Rmv6LL2zsK7mf8HM7lNyV2dYqzjAvJxfkKz09Jx6Exr6vfVvSkDzy74WwqPyLYKDxbtFzYP0uccq2q6eZnm66gtykAVk-fh4-y9HuWzJnpuVWpwNjdAu6Z_nReKIry-yHNO5iUbEwIJcx99TRl4; _jc_save_showIns=true; _jc_save_fromDate=2018-01-23; _jc_save_toDate=2018-01-23; route=6f50b51faa11b987e576cdb301e545c4; BIGipServerotn=1540948234.50210.0000; BIGipServerpassport=904397066.50215.0000
+  Host:kyfw.12306.cn
+  Referer:https://kyfw.12306.cn/otn/confirmPassenger/initDc
+  User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36
+
+Form Data
+  module:passenger
+  rand:randp
+  0.9846832662550371:
+
+Response
+  IMG
+
+12.#################################################################################################
+General
+  Request URL:https://kyfw.12306.cn/otn/confirmPassenger/checkOrderInfo
+  Request Method:POST
+  Status Code:200 OK
+  Remote Address:42.81.10.94:443
+  Referrer Policy:no-referrer-when-downgrade
+
+Response Headers
+  Connection:keep-alive
+  Content-Length:286
+  Content-Type:application/json;charset=UTF-8
+  ct:C1_217_91_7
+  Date:Tue, 23 Jan 2018 09:03:54 GMT
+  Set-Cookie:tk=qi9U0k-pTPg4Pj72HqjRtcD6BYuQ451GDRAbxQ64c1c0; Path=/otn
+  X-Cdn-Src-Port:49785
+  X-Via:1.1 angdianxin90:2 (Cdn Cache Server V2.0)
+
+Rquest Headers
+  Accept:application/json, text/javascript, */*; q=0.01
+  Accept-Encoding:gzip, deflate, br
+  Accept-Language:zh-CN,zh;q=0.9,en;q=0.8
+  Connection:keep-alive
+  Content-Length:434
+  Content-Type:application/x-www-form-urlencoded; charset=UTF-8
+  Cookie:JSESSIONID=0AD2E68D3B87C31E255AE7C7F39050A0; tk=3Jj-slhOjlt3x29dZI6hEkobtb1Y8pBU8yEhCgkoc1c0; _jc_save_fromStation=%u5317%u4EAC%2CBJP; _jc_save_wfdc_flag=dc; _jc_save_toStation=%u66F9%u53BF%2CCXK; RAIL_EXPIRATION=1516901060874; RAIL_DEVICEID=U5CE8E03cUbs-Rmv6LL2zsK7mf8HM7lNyV2dYqzjAvJxfkKz09Jx6Exr6vfVvSkDzy74WwqPyLYKDxbtFzYP0uccq2q6eZnm66gtykAVk-fh4-y9HuWzJnpuVWpwNjdAu6Z_nReKIry-yHNO5iUbEwIJcx99TRl4; _jc_save_showIns=true; _jc_save_fromDate=2018-01-23; _jc_save_toDate=2018-01-23; route=6f50b51faa11b987e576cdb301e545c4; BIGipServerotn=1540948234.50210.0000; BIGipServerpassport=904397066.50215.0000; current_captcha_type=Z
+  Host:kyfw.12306.cn
+  Origin:https://kyfw.12306.cn
+  Referer:https://kyfw.12306.cn/otn/confirmPassenger/initDc
+  User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36
+  X-Requested-With:XMLHttpRequest
+
+Form Data
+  cancel_flag:2
+  bed_level_order_num:000000000000000000000000000000
+  passengerTicketStr:1,0,1,刘x,1,372xxxxx,152xxx,N_1,0,1,张x,1,37xxx,,N
+  oldPassengerStr:刘x,1,372xxx,1_张x,1,372xxxx,1_
+  tour_flag:dc
+  randCode:
+  whatsSelect:1
+  _json_att:
+  REPEAT_SUBMIT_TOKEN:743e01135ed7ae0d312bc063a0923832
+
+Response
+  {
+    "validateMessagesShowId": "_validatorMessage", 
+    "status": true, 
+    "httpstatus": 200, 
+    "data": {
+      "ifShowPassCode": "N", 
+      "canChooseBeds": "N", 
+      "canChooseSeats": "N", 
+      "choose_Seats": "MOP9", 
+      "isCanChooseMid": "N", 
+      "ifShowPassCodeTime": "1", 
+      "submitStatus": true, 
+      "smokeStr": ""
+    }, 
+    "messages": [ ], 
+    "validateMessages": { }
+  }
+
+13.#################################################################################################
+General
+  Request URL:https://kyfw.12306.cn/otn/confirmPassenger/getQueueCount
+  Request Method:POST
+  Status Code:200 OK
+  Remote Address:42.81.10.94:443
+  Referrer Policy:no-referrer-when-downgrade
+
+Response Headers
+  Connection:keep-alive
+  Content-Length:195
+  Content-Type:application/json;charset=UTF-8
+  ct:C1_217_91_7
+  Date:Tue, 23 Jan 2018 09:03:54 GMT
+  X-Cdn-Src-Port:49785
+  X-Via:1.1 angdianxin90:2 (Cdn Cache Server V2.0)
+
+Rquest Headers
+  Accept:application/json, text/javascript, */*; q=0.01
+  Accept-Encoding:gzip, deflate, br
+  Accept-Language:zh-CN,zh;q=0.9,en;q=0.8
+  Connection:keep-alive
+  Content-Length:383
+  Content-Type:application/x-www-form-urlencoded; charset=UTF-8
+  Cookie:JSESSIONID=0AD2E68D3B87C31E255AE7C7F39050A0; tk=qi9U0k-pTPg4Pj72HqjRtcD6BYuQ451GDRAbxQ64c1c0; _jc_save_fromStation=%u5317%u4EAC%2CBJP; _jc_save_wfdc_flag=dc; _jc_save_toStation=%u66F9%u53BF%2CCXK; RAIL_EXPIRATION=1516901060874; RAIL_DEVICEID=U5CE8E03cUbs-Rmv6LL2zsK7mf8HM7lNyV2dYqzjAvJxfkKz09Jx6Exr6vfVvSkDzy74WwqPyLYKDxbtFzYP0uccq2q6eZnm66gtykAVk-fh4-y9HuWzJnpuVWpwNjdAu6Z_nReKIry-yHNO5iUbEwIJcx99TRl4; _jc_save_showIns=true; _jc_save_fromDate=2018-01-23; _jc_save_toDate=2018-01-23; route=6f50b51faa11b987e576cdb301e545c4; BIGipServerotn=1540948234.50210.0000; BIGipServerpassport=904397066.50215.0000; current_captcha_type=Z
+  Host:kyfw.12306.cn
+  Origin:https://kyfw.12306.cn
+  Referer:https://kyfw.12306.cn/otn/confirmPassenger/initDc
+  User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36
+  X-Requested-With:XMLHttpRequest
+
+Form Data
+  train_date:Tue Jan 23 2018 00:00:00 GMT+0800 (中国标准时间)
+  train_no:24000013030O
+  stationTrainCode:1303
+  seatType:1
+  fromStationTelecode:BXP
+  toStationTelecode:CXK
+  leftTicket:HnvZ1DKTaJvFqdbXwFvOnnRPPsqRubqA9vHChyG4Uufep8dFzko9YT8u6sU%3D
+  purpose_codes:00
+  train_location:P3
+  _json_att:
+  REPEAT_SUBMIT_TOKEN:743e01135ed7ae0d312bc063a0923832
+
+Response
+  {
+    "validateMessagesShowId": "_validatorMessage", 
+    "status": true, 
+    "httpstatus": 200, 
+    "data": {
+      "count": "110", 
+      "ticket": "1,737", 
+      "op_2": "false", 
+      "countT": "0", 
+      "op_1": "true"
+    }, 
+    "messages": [ ], 
+    "validateMessages": { }
+  }
+
+14.#################################################################################################
+General
+  Request URL:https://kyfw.12306.cn/otn/confirmPassenger/confirmSingleForQueue
+  Request Method:POST
+  Status Code:200 OK
+  Remote Address:42.81.10.94:443
+  Referrer Policy:no-referrer-when-downgrade
+
+Response Headers
+  Connection:keep-alive
+  Content-Length:142
+  Content-Type:application/json;charset=UTF-8
+  ct:C1_217_91_7
+  Date:Tue, 23 Jan 2018 09:09:49 GMT
+  Set-Cookie:tk=5AGLnMpo7hOn6rDXcRYVtgMF4-69denozLv1VQ45c1c0; Path=/otn
+  X-Cdn-Src-Port:44054
+  X-Via:1.1 angdianxin90:2 (Cdn Cache Server V2.0)
+
+Rquest Headers
+  Accept:application/json, text/javascript, */*; q=0.01
+  Accept-Encoding:gzip, deflate, br
+  Accept-Language:zh-CN,zh;q=0.9,en;q=0.8
+  Connection:keep-alive
+  Content-Length:599
+  Content-Type:application/x-www-form-urlencoded; charset=UTF-8
+  Cookie:JSESSIONID=0AD2E68D3B87C31E255AE7C7F39050A0; tk=qi9U0k-pTPg4Pj72HqjRtcD6BYuQ451GDRAbxQ64c1c0; _jc_save_fromStation=%u5317%u4EAC%2CBJP; _jc_save_wfdc_flag=dc; _jc_save_toStation=%u66F9%u53BF%2CCXK; RAIL_EXPIRATION=1516901060874; RAIL_DEVICEID=U5CE8E03cUbs-Rmv6LL2zsK7mf8HM7lNyV2dYqzjAvJxfkKz09Jx6Exr6vfVvSkDzy74WwqPyLYKDxbtFzYP0uccq2q6eZnm66gtykAVk-fh4-y9HuWzJnpuVWpwNjdAu6Z_nReKIry-yHNO5iUbEwIJcx99TRl4; _jc_save_showIns=true; _jc_save_fromDate=2018-01-23; _jc_save_toDate=2018-01-23; route=6f50b51faa11b987e576cdb301e545c4; BIGipServerotn=1540948234.50210.0000; BIGipServerpassport=904397066.50215.0000; current_captcha_type=Z
+  Host:kyfw.12306.cn
+  Origin:https://kyfw.12306.cn
+  Referer:https://kyfw.12306.cn/otn/confirmPassenger/initDc
+  User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36
+  X-Requested-With:XMLHttpRequest
+
+Form Data
+  passengerTicketStr:1,0,1,刘顺,1,372925198812203312,15210906131,N_1,0,1,张存,1,372924198801023037,,N
+  oldPassengerStr:刘顺,1,372925198812203312,1_张存,1,372924198801023037,1_
+  randCode:
+  purpose_codes:00
+  key_check_isChange:72B63171948A5D6485E7FC67ADEDDBF15572E40FA8BDD3C879C42A3D
+  leftTicketStr:HnvZ1DKTaJvFqdbXwFvOnnRPPsqRubqA9vHChyG4Uufep8dFzko9YT8u6sU%3D
+  train_location:P3
+  choose_seats:
+  seatDetailType:000
+  whatsSelect:1
+  roomType:00
+  dwAll:N
+  _json_att:
+  REPEAT_SUBMIT_TOKEN:743e01135ed7ae0d312bc063a0923832
+
+Response
+  {
+    "validateMessagesShowId": "_validatorMessage", 
+    "status": true, 
+    "httpstatus": 200, 
+    "data": {
+      "submitStatus": true
+    }, 
+    "messages": [ ], 
+    "validateMessages": { }
+  }
+
+15.#################################################################################################
+General
+  Request URL:https://kyfw.12306.cn/otn/confirmPassenger/queryOrderWaitTime?random=1516698700203&tourFlag=dc&_json_att=&REPEAT_SUBMIT_TOKEN=743e01135ed7ae0d312bc063a0923832
+  Request Method:GET
+  Status Code:200 OK
+  Remote Address:42.81.10.94:443
+  Referrer Policy:no-referrer-when-downgrade
+
+Response Headers
+  Connection:keep-alive
+  Content-Length:263
+  Content-Type:application/json;charset=UTF-8
+  ct:C1_217_91_7
+  Date:Tue, 23 Jan 2018 09:11:41 GMT
+  Set-Cookie:tk=0Q1wc3SXQDzmvRLWRlpL70kqWPOV915O_nAwKwsdc1c0; Path=/otn
+  X-Cdn-Src-Port:56928
+  X-Via:1.1 gangdxin88:9 (Cdn Cache Server V2.0)
+
+Rquest Headers
+  Accept:application/json, text/javascript, */*; q=0.01
+  Accept-Encoding:gzip, deflate, br
+  Accept-Language:zh-CN,zh;q=0.9,en;q=0.8
+  Connection:keep-alive
+  Cookie:JSESSIONID=0AD2E68D3B87C31E255AE7C7F39050A0; tk=5AGLnMpo7hOn6rDXcRYVtgMF4-69denozLv1VQ45c1c0; _jc_save_fromStation=%u5317%u4EAC%2CBJP; _jc_save_wfdc_flag=dc; _jc_save_toStation=%u66F9%u53BF%2CCXK; RAIL_EXPIRATION=1516901060874; RAIL_DEVICEID=U5CE8E03cUbs-Rmv6LL2zsK7mf8HM7lNyV2dYqzjAvJxfkKz09Jx6Exr6vfVvSkDzy74WwqPyLYKDxbtFzYP0uccq2q6eZnm66gtykAVk-fh4-y9HuWzJnpuVWpwNjdAu6Z_nReKIry-yHNO5iUbEwIJcx99TRl4; _jc_save_showIns=true; _jc_save_fromDate=2018-01-23; _jc_save_toDate=2018-01-23; route=6f50b51faa11b987e576cdb301e545c4; BIGipServerotn=1540948234.50210.0000; BIGipServerpassport=904397066.50215.0000; current_captcha_type=Z
+  Host:kyfw.12306.cn
+  Referer:https://kyfw.12306.cn/otn/confirmPassenger/initDc
+  User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36
+  X-Requested-With:XMLHttpRequest
+
+Form Data
+  random:1516698700203
+  tourFlag:dc
+  _json_att:
+  REPEAT_SUBMIT_TOKEN:743e01135ed7ae0d312bc063a0923832
+
+Response
+  {
+    "validateMessagesShowId": "_validatorMessage", 
+    "status": true, 
+    "httpstatus": 200, 
+    "data": {
+      "queryOrderWaitTimeStatus": true, 
+      "count": 0, 
+      "waitTime": -1, 
+      "requestId": 6361494958854198000, 
+      "waitCount": 0, 
+      "tourFlag": "dc", 
+      "orderId": "EJ55941251"
+    }, 
+    "messages": [ ], 
+    "validateMessages": { }
+  }
+
+16.#################################################################################################
+General
+  Request URL:https://kyfw.12306.cn/otn/confirmPassenger/resultOrderForDcQueue
+  Request Method:POST
+  Status Code:200 OK
+  Remote Address:42.81.10.94:443
+  Referrer Policy:no-referrer-when-downgrade
+
+Response Headers
+  Connection:keep-alive
+  Content-Length:142
+  Content-Type:application/json;charset=UTF-8
+  ct:C1_217_91_7
+  Date:Tue, 23 Jan 2018 09:13:22 GMT
+  Set-Cookie:tk=uENIQgMrkXGNeTaw42gPR6Uo_q2uQDHb44bBuAhuc1c0; Path=/otn
+  X-Cdn-Src-Port:57295
+  X-Via:1.1 angdianxin90:2 (Cdn Cache Server V2.0)
+
+Rquest Headers
+  Accept:application/json, text/javascript, */*; q=0.01
+  Accept-Encoding:gzip, deflate, br
+  Accept-Language:zh-CN,zh;q=0.9,en;q=0.8
+  Connection:keep-alive
+  Content-Length:91
+  Content-Type:application/x-www-form-urlencoded; charset=UTF-8
+  Cookie:JSESSIONID=0AD2E68D3B87C31E255AE7C7F39050A0; tk=0Q1wc3SXQDzmvRLWRlpL70kqWPOV915O_nAwKwsdc1c0; _jc_save_fromStation=%u5317%u4EAC%2CBJP; _jc_save_wfdc_flag=dc; _jc_save_toStation=%u66F9%u53BF%2CCXK; RAIL_EXPIRATION=1516901060874; RAIL_DEVICEID=U5CE8E03cUbs-Rmv6LL2zsK7mf8HM7lNyV2dYqzjAvJxfkKz09Jx6Exr6vfVvSkDzy74WwqPyLYKDxbtFzYP0uccq2q6eZnm66gtykAVk-fh4-y9HuWzJnpuVWpwNjdAu6Z_nReKIry-yHNO5iUbEwIJcx99TRl4; _jc_save_showIns=true; _jc_save_fromDate=2018-01-23; _jc_save_toDate=2018-01-23; route=6f50b51faa11b987e576cdb301e545c4; BIGipServerotn=1540948234.50210.0000; BIGipServerpassport=904397066.50215.0000; current_captcha_type=Z
+  Host:kyfw.12306.cn
+  Origin:https://kyfw.12306.cn
+  Referer:https://kyfw.12306.cn/otn/confirmPassenger/initDc
+  User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36
+  X-Requested-With:XMLHttpRequest
+
+Form Data
+  orderSequence_no:EJ55941251
+  _json_att:
+  REPEAT_SUBMIT_TOKEN:743e01135ed7ae0d312bc063a0923832
+
+Response
+  {
+    validateMessagesShowId: "_validatorMessage", 
+    status: true, 
+    httpstatus: 200, 
+    data: {
+      submitStatus: true
+    }, 
+    messages: [ ], 
+    validateMessages: { }
+  }

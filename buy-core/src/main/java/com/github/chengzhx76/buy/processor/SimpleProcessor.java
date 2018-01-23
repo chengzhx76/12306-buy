@@ -1,6 +1,7 @@
 package com.github.chengzhx76.buy.processor;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.github.chengzhx76.buy.Buyer;
 import com.github.chengzhx76.buy.model.*;
 import com.github.chengzhx76.buy.utils.*;
@@ -66,13 +67,13 @@ public class SimpleProcessor implements Processor {
             Map<String, Object> params = new HashMap<>();
             params.put("json_att", "");
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
-        }else if (OperationType.CAPTCHA_IMG.equals(operation)) {
+        } else if (OperationType.CAPTCHA_IMG.equals(operation)) {
             request.setUrl(operation.getUrl()+"&"+new Random().nextDouble());
 
             request.addHeader("Accept", "image/webp,image/apng,image/*,*/*;q=0.8");
             request.addHeader("Referer", "https://kyfw.12306.cn/otn/leftTicket/init");
             setHeader(request);
-        }else if (OperationType.CHECK_CAPTCHA.equals(operation)) {
+        } else if (OperationType.CHECK_CAPTCHA.equals(operation)) {
             request.setUrl(operation.getUrl());
 
             request.addHeader("Accept", "application/json, text/javascript, */*; q=0.01");
@@ -199,20 +200,86 @@ public class SimpleProcessor implements Processor {
             setHeader(request);
 
             Map<String, Object> params = new HashMap<>();
-            params.put("train_date", "2");
-            params.put("train_no", "2");
-            params.put("stationTrainCode", "2");
-            params.put("seatType", "2");
-            params.put("fromStationTelecode", "2");
-            params.put("toStationTelecode", "2");
-            params.put("leftTicket", "2");
-            params.put("purpose_codes", "2");
-            params.put("train_location", "2");
-            params.put("_json_att", "2");
-            params.put("REPEAT_SUBMIT_TOKEN", request.getExtra("token"));
+            String token = request.getExtra("token");
+            String ticketInfoForPassenger = request.getExtra("ticketInfoForPassenger");
+
+            JSONObject ticketInfoForPassengerJsonObject = parse(ticketInfoForPassenger);
+            JSONObject queryLeftTicketRequestJsonObject = ticketInfoForPassengerJsonObject.getJSONObject("queryLeftTicketRequestDTO");
+
+            String trainNo = queryLeftTicketRequestJsonObject.getString("train_no");
+            String stationTrainCode = queryLeftTicketRequestJsonObject.getString("station_train_code");
+            String seatType = getSeatType(buyer.getSetType().get(0));
+            String fromStationTelecode = queryLeftTicketRequestJsonObject.getString("from_station");
+            String toStationTelecode = queryLeftTicketRequestJsonObject.getString("to_station");
+            String leftTicketStr = ticketInfoForPassengerJsonObject.getString("leftTicketStr");
+            String purposeCodes = ticketInfoForPassengerJsonObject.getString("purpose_codes");
+            String trainLocation = ticketInfoForPassengerJsonObject.getString("train_location");
 
 
+            params.put("train_date", DateUtils.toEnDate(buyer.getStationDate()));
+            params.put("train_no", trainNo);
+            params.put("stationTrainCode", stationTrainCode);
+            params.put("seatType", seatType);
+            params.put("fromStationTelecode", fromStationTelecode);
+            params.put("toStationTelecode", toStationTelecode);
+            params.put("leftTicket", leftTicketStr);
+            params.put("purpose_codes", purposeCodes);
+            params.put("train_location", trainLocation);
+            params.put("_json_att", "");
+            params.put("REPEAT_SUBMIT_TOKEN", token);
+            request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
+        } else if (OperationType.CONFIRM_SINGLE_FOR_QUEUE.equals(operation)) {
+            request.setUrl(operation.getUrl());
 
+            request.addHeader("Accept", "application/json, text/javascript, */*; q=0.01");
+            request.addHeader("Referer", "https://kyfw.12306.cn/otn/confirmPassenger/initDc");
+            request.addHeader("X-Requested-With", "XMLHttpRequest");
+            setHeader(request);
+
+            Map<String, Object> params = new HashMap<>();
+
+            String token = request.getExtra("token");
+            String ticketInfoForPassenger = request.getExtra("ticketInfoForPassenger");
+            JSONObject ticketInfoForPassengerJsonObject = parse(ticketInfoForPassenger);
+
+            params.put("passengerTicketStr", passengerTicketStr(buyer));
+            params.put("oldPassengerStr", oldPassengerStr(buyer));
+            params.put("purpose_codes", ticketInfoForPassengerJsonObject.getString("purpose_codes"));
+            params.put("key_check_isChange", ticketInfoForPassengerJsonObject.getString("key_check_isChange"));
+            params.put("leftTicketStr", ticketInfoForPassengerJsonObject.getString("leftTicketStr"));
+            params.put("train_location", ticketInfoForPassengerJsonObject.getString("train_location"));
+            params.put("seatDetailType", "000");
+            params.put("roomType", "00");
+            params.put("dwAll", "N");
+            params.put("whatsSelect", "1");
+            params.put("_json_at", "");
+            params.put("REPEAT_SUBMIT_TOKEN", token);
+            request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
+        } else if (OperationType.QUERY_ORDER_WAIT_TIME.equals(operation)) {
+            request.setUrl(operation.getUrl()
+                    .replace("{RANDOM}", System.currentTimeMillis()+"")
+                    .replace("{TOURFLAG}", "dc")
+                    .replace("{REPEAT_SUBMIT_TOKEN}", request.getExtra("token")));
+
+            request.addHeader("Accept", "application/json, text/javascript, */*; q=0.01");
+            request.addHeader("Referer", "https://kyfw.12306.cn/otn/confirmPassenger/initDc");
+            request.addHeader("X-Requested-With", "XMLHttpRequest");
+            setHeader(request);
+        } else if (OperationType.RESULT_ORDER_FOR_DC_QUEUE.equals(operation)) {
+            request.addHeader("Accept", "application/json, text/javascript, */*; q=0.01");
+            request.addHeader("Referer", "https://kyfw.12306.cn/otn/confirmPassenger/initDc");
+            request.addHeader("X-Requested-With", "XMLHttpRequest");
+            setHeader(request);
+
+            Map<String, Object> params = new HashMap<>();
+
+            String token = request.getExtra("token");
+            String orderNo = request.getExtra("orderNo");
+
+            params.put("orderSequence_no", orderNo);
+            params.put("_json_att", "");
+            params.put("REPEAT_SUBMIT_TOKEN", token);
+            request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else {
             request.setUrl(operation.getUrl());
         }
@@ -290,13 +357,6 @@ public class SimpleProcessor implements Processor {
             request.setOperation(OperationType.CHECK_CAPTCHA);
         } else if (OperationType.CHECK_CAPTCHA.equals(operation)) {
             System.out.println("-----检查验证码-----");
-
-            //- 校验验证码
-            //  - 没携带cookie：         {"result_message":"验证码校验失败,信息为空","result_code":"8"}
-            //  - 携带cookie但点错了：    {"result_message":"验证码校验失败","result_code":"5"}
-            //  - 携带cookie并且点击正确： {"result_message":"验证码校验成功","result_code":"4"}
-            //  - 停留时间过长：           {"result_message":"验证码已经过期","result_code":"7"}
-
             ValidateMsg<String> validateMsg = parseObject(response, ValidateMsg.class);
             if ("4".equals(validateMsg.getResult_code())) { // 验证码校验成功
                 request.setOperation(OperationType.LOGIN);
@@ -316,11 +376,6 @@ public class SimpleProcessor implements Processor {
             }
         } else if (OperationType.LOGIN.equals(operation)) {
             System.out.println("-----用户登陆-----");
-
-            //- 校验用户名密码：
-            //  - 密码输入错误：   {"result_message":"密码输入错误。如果输错次数超过4次，用户将被锁定。","result_code":1}
-            //  - 用户不存在：     {"result_message":"登录名不存在。","result_code":1}
-            //  - 密码输入正确：   {"result_message":"登录成功","result_code":0,"uamtk":"0HPOXSv6Wdr4P9Ru0TQsYtAWyadxAtVWPHKB0Qplc2c0"}
             ValidateMsg<String> validateMsg = null;
             try {
                 validateMsg = parseObject(response, ValidateMsg.class);
@@ -448,9 +503,54 @@ public class SimpleProcessor implements Processor {
             if (checkOrder.getData().getSubmitStatus()) {
                 System.out.println("车票提交通过，正在尝试排队");
             }
-        } else if (OperationType.END.equals(operation)) {
+        } else if (OperationType.QUEUE_COUNT.equals(operation)) {
+            JSONObject queueCount = parse(response.getRawText());
+            JSONObject data = queueCount.getJSONObject("data");
+            if (queueCount.getBoolean("status")) {
+                String[] ticket = data.getString("ticket").split("\\,");
+                Integer ticketCount = Integer.valueOf(ticket[0]) + Integer.valueOf(ticket[1]);
+                Integer countT = data.getInteger("countT");
 
-        }  else {
+                if (countT == 0) {
+                    if (ticketCount < buyer.getTickePeoples().size()) {
+                        System.out.println("当前余票数小于乘车人数，放弃订票");
+                        request.setOperation(OperationType.QUERY);
+                    } else {
+                        System.out.println("排队成功, 当前余票还剩余: "+ticketCount+" 张");
+                        request.setOperation(OperationType.CONFIRM_SINGLE_FOR_QUEUE);
+                    }
+                }
+            }
+        } else if (OperationType.CONFIRM_SINGLE_FOR_QUEUE.equals(operation)) {
+            JSONObject queueCount = parse(response.getRawText());
+            JSONObject data = queueCount.getJSONObject("data");
+            if (queueCount.getBoolean("status")) {
+                if (data.getBoolean("submitStatus")) {
+                    request.setOperation(OperationType.QUERY_ORDER_WAIT_TIME);
+                }
+            }
+        } else if (OperationType.QUERY_ORDER_WAIT_TIME.equals(operation)) {
+            JSONObject queryOrder = parse(response.getRawText());
+            JSONObject data = queryOrder.getJSONObject("data");
+            if (queryOrder.getBoolean("status")) {
+                if (StringUtils.isBlank(data.getString("orderId"))) {
+                    System.out.println("订票成功，订单号为：" + data.getString("orderId"));
+                    request.setOperation(OperationType.END);
+                }else if (StringUtils.isBlank(data.getString("waitTime"))) {
+                    System.out.println("排队等待时间预计还剩 "+ data.getString("waitTime") +" ms");
+                    request.setOperation(OperationType.QUERY_ORDER_WAIT_TIME);
+                }
+            }
+        } else if (OperationType.RESULT_ORDER_FOR_DC_QUEUE.equals(operation)) {
+            JSONObject queryOrder = parse(response.getRawText());
+            JSONObject data = queryOrder.getJSONObject("data");
+            if (queryOrder.getBoolean("status")) {
+                if (data.getBoolean("submitStatus")) {
+                    System.out.println("----订票流程结束----");
+                }
+            }
+            request.setOperation(OperationType.END);
+        } else {
             System.out.println("SimpleProcessor--> ---------");
         }
     }
@@ -462,6 +562,10 @@ public class SimpleProcessor implements Processor {
             LOG.error("格式化发生错误 Response {}", response.getRawText(), e);
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    private JSONObject parse(String text) {
+        return JSON.parseObject(text);
     }
 
     private String getCaptchaXY(String positions) {
