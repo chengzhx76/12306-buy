@@ -430,49 +430,37 @@ public class SimpleProcessor implements Processor {
             }
         } else if (OperationType.QUEUE_COUNT.equals(operation)) {
             JSONObject queueCount = parse(response.getRawText());
-            JSONObject data = queueCount.getJSONObject("data");
-            if (queueCount.getBoolean("status")) {
-                String[] ticket = data.getString("ticket").split("\\,");
-                Integer ticketCount = Integer.valueOf(ticket[0]) + Integer.valueOf(ticket[1]);
-                Integer countT = data.getInteger("countT");
+            String[] ticket = queueCount.getString("ticket").split("\\,");
+            Integer ticketCount = Integer.valueOf(ticket[0]) + Integer.valueOf(ticket[1]);
+            Integer countT = queueCount.getInteger("countT");
 
-                if (countT == 0) {
-                    if (ticketCount < buyer.getTickePeoples().size()) {
-                        System.out.println("当前余票数小于乘车人数，放弃订票");
-                        request.setOperation(OperationType.QUERY);
-                    } else {
-                        System.out.println("排队成功, 当前余票还剩余: "+ticketCount+" 张");
-                        request.setOperation(OperationType.CONFIRM_SINGLE_FOR_QUEUE);
-                    }
+            if (countT == 0) {
+                if (ticketCount < buyer.getTickePeoples().size()) {
+                    System.out.println("当前余票数小于乘车人数，放弃订票");
+                    request.setOperation(OperationType.QUERY);
+                } else {
+                    System.out.println("排队成功, 当前余票还剩余: "+ticketCount+" 张");
+                    request.setOperation(OperationType.CONFIRM_SINGLE_FOR_QUEUE);
                 }
             }
         } else if (OperationType.CONFIRM_SINGLE_FOR_QUEUE.equals(operation)) {
             JSONObject queueCount = parse(response.getRawText());
-            JSONObject data = queueCount.getJSONObject("data");
-            if (queueCount.getBoolean("status")) {
-                if (data.getBoolean("submitStatus")) {
-                    request.setOperation(OperationType.QUERY_ORDER_WAIT_TIME);
-                }
+            if (queueCount.getBoolean("submitStatus")) {
+                request.setOperation(OperationType.QUERY_ORDER_WAIT_TIME);
             }
         } else if (OperationType.QUERY_ORDER_WAIT_TIME.equals(operation)) {
             JSONObject queryOrder = parse(response.getRawText());
-            JSONObject data = queryOrder.getJSONObject("data");
-            if (queryOrder.getBoolean("status")) {
-                if (StringUtils.isBlank(data.getString("orderId"))) {
-                    System.out.println("订票成功，订单号为：" + data.getString("orderId"));
-                    request.setOperation(OperationType.END);
-                }else if (StringUtils.isBlank(data.getString("waitTime"))) {
-                    System.out.println("排队等待时间预计还剩 "+ data.getString("waitTime") +" ms");
-                    request.setOperation(OperationType.QUERY_ORDER_WAIT_TIME);
-                }
+            if (StringUtils.isBlank(queryOrder.getString("orderId"))) {
+                System.out.println("订票成功，订单号为：" + queryOrder.getString("orderId"));
+                request.setOperation(OperationType.END);
+            }else if (StringUtils.isBlank(queryOrder.getString("waitTime"))) {
+                System.out.println("排队等待时间预计还剩 "+ queryOrder.getString("waitTime") +" ms");
+                request.setOperation(OperationType.QUERY_ORDER_WAIT_TIME);
             }
         } else if (OperationType.RESULT_ORDER_FOR_DC_QUEUE.equals(operation)) {
             JSONObject queryOrder = parse(response.getRawText());
-            JSONObject data = queryOrder.getJSONObject("data");
-            if (queryOrder.getBoolean("status")) {
-                if (data.getBoolean("submitStatus")) {
-                    System.out.println("----");
-                }
+            if (queryOrder.getBoolean("submitStatus")) {
+                System.out.println("----");
             }
             request.setOperation(OperationType.END);
         } else {
@@ -490,9 +478,10 @@ public class SimpleProcessor implements Processor {
     }
 
     private JSONObject parse(String text) {
-        JSONObject msg = parse(text);
+        JSONObject msg = JSON.parseObject(text);
         Boolean status = msg.getBoolean("status");
-        if (status == null || !status) {
+        Integer httpStatus = msg.getInteger("httpstatus");
+        if ((status == null || !status) || (httpStatus == null || httpStatus != 200)) {
             LOG.warn("请求失败 Response {}", text);
             throw new RuntimeException(text);
         }

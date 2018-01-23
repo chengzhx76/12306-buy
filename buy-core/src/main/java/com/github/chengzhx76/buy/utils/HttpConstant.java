@@ -79,8 +79,6 @@ public abstract class HttpConstant {
 
         public static final String ZERO = "0";
 
-        public static final String ONE = "1";
-
     }
 
     public static abstract class Referer {
@@ -195,7 +193,7 @@ public abstract class HttpConstant {
 
             INIT_DC.put(Header.ACCEPT, HeaderValue.APPLICATION_TEXT_HTML_XML_IMG);
             INIT_DC.put(Header.CACHE_CONTROL, HeaderValue.MAX_AGE_ZERO);
-            INIT_DC.put(Header.UPGRADE_INSECURE_REQUESTS, HeaderValue.ONE);
+            INIT_DC.put(Header.UPGRADE_INSECURE_REQUESTS, HeaderValue.UPGRADE_ONE);
             INIT_DC.put(Header.REFERER, Referer.INIT);
 
             PASSENGER.put(Header.ACCEPT, HeaderValue.APPLICATION_ALL);
