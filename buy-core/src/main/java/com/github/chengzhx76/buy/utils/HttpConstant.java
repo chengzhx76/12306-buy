@@ -25,7 +25,7 @@ public abstract class HttpConstant {
 
         public static final String CACHE_CONTROL = "Cache-Control";
 
-        public static final String IF_MODIFIED_SINCE = "Cache-Control";
+        public static final String IF_MODIFIED_SINCE = "If-Modified-Since";
 
         public static final String REFERER = "Referer";
 

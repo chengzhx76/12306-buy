@@ -131,9 +131,9 @@ public class Request implements Serializable {
         this.requestBody = requestBody;
     }
     public boolean isDisableCookieManagement() {
-        if (OperationType.QUERY.equals(getOperation())) {
-            disableCookieManagement = true;
-        }
+//        if (OperationType.QUERY.equals(getOperation())) {
+//            disableCookieManagement = true;
+//        }
         return disableCookieManagement;
     }
 

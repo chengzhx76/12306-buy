@@ -31,7 +31,7 @@ public class Buyer {
 
     protected final static Logger logger = LoggerFactory.getLogger(Buyer.class);
 
-    /** 出发日期不能为空 **/
+    /** 出发日期 **/
     private String stationDate;
     /** 车次 **/
     private List<String> stationTrains;
@@ -365,7 +365,7 @@ public class Buyer {
             if (StringUtils.contains(tickePeoples, ",")) {
                 this.tickePeoples = Arrays.asList(StringUtils.split(tickePeoples, ","));
             }
-            if (CollectionUtils.isEmpty(getStationTrains())) {
+            if (CollectionUtils.isEmpty(getTickePeoples())) {
                 if (StringUtils.contains(tickePeoples, "|")) {
                     this.tickePeoples = Arrays.asList(StringUtils.split(tickePeoples, "|"));
                 }else {

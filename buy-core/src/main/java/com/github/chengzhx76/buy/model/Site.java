@@ -102,7 +102,7 @@ public class Site {
         headers.put(HttpConstant.Header.ACCEPT_LANGUAGE, HttpConstant.HeaderValue.LANGUAGE);
         headers.put(HttpConstant.Header.CONNECTION, HttpConstant.HeaderValue.KEEP_ALIVE);
         headers.put(HttpConstant.Header.HOST, HttpConstant.HeaderValue.HOST);
-        headers.put(HttpConstant.Header.ORIGIN, HttpConstant.Header.ORIGIN);
+        headers.put(HttpConstant.Header.ORIGIN, HttpConstant.HeaderValue.ORIGIN);
         return this;
     }
 
