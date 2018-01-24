@@ -1,7 +1,7 @@
 package com.github.chengzhx76.buy.httper.client;
 
 
-import com.github.chengzhx76.buy.Site;
+import com.github.chengzhx76.buy.model.Site;
 import com.github.chengzhx76.buy.httper.Downloader;
 import com.github.chengzhx76.buy.model.Request;
 import com.github.chengzhx76.buy.model.Response;

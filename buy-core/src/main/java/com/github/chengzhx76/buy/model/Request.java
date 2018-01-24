@@ -110,6 +110,11 @@ public class Request implements Serializable {
         return this;
     }
 
+    public Request setHeaders(Map<String, String> headers) {
+        this.headers = headers;
+        return this;
+    }
+
     public Map<String, String> getCookies() {
         return cookies;
     }

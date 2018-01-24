@@ -1,4 +1,4 @@
-package com.github.chengzhx76.buy;
+package com.github.chengzhx76.buy.model;
 
 
 import com.github.chengzhx76.buy.utils.HttpConstant;

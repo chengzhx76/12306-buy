@@ -9,6 +9,7 @@ import java.util.Map;
  * Author: 光灿
  * Date: 2018/1/13
  */
+@Deprecated
 public class Ticket implements Serializable {
     private String flag;
     private Map<String, String> map;

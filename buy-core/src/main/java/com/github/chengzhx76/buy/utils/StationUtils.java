@@ -30,4 +30,75 @@ public class StationUtils {
         return map.get(stationName);
     }
 
+
+    public static String getCaptchaXY(String positions) {
+        StringBuilder offsetsXY = new StringBuilder();
+        String posArr[] = positions.split("\\ ");
+        for (String pos : posArr) {
+            int offsetsX = 0;
+            int offsetsY = 0;
+            switch (pos) {
+                case "1":
+                    offsetsX = 37;
+                    offsetsY = 45;
+                    break;
+                case "2":
+                    offsetsX = 110;
+                    offsetsY = 45;
+                    break;
+                case "3":
+                    offsetsX = 186;
+                    offsetsY = 45;
+                    break;
+                case "4":
+                    offsetsX = 254;
+                    offsetsY = 45;
+                    break;
+                case "5":
+                    offsetsX = 37;
+                    offsetsY = 120;
+                    break;
+                case "6":
+                    offsetsX = 110;
+                    offsetsY = 113;
+                    break;
+                case "7":
+                    offsetsX = 186;
+                    offsetsY = 118;
+                    break;
+                case "8":
+                    offsetsX = 254;
+                    offsetsY = 116;
+                    break;
+                default:
+                    break;
+            }
+            offsetsXY.append(offsetsX)
+                    .append(",")
+                    .append(offsetsY)
+                    .append(",");
+        }
+        return offsetsXY.deleteCharAt(offsetsXY.length()-1).toString();
+    }
+
+    public static String getSeatType(String seatCn) {
+        String seatType = "";
+        if ("一等座".equals(seatCn)) {
+            seatType = "M";
+        } else if ("特等座".equals(seatCn)) {
+            seatType = "P";
+        } else if ("二等座".equals(seatCn)) {
+            seatType = "O";
+        } else if ("商务座".equals(seatCn)) {
+            seatType = "9";
+        } else if ("硬座".equals(seatCn) || "无座".equals(seatCn)) {
+            seatType = "1";
+        } else if ("软卧".equals(seatCn)) {
+            seatType = "4";
+        } else if ("硬卧".equals(seatCn)) {
+            seatType = "3";
+        }
+        return seatType;
+    }
+
 }

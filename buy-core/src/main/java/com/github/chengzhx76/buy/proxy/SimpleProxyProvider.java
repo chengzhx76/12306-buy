@@ -2,7 +2,7 @@ package com.github.chengzhx76.buy.proxy;
 
 
 import com.github.chengzhx76.buy.model.Response;
-import com.github.chengzhx76.buy.Site;
+import com.github.chengzhx76.buy.model.Site;
 
 import java.util.ArrayList;
 import java.util.Collections;

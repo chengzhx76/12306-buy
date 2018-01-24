@@ -7,6 +7,7 @@ import java.io.Serializable;
  * Author: 光灿
  * Date: 2018/1/13
  */
+@Deprecated
 public class Flag implements Serializable {
     private Boolean flag;
 

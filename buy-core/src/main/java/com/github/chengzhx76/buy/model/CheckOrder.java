@@ -7,6 +7,7 @@ import java.io.Serializable;
  * @author: hp
  * @date: 2018/1/22
  */
+@Deprecated
 public class CheckOrder implements Serializable {
     private String ifShowPassCode;
     private String canChooseBeds;

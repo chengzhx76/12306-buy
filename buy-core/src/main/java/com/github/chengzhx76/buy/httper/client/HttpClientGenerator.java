@@ -1,6 +1,6 @@
 package com.github.chengzhx76.buy.httper.client;
 
-import com.github.chengzhx76.buy.Site;
+import com.github.chengzhx76.buy.model.Site;
 import com.github.chengzhx76.buy.httper.CustomRedirectStrategy;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;

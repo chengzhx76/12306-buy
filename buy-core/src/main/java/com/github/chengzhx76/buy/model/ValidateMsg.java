@@ -8,6 +8,7 @@ import java.util.List;
  * Author: 光灿
  * Date: 2018/1/13
  */
+@Deprecated
 public class ValidateMsg<T> implements Serializable {
 
     private String validateMessagesShowId;

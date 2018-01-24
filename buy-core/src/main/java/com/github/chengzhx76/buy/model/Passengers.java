@@ -8,6 +8,7 @@ import java.util.List;
  * Author: 光灿
  * Date: 2018/1/20
  */
+@Deprecated
 public class Passengers implements Serializable {
 
     private Boolean isExist;
