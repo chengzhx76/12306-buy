@@ -53,7 +53,6 @@ public class SimpleProcessor implements Processor {
             }
         } else if (OperationType.CHECK_USER.equals(operation)) {
             request.setUrl(operation.getUrl());
-
             Map<String, Object> params = new HashMap<>();
             params.put("json_att", "");
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
@@ -73,6 +72,8 @@ public class SimpleProcessor implements Processor {
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         }else if (OperationType.LOGIN.equals(operation)){
             request.setUrl(operation.getUrl());
+
+            request.addCookie("RAIL_DEVICEID", "pfCytWi-RvCa3rJCErlhW1-2kmt8Z5cK9MrwL4io10AacWOLR1c392NpvQpevNWoSMgA9xMXsZGvtMDnTU2VCvNjdTHH1UFsq0QXbeADamd_MbBmlUFPaDIT4_dFHk8WJlEOREf3rXOLJA4uN3sI51bY5nkwZXeB");
 
             Map<String, Object> params = new HashMap<>();
             params.put("username", buyer.getUsername());
@@ -109,8 +110,6 @@ public class SimpleProcessor implements Processor {
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else if (OperationType.INIT_DC.equals(operation)) {
             request.setUrl(operation.getUrl());
-            request.addCookie("tk", request.getExtra("tk"));
-
             Map<String, Object> params = new HashMap<>();
             params.put("_json_att", "");
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
@@ -145,7 +144,8 @@ public class SimpleProcessor implements Processor {
             String token = request.getExtra("token");
             String ticketInfoForPassenger = request.getExtra("ticketInfoForPassenger");
 
-            JSONObject ticketInfoForPassengerJsonObject = parse(ticketInfoForPassenger);
+            JSONObject ticketInfoForPassengerJsonObject = JSON.parseObject(ticketInfoForPassenger);
+
             JSONObject queryLeftTicketRequestJsonObject = ticketInfoForPassengerJsonObject.getJSONObject("queryLeftTicketRequestDTO");
 
             String trainNo = queryLeftTicketRequestJsonObject.getString("train_no");
@@ -156,7 +156,6 @@ public class SimpleProcessor implements Processor {
             String leftTicketStr = ticketInfoForPassengerJsonObject.getString("leftTicketStr");
             String purposeCodes = ticketInfoForPassengerJsonObject.getString("purpose_codes");
             String trainLocation = ticketInfoForPassengerJsonObject.getString("train_location");
-
 
             params.put("train_date", DateUtils.toEnDate(buyer.getStationDate()));
             params.put("train_no", trainNo);
@@ -177,7 +176,7 @@ public class SimpleProcessor implements Processor {
 
             String token = request.getExtra("token");
             String ticketInfoForPassenger = request.getExtra("ticketInfoForPassenger");
-            JSONObject ticketInfoForPassengerJsonObject = parse(ticketInfoForPassenger);
+            JSONObject ticketInfoForPassengerJsonObject = JSON.parseObject(ticketInfoForPassenger);
 
             String passengers = request.getExtra("passengers");
 
@@ -228,22 +227,28 @@ public class SimpleProcessor implements Processor {
             }
 
         } else if (OperationType.QUERY.equals(operation)) {
-            JSONObject query = parse(response.getRawText());
+            JSONObject query = null;
+            try {
+                query = parse(response.getRawText());
+            } catch (Exception e) {
+                LOG.warn("请求错误");
+                request.setOperation(OperationType.QUERY);
+                return;
+            }
             JSONArray tickets = query.getJSONArray("result");
             for (int i = 0; i < tickets.size(); i++) {
-                String ticket = tickets.getJSONObject(i).toJSONString();
-                String[] ticketInfo = ticket.split("\\|");
-                if ("Y".equals(ticketInfo[11]) && "预订".equals(ticketInfo[1])) {
+                String[] ticket = tickets.getString(i).split("\\|");
+                if ("Y".equals(ticket[11]) && "预订".equals(ticket[1])) {
                     for (String seatCn : buyer.getSetType()) {
                         int seatCode = TicketConstant.getSeat(seatCn);
-                        String seat = ticketInfo[seatCode];
+                        String seat = ticket[seatCode];
                         if (!"".equals(seat) &&
                                 !"*".equals(seat) &&
                                 !"无".equals(seat) &&
-                                buyer.getStationTrains().contains(ticketInfo[3])) {
+                                buyer.getStationTrains().contains(ticket[3])) {
 
-                            String secretStr = ticketInfo[0];
-                            String trainNo = ticketInfo[3];
+                            String secretStr = ticket[0];
+                            String trainNo = ticket[3];
                             LOG.info("车次：" + trainNo + " 始发车站：" + buyer.getFromStation() + " 终点车站：" +
                                     buyer.getToStation() + " 席别：" + seatCn + "-" + seat + " 安全码：" + secretStr);
                             if (!"无".equals(seat)) {
@@ -259,6 +264,7 @@ public class SimpleProcessor implements Processor {
             JSONObject checkUser = parse(response.getRawText());
             if (checkUser.getBoolean("flag")) {
                 System.out.println("----------开始尝试下单-------------");
+                request.setOperation(OperationType.END);
             } else {
                 request.setOperation(OperationType.CAPTCHA_IMG);
             }
@@ -332,8 +338,15 @@ public class SimpleProcessor implements Processor {
             }
         } else if (OperationType.SUBMIT_ORDER.equals(operation)) {
             System.out.println("提交订单结果--> "+ response.getRawText());
+            String submitOrder = null;
+            try {
+                submitOrder = parseStr(response.getRawText());
+            } catch (Exception e) {
+                LOG.warn("提交订单出错，重新查询");
+                request.setOperation(OperationType.QUERY);
+                return;
+            }
 
-            String submitOrder = parse(response.getRawText()).toJSONString();
             if ("N".equals(submitOrder)) {
                 LOG.info("开始订单确认");
             } else if ("Y".equals(submitOrder)){
@@ -358,7 +371,7 @@ public class SimpleProcessor implements Processor {
 
             String ticketInfoForPassenger = "";
             if (ticketInfoForPassengerFormMatcher.find()) {
-                ticketInfoForPassenger = ticketInfoForPassengerFormMatcher.group();
+                ticketInfoForPassenger = ticketInfoForPassengerFormMatcher.group(1);
             }else {
                 LOG.warn("未查找到乘客信息");
             }
@@ -369,7 +382,7 @@ public class SimpleProcessor implements Processor {
 
             String orderRequestParams = "";
             if (orderRequestParamsMatcher.find()) {
-                orderRequestParams = orderRequestParamsMatcher.group();
+                orderRequestParams = orderRequestParamsMatcher.group(1);
             }else {
                 LOG.warn("未查找到参数信息");
             }
@@ -443,6 +456,14 @@ public class SimpleProcessor implements Processor {
     }
 
     private JSONObject parse(String text) {
+        return parseMsg(text).getJSONObject("data");
+    }
+
+    private String parseStr(String text) {
+        return parseMsg(text).getString("data");
+    }
+
+    private JSONObject parseMsg(String text) {
         JSONObject msg = JSON.parseObject(text);
         Boolean status = msg.getBoolean("status");
         Integer httpStatus = msg.getInteger("httpstatus");
@@ -450,7 +471,7 @@ public class SimpleProcessor implements Processor {
             LOG.warn("请求失败 Response {}", text);
             throw new RuntimeException(text);
         }
-        return msg.getJSONObject("data");
+        return msg;
     }
 
     // "座位编号,0,票类型,乘客名,证件类型,证件号,手机号码,保存常用联系人(Y或N)";

@@ -23,14 +23,8 @@ public class Request implements Serializable {
 
     private long sleepTime;
 
-    /**
-     * Store additional information in extras.
-     */
     private Map<String, String> extras;
 
-    /**
-     * cookies for current url, if not set use Site's cookies
-     */
     private Map<String, String> cookies = new HashMap<>();
 
     private Map<String, String> headers = new HashMap<>();
@@ -102,6 +96,15 @@ public class Request implements Serializable {
 
     public Request addCookie(String name, String value) {
         cookies.put(name, value);
+        return this;
+    }
+
+    public Request addCookie(Map<String, String> cookies) {
+        if (cookies != null && !cookies.isEmpty()) {
+            for (Map.Entry<String, String> cookie : cookies.entrySet()) {
+                this.cookies.put(cookie.getKey(), cookie.getValue());
+            }
+        }
         return this;
     }
 

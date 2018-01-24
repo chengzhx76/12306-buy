@@ -1,6 +1,9 @@
 package com.github.chengzhx76.test;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.github.chengzhx76.buy.utils.FileUtils;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +34,28 @@ public class RegexTest {
         }
         //String token = pattern.matcher(html).group(0);
         //System.out.println(token);
+    }
+
+    @Test
+    public void test_html_ticketInfoForPassengerFormRegex() throws IOException {
+
+        String html = FileUtils.readFileToString(new File("E:\\Idea\\12306-buy\\html\\initDc.html"));
+
+        String ticketInfoForPassengerFormRegex = "var ticketInfoForPassengerForm=(\\{.+\\})?";
+        Pattern ticketInfoForPassengerFormPattern = Pattern.compile(ticketInfoForPassengerFormRegex);
+        Matcher ticketInfoForPassengerFormMatcher = ticketInfoForPassengerFormPattern.matcher(html);
+
+        String ticketInfoForPassenger = "";
+        if (ticketInfoForPassengerFormMatcher.find()) {
+            ticketInfoForPassenger = ticketInfoForPassengerFormMatcher.group(1);
+        }
+        System.out.println(ticketInfoForPassenger);
+
+
+        JSONObject msg = JSON.parseObject(ticketInfoForPassenger);
+
+        System.out.println(msg.getString("cardTypes"));
+
     }
 
 }

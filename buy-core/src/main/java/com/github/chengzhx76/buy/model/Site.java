@@ -1,6 +1,7 @@
 package com.github.chengzhx76.buy.model;
 
 
+import com.github.chengzhx76.buy.utils.ConfigUtils;
 import com.github.chengzhx76.buy.utils.HttpConstant;
 
 import java.util.*;
@@ -11,8 +12,6 @@ public class Site {
 
     private String userAgent;
 
-    private Map<String, String> cookies = new LinkedHashMap<>();
-
     private long sleepTime = 3000L;
 
     private int timeOut = 10000;
@@ -20,6 +19,8 @@ public class Site {
     private static final Set<Integer> DEFAULT_STATUS_CODE_SET = new HashSet<>();
 
     private Set<Integer> acceptStatCode = DEFAULT_STATUS_CODE_SET;
+
+    private Map<String, String> cookies = new LinkedHashMap<>();
 
     private Map<String, String> headers = new HashMap<>();
 
@@ -103,6 +104,17 @@ public class Site {
         headers.put(HttpConstant.Header.CONNECTION, HttpConstant.HeaderValue.KEEP_ALIVE);
         headers.put(HttpConstant.Header.HOST, HttpConstant.HeaderValue.HOST);
         headers.put(HttpConstant.Header.ORIGIN, HttpConstant.HeaderValue.ORIGIN);
+        return this;
+    }
+
+    public Site loginCookies() {
+        Properties properties = ConfigUtils.loadProperties("cookies.properties");
+        String jSessionId = properties.getProperty("JSESSIONID");
+        String bIGipServerotn = properties.getProperty("BIGipServerotn");
+        String route = properties.getProperty("route");
+        cookies.put("JSESSIONID", jSessionId);
+        cookies.put("BIGipServerotn", bIGipServerotn);
+        cookies.put("route", route);
         return this;
     }
 

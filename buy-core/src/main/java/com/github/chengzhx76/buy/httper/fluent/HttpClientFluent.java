@@ -1,13 +1,13 @@
 package com.github.chengzhx76.buy.httper.fluent;
 
 
-import com.github.chengzhx76.buy.model.Site;
 import com.github.chengzhx76.buy.httper.Downloader;
 import com.github.chengzhx76.buy.model.Request;
 import com.github.chengzhx76.buy.model.Response;
+import com.github.chengzhx76.buy.model.Site;
 import com.github.chengzhx76.buy.utils.HttpConstant;
+import com.github.chengzhx76.buy.utils.OperationType;
 import com.github.chengzhx76.buy.utils.UrlUtils;
-import org.apache.http.Header;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.fluent.Content;
 import org.apache.http.client.fluent.Executor;
@@ -15,7 +15,6 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.cookie.BasicClientCookie;
-import org.apache.http.message.BasicHeader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,17 +32,17 @@ public class HttpClientFluent implements Downloader {
 
         Response response = null;
         Executor executor = Executor.newInstance(httpClientGenerator.getClient());
-        setCookie(request);
+        addCookie(request, site);
         deleteCookie(request, executor);
+        org.apache.http.client.fluent.Request fluentReq = selectRequestMethod(request)
+                                                            .userAgent(site.getUserAgent());
+        addHeaders(fluentReq, request, site);
         try {
             Content content = executor.use(cookieStore)
-                    .execute(
-                            selectRequestMethod(request)
-                            .userAgent(site.getUserAgent())
-                            .setHeaders(setHeader(request, site))
-                    )
+                    .execute(fluentReq)
                     .returnContent();
             response = handleResponse(content, site, request);
+            System.out.println("------------afterCookies---------------");
             getCookies(cookieStore, request);
         } catch (IOException e) {
             e.printStackTrace();
@@ -51,7 +50,20 @@ public class HttpClientFluent implements Downloader {
         return response;
     }
 
-    private void setCookie(Request request) {
+    private void addCookie(Request request, Site site) {
+        if (site.getCookies() != null && !site.getCookies().isEmpty()) {
+            for (Map.Entry<String, String> cookieEntry : site.getCookies().entrySet()) {
+                BasicClientCookie cookie = new BasicClientCookie(cookieEntry.getKey(), cookieEntry.getValue());
+                cookie.setDomain(UrlUtils.getDomain(request.getUrl()));
+                if (OperationType.CHECK_USER.equals(request.getOperation()) && "JSESSIONID".equals(cookieEntry.getKey())) {
+                    cookie.setPath("/otn");
+                } else {
+                    cookie.setPath("/");
+                }
+                cookieStore.addCookie(cookie);
+            }
+        }
+
         if (request.getCookies() != null && !request.getCookies().isEmpty()) {
             for (Map.Entry<String, String> cookieEntry : request.getCookies().entrySet()) {
                 BasicClientCookie cookie = new BasicClientCookie(cookieEntry.getKey(), cookieEntry.getValue());
@@ -70,27 +82,24 @@ public class HttpClientFluent implements Downloader {
 
     private void getCookies(CookieStore cookieStore, Request request) {
         for (Cookie cookie : cookieStore.getCookies()) {
+            // TODO 登录成功后保存登录cookies
             System.out.println(cookie);
         }
     }
 
-    private Header[] setHeader(Request request, Site site) {
-        Header[] headers = new Header[request.getHeaders().size() + site.getHeaders().size()];
-        int i = 0;
+    private void addHeaders(org.apache.http.client.fluent.Request fluentReq, Request request, Site site) {
         if (site.getHeaders() != null && !site.getHeaders().isEmpty()) {
             for (Map.Entry<String, String> header : site.getHeaders().entrySet()) {
-                headers[i] = new BasicHeader(header.getKey(), header.getValue());
-                i++;
+                fluentReq.addHeader(header.getKey(), header.getValue());
             }
         }
 
         if (request.getHeaders() != null && !request.getHeaders().isEmpty()) {
             for (Map.Entry<String, String> header : request.getHeaders().entrySet()) {
-                headers[i] = new BasicHeader(header.getKey(), header.getValue());
-                i++;
+                fluentReq.addHeader(header.getKey(), header.getValue());
             }
         }
-        return headers;
+
     }
 
     private Response handleResponse(Content content, Site site, Request request) {
