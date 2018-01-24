@@ -101,4 +101,16 @@ public class StationUtils {
         return seatType;
     }
 
+    public static void saveLoginCookie(Map<String, String> cookies) {
+        Map<String, String> loginCookies = new HashMap<>();
+        for (Map.Entry<String, String> cookie : cookies.entrySet()) {
+            String name = cookie.getKey();
+            if ("JSESSIONID".equals(name) ||
+                    "BIGipServerotn".equals(name) ||
+                    "route".equals(name)) {
+                loginCookies.put(name, cookie.getValue());
+            }
+        }
+        ConfigUtils.writeProperties("cookies.properties", loginCookies);
+    }
 }

@@ -15,7 +15,8 @@ public class BuyerTest {
         Site site = Site.me()
                 .setSleepTime(600L)
                 .setUserAgent(HttpConstant.UserAgent.CHROME)
-                .defaultHeader();
+                .defaultHeader()
+                .loginCookies();
         Buyer.create(site).go();
     }
 

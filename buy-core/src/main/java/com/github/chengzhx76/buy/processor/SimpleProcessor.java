@@ -302,6 +302,10 @@ public class SimpleProcessor implements Processor {
             String uamtk = login.getString("uamtk");
             if (0 == resultCode) {
                 System.out.println("登录成功---->开始认证-1");
+
+                // 登录成功把Cookie写文件
+                StationUtils.saveLoginCookie(request.getCookies());
+
                 request.putExtra("uamtk", uamtk);
                 request.setOperation(OperationType.AUTH_UAMTK);
             } else if (1 == resultCode) {

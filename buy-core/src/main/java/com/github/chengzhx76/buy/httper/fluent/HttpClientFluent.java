@@ -6,7 +6,6 @@ import com.github.chengzhx76.buy.model.Request;
 import com.github.chengzhx76.buy.model.Response;
 import com.github.chengzhx76.buy.model.Site;
 import com.github.chengzhx76.buy.utils.HttpConstant;
-import com.github.chengzhx76.buy.utils.OperationType;
 import com.github.chengzhx76.buy.utils.UrlUtils;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.fluent.Content;
@@ -26,6 +25,7 @@ public class HttpClientFluent implements Downloader {
     private final static Logger LOG = LoggerFactory.getLogger(HttpClientFluent.class);
     private HttpClientFluentGenerator httpClientGenerator = new HttpClientFluentGenerator();
     private CookieStore cookieStore = new BasicCookieStore();
+    private volatile boolean addCookies = true;
 
     @Override
     public Response request(Request request, Site site) {
@@ -42,7 +42,6 @@ public class HttpClientFluent implements Downloader {
                     .execute(fluentReq)
                     .returnContent();
             response = handleResponse(content, site, request);
-            System.out.println("------------afterCookies---------------");
             getCookies(cookieStore, request);
         } catch (IOException e) {
             e.printStackTrace();
@@ -51,11 +50,12 @@ public class HttpClientFluent implements Downloader {
     }
 
     private void addCookie(Request request, Site site) {
-        if (site.getCookies() != null && !site.getCookies().isEmpty()) {
+        if (addCookies && site.getCookies() != null && !site.getCookies().isEmpty()) {
+            addCookies = false;
             for (Map.Entry<String, String> cookieEntry : site.getCookies().entrySet()) {
                 BasicClientCookie cookie = new BasicClientCookie(cookieEntry.getKey(), cookieEntry.getValue());
                 cookie.setDomain(UrlUtils.getDomain(request.getUrl()));
-                if (OperationType.CHECK_USER.equals(request.getOperation()) && "JSESSIONID".equals(cookieEntry.getKey())) {
+                if ("JSESSIONID".equals(cookieEntry.getKey())) {
                     cookie.setPath("/otn");
                 } else {
                     cookie.setPath("/");
@@ -82,8 +82,7 @@ public class HttpClientFluent implements Downloader {
 
     private void getCookies(CookieStore cookieStore, Request request) {
         for (Cookie cookie : cookieStore.getCookies()) {
-            // TODO 登录成功后保存登录cookies
-            System.out.println(cookie);
+            request.addCookie(cookie.getName(), cookie.getValue());
         }
     }
 

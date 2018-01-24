@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -38,4 +39,12 @@ public class ConfigUtils {
         }
         return properties;
     }
+
+    public static void writeProperties(String fileName, Map<String, String> configs) {
+        Properties properties = loadProperties(fileName);
+        for (Map.Entry<String, String> config : configs.entrySet()) {
+            properties.setProperty(config.getKey(), config.getValue());
+        }
+    }
+
 }
