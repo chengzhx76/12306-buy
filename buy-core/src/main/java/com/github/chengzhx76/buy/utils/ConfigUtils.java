@@ -3,9 +3,7 @@ package com.github.chengzhx76.buy.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Map;
 import java.util.Properties;
 
@@ -44,6 +42,23 @@ public class ConfigUtils {
         Properties properties = loadProperties(fileName);
         for (Map.Entry<String, String> config : configs.entrySet()) {
             properties.setProperty(config.getKey(), config.getValue());
+        }
+
+        FileOutputStream outputFile = null;
+        try {
+            outputFile = new FileOutputStream(ConfigUtils.class.getClassLoader().getResource(fileName).getPath());
+            properties.store(outputFile, "modify");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (outputFile != null) {
+                try {
+                    outputFile.flush();
+                    outputFile.close();
+                } catch (IOException e) {
+                    outputFile = null;
+                }
+            }
         }
     }
 

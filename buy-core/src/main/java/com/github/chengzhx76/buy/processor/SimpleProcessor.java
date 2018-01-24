@@ -264,7 +264,7 @@ public class SimpleProcessor implements Processor {
             JSONObject checkUser = parse(response.getRawText());
             if (checkUser.getBoolean("flag")) {
                 System.out.println("----------开始尝试下单-------------");
-                request.setOperation(OperationType.END);
+                request.setOperation(OperationType.SUBMIT_ORDER);
             } else {
                 request.setOperation(OperationType.CAPTCHA_IMG);
             }
