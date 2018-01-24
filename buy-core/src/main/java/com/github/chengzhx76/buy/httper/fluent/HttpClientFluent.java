@@ -40,7 +40,7 @@ public class HttpClientFluent implements Downloader {
                     .execute(
                             selectRequestMethod(request)
                             .userAgent(site.getUserAgent())
-                            .setHeaders(setHeader(request))
+                            .setHeaders(setHeader(request, site))
                     )
                     .returnContent();
             response = handleResponse(content, site, request);
@@ -74,10 +74,17 @@ public class HttpClientFluent implements Downloader {
         }
     }
 
-    private Header[] setHeader(Request request) {
-        Header headers[] = new Header[request.getHeaders().size()];
+    private Header[] setHeader(Request request, Site site) {
+        Header[] headers = new Header[request.getHeaders().size() + site.getHeaders().size()];
+        int i = 0;
+        if (site.getHeaders() != null && !site.getHeaders().isEmpty()) {
+            for (Map.Entry<String, String> header : site.getHeaders().entrySet()) {
+                headers[i] = new BasicHeader(header.getKey(), header.getValue());
+                i++;
+            }
+        }
+
         if (request.getHeaders() != null && !request.getHeaders().isEmpty()) {
-            int i = 0;
             for (Map.Entry<String, String> header : request.getHeaders().entrySet()) {
                 headers[i] = new BasicHeader(header.getKey(), header.getValue());
                 i++;

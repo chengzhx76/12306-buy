@@ -1,7 +1,6 @@
 package com.github.chengzhx76.buy.model;
 
 
-import com.github.chengzhx76.buy.utils.HttpConstant;
 import com.github.chengzhx76.buy.utils.OperationType;
 
 import java.io.Serializable;
@@ -108,16 +107,6 @@ public class Request implements Serializable {
 
     public Request addHeader(String name, String value) {
         headers.put(name, value);
-        return this;
-    }
-
-    public Request setHeaders(Map<String, String> headers) {
-        headers.put(HttpConstant.Header.ACCEPT_ENCODING, HttpConstant.HeaderValue.ENCODING);
-        headers.put(HttpConstant.Header.ACCEPT_LANGUAGE, HttpConstant.HeaderValue.LANGUAGE);
-        headers.put(HttpConstant.Header.CONNECTION, HttpConstant.HeaderValue.KEEP_ALIVE);
-        headers.put(HttpConstant.Header.HOST, HttpConstant.HeaderValue.HOST);
-        headers.put(HttpConstant.Header.ORIGIN, HttpConstant.Header.ORIGIN);
-        this.headers = headers;
         return this;
     }
 

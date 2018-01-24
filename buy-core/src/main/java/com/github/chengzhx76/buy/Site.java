@@ -29,71 +29,32 @@ public class Site {
         DEFAULT_STATUS_CODE_SET.add(HttpConstant.StatusCode.CODE_200);
     }
 
-    /**
-     * new a Site
-     *
-     * @return new site
-     */
     public static Site me() {
         return new Site();
     }
 
-    /**
-     * Add a cookie with domain {@link #getDomain()}
-     *
-     * @param name name
-     * @param value value
-     * @return this
-     */
     public Site addCookie(String name, String value) {
         cookies.put(name, value);
         return this;
     }
 
-    /**
-     * set user agent
-     *
-     * @param userAgent userAgent
-     * @return this
-     */
     public Site setUserAgent(String userAgent) {
         this.userAgent = userAgent;
         return this;
     }
 
-    /**
-     * get cookies
-     *
-     * @return get cookies
-     */
     public Map<String, String> getCookies() {
         return cookies;
     }
 
-    /**
-     * get user agent
-     *
-     * @return user agent
-     */
     public String getUserAgent() {
         return userAgent;
     }
 
-    /**
-     * get domain
-     *
-     * @return get domain
-     */
     public String getDomain() {
         return domain;
     }
 
-    /**
-     * set the domain of site.
-     *
-     * @param domain domain
-     * @return this
-     */
     public Site setDomain(String domain) {
         this.domain = domain;
         return this;
@@ -103,58 +64,25 @@ public class Site {
         return timeOut;
     }
 
-    /**
-     * set timeout for downloader in ms
-     *
-     * @param timeOut timeOut
-     * @return this
-     */
     public Site setTimeOut(int timeOut) {
         this.timeOut = timeOut;
         return this;
     }
 
-    /**
-     * Set acceptStatCode.<br>
-     * When status code of http response is in acceptStatCodes, it will be processed.<br>
-     * {200} by default.<br>
-     * It is not necessarily to be set.<br>
-     *
-     * @param acceptStatCode acceptStatCode
-     * @return this
-     */
     public Site setAcceptStatCode(Set<Integer> acceptStatCode) {
         this.acceptStatCode = acceptStatCode;
         return this;
     }
 
-    /**
-     * get acceptStatCode
-     *
-     * @return acceptStatCode
-     */
     public Set<Integer> getAcceptStatCode() {
         return acceptStatCode;
     }
 
-    /**
-     * Set the interval between the processing of two pages.<br>
-     * Time unit is micro seconds.<br>
-     *
-     * @param sleepTime sleepTime
-     * @return this
-     */
     public Site setSleepTime(long sleepTime) {
         this.sleepTime = sleepTime;
         return this;
     }
 
-    /**
-     * Get the interval between the processing of two pages.<br>
-     * Time unit is micro seconds.<br>
-     *
-     * @return the interval between the processing of two pages,
-     */
     public long getSleepTime() {
         return sleepTime;
     }
@@ -164,16 +92,17 @@ public class Site {
         return headers;
     }
 
-    /**
-     * Put an Http header for downloader. <br>
-     * Use {@link #addCookie(String, String)} for cookie and {@link #setUserAgent(String)} for user-agent. <br>
-     *
-     * @param key   key of http header, there are some keys constant in {@link HttpConstant.Header}
-     * @param value value of header
-     * @return this
-     */
     public Site addHeader(String key, String value) {
         headers.put(key, value);
+        return this;
+    }
+
+    public Site defaultHeader() {
+        headers.put(HttpConstant.Header.ACCEPT_ENCODING, HttpConstant.HeaderValue.ENCODING);
+        headers.put(HttpConstant.Header.ACCEPT_LANGUAGE, HttpConstant.HeaderValue.LANGUAGE);
+        headers.put(HttpConstant.Header.CONNECTION, HttpConstant.HeaderValue.KEEP_ALIVE);
+        headers.put(HttpConstant.Header.HOST, HttpConstant.HeaderValue.HOST);
+        headers.put(HttpConstant.Header.ORIGIN, HttpConstant.Header.ORIGIN);
         return this;
     }
 
@@ -182,13 +111,6 @@ public class Site {
         return disableCookieManagement;
     }
 
-    /**
-     * Downloader is supposed to store response cookie.
-     * Disable it to ignore all cookie fields and stay clean.
-     * Warning: Set cookie will still NOT work if disableCookieManagement is true.
-     * @param disableCookieManagement disableCookieManagement
-     * @return this
-     */
     public Site setDisableCookieManagement(boolean disableCookieManagement) {
         this.disableCookieManagement = disableCookieManagement;
         return this;

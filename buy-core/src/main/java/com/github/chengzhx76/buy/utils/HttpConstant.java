@@ -222,14 +222,6 @@ public abstract class HttpConstant {
 
         }
 
-        private static void setHeader(Map<String, String> header) {
-            header.put(Header.ACCEPT_ENCODING, HeaderValue.ENCODING);
-            header.put(Header.ACCEPT_LANGUAGE, HeaderValue.LANGUAGE);
-            header.put(Header.CONNECTION, HeaderValue.KEEP_ALIVE);
-            header.put(Header.HOST, HeaderValue.HOST);
-            header.put(Header.ORIGIN, HeaderValue.ORIGIN);
-        }
-
     }
 
 }
