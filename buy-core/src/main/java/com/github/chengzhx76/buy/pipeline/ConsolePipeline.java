@@ -12,9 +12,11 @@ public class ConsolePipeline implements Pipeline {
     @Override
     public void process(Request request, Response response) {
         if (!response.isDestroy()) {
+            System.out.println("--------------------RESULT-----------------");
             System.out.println(response.getOperation()+"\r\n" +
-                    request.getMethod()+"\t" + request.getUrl()+"\r\n" +
-                    response.getRawText()+"\r\n");
+                    request.getMethod() + " " + request.getUrl()+"\r\n" +
+                    response.getRawText());
+            System.out.println("---------------------END-------------------\r\n");
         }
         request.destroy(); // 处理完成之后把Request销毁，交给下一业务赋值
     }

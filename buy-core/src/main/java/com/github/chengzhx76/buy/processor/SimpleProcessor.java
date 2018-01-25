@@ -153,7 +153,7 @@ public class SimpleProcessor implements Processor {
             String seatType = StationUtils.getSeatType(buyer.getSetType().get(0));
             String fromStationTelecode = queryLeftTicketRequestJsonObject.getString("from_station");
             String toStationTelecode = queryLeftTicketRequestJsonObject.getString("to_station");
-            String leftTicketStr = ticketInfoForPassengerJsonObject.getString("leftTicketStr");
+            String leftTicketStr = EncodeUtils.decode(ticketInfoForPassengerJsonObject.getString("leftTicketStr"));
             String purposeCodes = ticketInfoForPassengerJsonObject.getString("purpose_codes");
             String trainLocation = ticketInfoForPassengerJsonObject.getString("train_location");
 
@@ -252,7 +252,7 @@ public class SimpleProcessor implements Processor {
                             LOG.info("车次：" + trainNo + " 始发车站：" + buyer.getFromStation() + " 终点车站：" +
                                     buyer.getToStation() + " 席别：" + seatCn + "-" + seat + " 安全码：" + secretStr);
                             if (!"无".equals(seat)) {
-                                request.putExtra("secretStr", EncodeUtils.decodeURL(secretStr));
+                                request.putExtra("secretStr", EncodeUtils.decode(secretStr));
                                 request.setOperation(OperationType.CHECK_USER);
                                 break;
                             }
@@ -468,14 +468,15 @@ public class SimpleProcessor implements Processor {
     }
 
     private JSONObject parseMsg(String text) {
-        JSONObject msg = JSON.parseObject(text);
-        Boolean status = msg.getBoolean("status");
-        Integer httpStatus = msg.getInteger("httpstatus");
+        JSONObject result = JSON.parseObject(text);
+        Boolean status = result.getBoolean("status");
+        Integer httpStatus = result.getInteger("httpstatus");
         if ((status == null || !status) || (httpStatus == null || httpStatus != 200)) {
             LOG.warn("请求失败 Response {}", text);
-            throw new RuntimeException(text);
+            String msg = result.getJSONArray("messages").getString(0);
+            throw new RuntimeException(msg);
         }
-        return msg;
+        return result;
     }
 
     // "座位编号,0,票类型,乘客名,证件类型,证件号,手机号码,保存常用联系人(Y或N)";
