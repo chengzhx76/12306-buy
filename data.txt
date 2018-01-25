@@ -381,6 +381,16 @@ Response
     validateMessages: { }
   }
 
+{
+  "validateMessagesShowId": "_validatorMessage", 
+  "status": false, 
+  "httpstatus": 200, 
+  "messages": [
+    "车票信息已过期，请重新查询最新车票信息"
+  ], 
+  "validateMessages": { }
+}
+
 9.#################################################################################################
 General
   Request URL:https://kyfw.12306.cn/otn/confirmPassenger/initDc
@@ -694,6 +704,17 @@ Response
     "messages": [ ], 
     "validateMessages": { }
   }
+
+{
+  "validateMessagesShowId": "_validatorMessage", 
+  "url": "/leftTicket/init", 
+  "status": false, 
+  "httpstatus": 200, 
+  "messages": [
+    "系统忙，请稍后重试"
+  ], 
+  "validateMessages": { }
+}
 
 14.#################################################################################################
 General

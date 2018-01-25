@@ -17,16 +17,20 @@ public class Cookie {
     public Cookie() {
     }
 
-    public Cookie(String name, String value, String domain, String path) {
-        this(name, value, null, domain, path);
+    public Cookie(String name, String value, String domain) {
+        this(name, value, domain,null);
     }
 
-    public Cookie(String name, String value, Date expiryDate, String domain, String path) {
+    public Cookie(String name, String value, String domain, String path) {
+        this(name, value, domain, path,null);
+    }
+
+    public Cookie(String name, String value, String domain, String path, Date expiryDate) {
         this.name = name;
         this.value = value;
-        this.expiryDate = expiryDate;
         this.domain = domain;
         this.path = path;
+        this.expiryDate = expiryDate;
     }
 
     public String getName() {
