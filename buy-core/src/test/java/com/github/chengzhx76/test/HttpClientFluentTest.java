@@ -121,24 +121,29 @@ public class HttpClientFluentTest {
                 cookieStore.addCookie(cookie);
             }
 
-            Executor executor = Executor.newInstance();
-            String content = executor.use(cookieStore)
-                    .execute(Request.Get(url)
-                            .userAgent(HttpConstant.UserAgent.CHROME)
-                            .addHeader(HttpConstant.Header.ACCEPT_ENCODING, HttpConstant.HeaderValue.ENCODING)
-                            .addHeader(HttpConstant.Header.ACCEPT_LANGUAGE, HttpConstant.HeaderValue.LANGUAGE)
-                            .addHeader(HttpConstant.Header.CONNECTION, HttpConstant.HeaderValue.KEEP_ALIVE)
-                            .addHeader(HttpConstant.Header.HOST, HttpConstant.HeaderValue.HOST)
-                            .addHeader(HttpConstant.Header.ORIGIN, HttpConstant.HeaderValue.ORIGIN)
-                            .addHeader(HttpConstant.Header.ACCEPT, HttpConstant.HeaderValue.APPLICATION_ALL)
-                            .addHeader(HttpConstant.Header.IF_MODIFIED_SINCE, HttpConstant.HeaderValue.ZERO)
-                            .addHeader(HttpConstant.Header.REFERER, HttpConstant.Referer.INIT)
-                            .addHeader(HttpConstant.Header.X_REQUESTED_WITH, HttpConstant.HeaderValue.XML))
-                    .returnContent()
-                    .asString(Charset.forName("UTF-8"));
+            try {
+                Executor executor = Executor.newInstance();
+                String content = executor.use(cookieStore)
+                        .execute(Request.Get(url)
+                                .connectTimeout(1000)
+                                .socketTimeout(1000)
+                                .userAgent(HttpConstant.UserAgent.CHROME)
+                                .addHeader(HttpConstant.Header.ACCEPT_ENCODING, HttpConstant.HeaderValue.ENCODING)
+                                .addHeader(HttpConstant.Header.ACCEPT_LANGUAGE, HttpConstant.HeaderValue.LANGUAGE)
+                                .addHeader(HttpConstant.Header.CONNECTION, HttpConstant.HeaderValue.KEEP_ALIVE)
+                                .addHeader(HttpConstant.Header.HOST, HttpConstant.HeaderValue.HOST)
+                                .addHeader(HttpConstant.Header.ORIGIN, HttpConstant.HeaderValue.ORIGIN)
+                                .addHeader(HttpConstant.Header.ACCEPT, HttpConstant.HeaderValue.APPLICATION_ALL)
+                                .addHeader(HttpConstant.Header.IF_MODIFIED_SINCE, HttpConstant.HeaderValue.ZERO)
+                                .addHeader(HttpConstant.Header.REFERER, HttpConstant.Referer.INIT)
+                                .addHeader(HttpConstant.Header.X_REQUESTED_WITH, HttpConstant.HeaderValue.XML))
+                        .returnContent()
+                        .asString(Charset.forName("UTF-8"));
 
-            System.out.println(content);
-
+                System.out.println(content);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
             sleep();
         }
     }
