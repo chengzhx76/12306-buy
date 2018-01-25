@@ -5,7 +5,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * Desc:
@@ -112,5 +114,17 @@ public class StationUtils {
             }
         }
         ConfigUtils.writeProperties("cookies.properties", loginCookies);
+    }
+
+    public static String getCdnIP() {
+        String ip = "kyfw.12306.cn";
+        try {
+            List<String> ips = IOUtils.readLines(StationUtils.class.getClassLoader().getResourceAsStream("ips.txt"));
+            int index = new Random().nextInt(ips.size());
+            ip = ips.get(index);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ip;
     }
 }

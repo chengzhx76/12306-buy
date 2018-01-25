@@ -35,6 +35,7 @@ public class SimpleProcessor implements Processor {
         if (OperationType.LOG.equals(operation) ||
                 OperationType.QUERY.equals(operation)) {
             request.setUrl(operation.getUrl()
+                    .replace("{IP}", StationUtils.getCdnIP())
                     .replace("{TRAINDATE}", buyer.getStationDate())
                     .replace("{FROMSTATION}", buyer.getFromStationCode())
                     .replace("{TOSTATION}", buyer.getToStationCode()));

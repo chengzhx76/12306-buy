@@ -100,9 +100,9 @@ public abstract class HttpConstant {
 
     public static abstract class URL {
 
-        public static final String LOG = "https://kyfw.12306.cn/otn/leftTicket/log?leftTicketDTO.train_date={TRAINDATE}&leftTicketDTO.from_station={FROMSTATION}&leftTicketDTO.to_station={TOSTATION}&purpose_codes=ADULT";
+        public static final String LOG = "https://{IP}/otn/leftTicket/log?leftTicketDTO.train_date={TRAINDATE}&leftTicketDTO.from_station={FROMSTATION}&leftTicketDTO.to_station={TOSTATION}&purpose_codes=ADULT";
 
-        public static final String QUERY = "https://kyfw.12306.cn/otn/leftTicket/queryZ?leftTicketDTO.train_date={TRAINDATE}&leftTicketDTO.from_station={FROMSTATION}&leftTicketDTO.to_station={TOSTATION}&purpose_codes=ADULT";
+        public static final String QUERY = "https://{IP}/otn/leftTicket/queryZ?leftTicketDTO.train_date={TRAINDATE}&leftTicketDTO.from_station={FROMSTATION}&leftTicketDTO.to_station={TOSTATION}&purpose_codes=ADULT";
 
         public static final String CHECK_USER = "https://kyfw.12306.cn/otn/login/checkUser";
 
