@@ -17,6 +17,10 @@ public class Cookie {
     public Cookie() {
     }
 
+    public Cookie(String name, String value) {
+        this(name, value,null);
+    }
+
     public Cookie(String name, String value, String domain) {
         this(name, value, domain,null);
     }
