@@ -1,6 +1,7 @@
 package com.github.chengzhx76.test;
 
 import com.github.chengzhx76.buy.utils.HttpConstant;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.fluent.Executor;
 import org.apache.http.client.fluent.Request;
@@ -11,7 +12,10 @@ import org.junit.Test;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Desc:
@@ -46,14 +50,15 @@ public class HttpClientFluentTest {
 
     @Test
     public void test_cnd() throws IOException {
+        String date = "2018-01-29";
         Map<String, String> map = new HashMap<>();
         map.put("_jc_save_fromStation", URLEncoder.encode("北京BJP", "UTF-8"));
-        map.put("_jc_save_fromDate", "2018-01-26");
+        map.put("_jc_save_fromDate", date);
         map.put("_jc_save_toStation", URLEncoder.encode("曹县CXK", "UTF-8"));
-        map.put("_jc_save_toDate", "2018-01-26");
+        map.put("_jc_save_toDate", date);
         map.put("_jc_save_wfdc_flag", "dc");
 
-        List<String> ips = new ArrayList<>();
+        /*List<String> ips = new ArrayList<>();
         ips.add("42.81.28.117");
         ips.add("123.138.60.232");
         ips.add("61.163.111.74");
@@ -96,15 +101,16 @@ public class HttpClientFluentTest {
         ips.add("120.221.25.177");
         ips.add("61.136.167.78");
         ips.add("219.146.68.78");
-        ips.add("117.145.179.145");
+        ips.add("117.145.179.145");*/
+        List<String> ips = IOUtils.readLines(ReadIPTest.class.getClassLoader().getResourceAsStream("ips.txt"));
 
 
         for (;;) {
             int index = new Random().nextInt(ips.size());
             String ip = ips.get(index);
-            System.out.println(index+"-->"+ips.get(index));
+            System.out.println(index+"-->"+ip);
 
-            String url = "http://"+ip+"/otn/leftTicket/queryZ?leftTicketDTO.train_date=2018-01-26&leftTicketDTO.from_station=BJP&leftTicketDTO.to_station=CXK&purpose_codes=ADULT";
+            String url = "http://"+ip+"/otn/leftTicket/queryZ?leftTicketDTO.train_date="+date+"&leftTicketDTO.from_station=BJP&leftTicketDTO.to_station=CXK&purpose_codes=ADULT";
 
             CookieStore cookieStore = new BasicCookieStore();
 
@@ -139,7 +145,7 @@ public class HttpClientFluentTest {
 
     public void sleep() {
         try {
-            Thread.sleep(1000L);
+            Thread.sleep(1500L);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
