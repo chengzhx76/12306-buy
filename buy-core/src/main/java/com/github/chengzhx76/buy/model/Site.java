@@ -110,6 +110,12 @@ public class Site {
 
     public Site loginCookies() {
         Properties properties = ConfigUtils.loadProperties("cookies.properties");
+//        Set<String> loginCookies = properties.stringPropertyNames();
+//        for (String loginCookie : loginCookies) {
+//
+//        }
+
+
         String jSessionId = properties.getProperty("JSESSIONID");
         String bIGipServerotn = properties.getProperty("BIGipServerotn");
         String route = properties.getProperty("route");
