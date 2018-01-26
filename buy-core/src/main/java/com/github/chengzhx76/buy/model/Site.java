@@ -20,7 +20,8 @@ public class Site {
 
     private Set<Integer> acceptStatCode = DEFAULT_STATUS_CODE_SET;
 
-    private Map<String, String> cookies = new LinkedHashMap<>();
+//    private Map<String, String> cookies = new LinkedHashMap<>();
+    private Set<Cookie> cookies = new HashSet<>();
 
     private Map<String, String> headers = new HashMap<>();
 
@@ -35,7 +36,7 @@ public class Site {
     }
 
     public Site addCookie(String name, String value) {
-        cookies.put(name, value);
+        cookies.add(new Cookie(name, value));
         return this;
     }
 
@@ -44,7 +45,7 @@ public class Site {
         return this;
     }
 
-    public Map<String, String> getCookies() {
+    public Set<Cookie> getCookies() {
         return cookies;
     }
 
@@ -112,9 +113,10 @@ public class Site {
         String jSessionId = properties.getProperty("JSESSIONID");
         String bIGipServerotn = properties.getProperty("BIGipServerotn");
         String route = properties.getProperty("route");
-        cookies.put("JSESSIONID", jSessionId);
-        cookies.put("BIGipServerotn", bIGipServerotn);
-        cookies.put("route", route);
+
+        addCookie("JSESSIONID", jSessionId);
+        addCookie("BIGipServerotn", bIGipServerotn);
+        addCookie("route", route);
         return this;
     }
 

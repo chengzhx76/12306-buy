@@ -34,19 +34,22 @@ public class SimpleProcessor implements Processor {
 
         if (OperationType.LOG.equals(operation) ||
                 OperationType.QUERY.equals(operation)) {
+
+            String ip = StationUtils.getCdnIP();
+
             request.setUrl(operation.getUrl()
-                    .replace("{IP}", StationUtils.getCdnIP())
+                    .replace("{IP}", ip)
                     .replace("{TRAINDATE}", buyer.getStationDate())
                     .replace("{FROMSTATION}", buyer.getFromStationCode())
                     .replace("{TOSTATION}", buyer.getToStationCode()));
 
             if (OperationType.QUERY.equals(operation)) {
                 try {
-                    request.addCookie("_jc_save_fromStation", URLEncoder.encode(buyer.getFromStation()+","+buyer.getFromStationCode(), "UTF-8"));
-                    request.addCookie("_jc_save_fromDate", buyer.getStationDate());
-                    request.addCookie("_jc_save_toStation", URLEncoder.encode(buyer.getToStation()+","+buyer.getToStationCode(), "UTF-8"));
-                    request.addCookie("_jc_save_toDate", buyer.getStationDate());
-                    request.addCookie("_jc_save_wfdc_flag", "dc");
+                    request.addCookie("_jc_save_fromStation", URLEncoder.encode(buyer.getFromStation()+","+buyer.getFromStationCode(), "UTF-8"), ip);
+                    request.addCookie("_jc_save_fromDate", buyer.getStationDate(), ip);
+                    request.addCookie("_jc_save_toStation", URLEncoder.encode(buyer.getToStation()+","+buyer.getToStationCode(), "UTF-8"), ip);
+                    request.addCookie("_jc_save_toDate", buyer.getStationDate(), ip);
+                    request.addCookie("_jc_save_wfdc_flag", "dc", ip);
                 } catch (UnsupportedEncodingException e) {
                     LOG.error("编码失败", e);
                     throw new RuntimeException("编码失败");

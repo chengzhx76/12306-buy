@@ -5,7 +5,9 @@ import com.github.chengzhx76.buy.utils.OperationType;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class Request implements Serializable {
 
@@ -25,7 +27,9 @@ public class Request implements Serializable {
 
     private Map<String, String> extras;
 
-    private Map<String, String> cookies = new HashMap<>();
+//    private Map<String, String> cookies = new HashMap<>();
+
+    private Set<Cookie> cookies = new HashSet<>();
 
     private Map<String, String> headers = new HashMap<>();
 
@@ -95,18 +99,28 @@ public class Request implements Serializable {
     }
 
     public Request addCookie(String name, String value) {
-        cookies.put(name, value);
+        cookies.add(new Cookie(name, value));
         return this;
     }
 
-    public Request addCookie(Map<String, String> cookies) {
+    public Request addCookie(String name, String value, String domain) {
+        cookies.add(new Cookie(name, value, domain));
+        return this;
+    }
+
+    public Request addCookie(String name, String value, String domain, String path) {
+        cookies.add(new Cookie(name, value, domain, path));
+        return this;
+    }
+
+   /* public Request addCookie(Map<String, String> cookies) {
         if (cookies != null && !cookies.isEmpty()) {
             for (Map.Entry<String, String> cookie : cookies.entrySet()) {
                 this.cookies.put(cookie.getKey(), cookie.getValue());
             }
         }
         return this;
-    }
+    }*/
 
     public Request addHeader(String name, String value) {
         headers.put(name, value);
@@ -118,7 +132,7 @@ public class Request implements Serializable {
         return this;
     }
 
-    public Map<String, String> getCookies() {
+    public Set<Cookie> getCookies() {
         return cookies;
     }
 

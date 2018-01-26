@@ -1,13 +1,11 @@
 package com.github.chengzhx76.buy.utils;
 
+import com.github.chengzhx76.buy.model.Cookie;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Desc:
@@ -103,14 +101,13 @@ public class StationUtils {
         return seatType;
     }
 
-    public static void saveLoginCookie(Map<String, String> cookies) {
+    public static void saveLoginCookie(Set<Cookie> cookies) {
         Map<String, String> loginCookies = new HashMap<>();
-        for (Map.Entry<String, String> cookie : cookies.entrySet()) {
-            String name = cookie.getKey();
-            if ("JSESSIONID".equals(name) ||
-                    "BIGipServerotn".equals(name) ||
-                    "route".equals(name)) {
-                loginCookies.put(name, cookie.getValue());
+        for (Cookie cookie : cookies) {
+            if ("JSESSIONID".equals(cookie.getName()) ||
+                    "BIGipServerotn".equals(cookie.getName()) ||
+                    "route".equals(cookie.getName())) {
+                loginCookies.put(cookie.getName(), cookie.getValue());
             }
         }
         ConfigUtils.writeProperties("cookies.properties", loginCookies);

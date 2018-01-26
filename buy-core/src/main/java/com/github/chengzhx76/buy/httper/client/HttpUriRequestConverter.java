@@ -1,5 +1,6 @@
 package com.github.chengzhx76.buy.httper.client;
 
+import com.github.chengzhx76.buy.model.Cookie;
 import com.github.chengzhx76.buy.model.Site;
 import com.github.chengzhx76.buy.model.Request;
 import com.github.chengzhx76.buy.proxy.Proxy;
@@ -46,8 +47,8 @@ public class HttpUriRequestConverter {
         } else {
             if (request.getCookies() != null && !request.getCookies().isEmpty()) {
                 CookieStore cookieStore = new BasicCookieStore();
-                for (Map.Entry<String, String> cookieEntry : request.getCookies().entrySet()) {
-                    BasicClientCookie cookie = new BasicClientCookie(cookieEntry.getKey(), cookieEntry.getValue());
+                for (Cookie cookieEntry : request.getCookies()) {
+                    BasicClientCookie cookie = new BasicClientCookie(cookieEntry.getName(), cookieEntry.getValue());
                     cookie.setDomain(UrlUtils.getDomain(request.getUrl()));
                     cookieStore.addCookie(cookie);
                 }

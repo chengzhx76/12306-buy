@@ -2,15 +2,16 @@ package com.github.chengzhx76.buy.httper.fluent;
 
 
 import com.github.chengzhx76.buy.httper.Downloader;
+import com.github.chengzhx76.buy.model.Cookie;
 import com.github.chengzhx76.buy.model.Request;
 import com.github.chengzhx76.buy.model.Response;
 import com.github.chengzhx76.buy.model.Site;
 import com.github.chengzhx76.buy.utils.HttpConstant;
 import com.github.chengzhx76.buy.utils.UrlUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.fluent.Content;
 import org.apache.http.client.fluent.Executor;
-import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.cookie.BasicClientCookie;
@@ -32,8 +33,8 @@ public class HttpClientFluent implements Downloader {
 
         Response response = null;
         Executor executor = Executor.newInstance(httpClientGenerator.getClient());
-        addCookie(request, site);
-        deleteCookie(request, executor);
+        addCookies(request, site);
+        deleteCookies(request, executor);
         org.apache.http.client.fluent.Request fluentReq = selectRequestMethod(request)
                                                             .userAgent(site.getUserAgent());
         addHeaders(fluentReq, request, site);
@@ -49,40 +50,44 @@ public class HttpClientFluent implements Downloader {
         return response;
     }
 
-    private void addCookie(Request request, Site site) {
+    private void addCookies(Request request, Site site) {
         if (addCookies && site.getCookies() != null && !site.getCookies().isEmpty()) {
             addCookies = false;
-            for (Map.Entry<String, String> cookieEntry : site.getCookies().entrySet()) {
-                BasicClientCookie cookie = new BasicClientCookie(cookieEntry.getKey(), cookieEntry.getValue());
-                cookie.setDomain(UrlUtils.getDomain(request.getUrl()));
-                if ("JSESSIONID".equals(cookieEntry.getKey())) {
-                    cookie.setPath("/otn");
-                } else {
-                    cookie.setPath("/");
-                }
-                cookieStore.addCookie(cookie);
+            for (Cookie cookieEntry : site.getCookies()) {
+                addCookie(request, cookieStore, cookieEntry);
             }
         }
-
         if (request.getCookies() != null && !request.getCookies().isEmpty()) {
-            for (Map.Entry<String, String> cookieEntry : request.getCookies().entrySet()) {
-                BasicClientCookie cookie = new BasicClientCookie(cookieEntry.getKey(), cookieEntry.getValue());
-                cookie.setDomain(UrlUtils.getDomain(request.getUrl()));
-                cookie.setPath("/");
-                cookieStore.addCookie(cookie);
+            for (Cookie cookieEntry : request.getCookies()) {
+                addCookie(request, cookieStore, cookieEntry);
             }
         }
     }
 
-    private void deleteCookie(Request request, Executor executor) {
+    private void addCookie(Request request, CookieStore cookieStore, Cookie cookieEntry) {
+        BasicClientCookie cookie = new BasicClientCookie(cookieEntry.getName(), cookieEntry.getValue());
+        if (StringUtils.isNotBlank(cookieEntry.getDomain())) {
+            cookie.setDomain(cookieEntry.getDomain());
+        } else {
+            cookie.setDomain(UrlUtils.getDomain(request.getUrl()));
+        }
+        if (StringUtils.isNotBlank(cookieEntry.getPath())) {
+            cookie.setPath(cookieEntry.getPath());
+        } else {
+            cookie.setPath("/");
+        }
+        cookieStore.addCookie(cookie);
+    }
+
+    private void deleteCookies(Request request, Executor executor) {
         if (request.isDisableCookieManagement()) {
             executor.clearCookies();
         }
     }
 
     private void getCookies(CookieStore cookieStore, Request request) {
-        for (Cookie cookie : cookieStore.getCookies()) {
-            request.addCookie(cookie.getName(), cookie.getValue());
+        for (org.apache.http.cookie.Cookie cookie : cookieStore.getCookies()) {
+            request.addCookie(cookie.getName(), cookie.getValue(), cookie.getDomain(), cookie.getPath());
         }
     }
 

@@ -1,5 +1,8 @@
 package com.github.chengzhx76.buy.model;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.util.Date;
 
 /**
@@ -80,5 +83,37 @@ public class Cookie {
     public Cookie setPath(String path) {
         this.path = path;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Cookie cookie = (Cookie) o;
+
+        return new EqualsBuilder()
+                .append(name, cookie.name)
+                .append(value, cookie.value)
+                .append(expiryDate, cookie.expiryDate)
+                .append(domain, cookie.domain)
+                .append(path, cookie.path)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(name)
+                .append(value)
+                .append(expiryDate)
+                .append(domain)
+                .append(path)
+                .toHashCode();
     }
 }
