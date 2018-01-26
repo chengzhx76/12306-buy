@@ -40,6 +40,11 @@ public class Site {
         return this;
     }
 
+    public Site addCookie(String name, String value, String path) {
+        cookies.add(new Cookie(name, value, null, path));
+        return this;
+    }
+
     public Site setUserAgent(String userAgent) {
         this.userAgent = userAgent;
         return this;
@@ -110,24 +115,16 @@ public class Site {
 
     public Site loginCookies() {
         Properties properties = ConfigUtils.loadProperties("cookies.properties");
-//        Iterator<Map.Entry<Object, Object>> it = properties.entrySet().iterator();
-//        while (it.hasNext()) {
-//            Map.Entry<Object, Object> entry = it.next();
-//            Object key = entry.getKey();
-//            Object value = entry.getValue();
-//            System.out.println("key   :" + key);
-//            System.out.println("value :" + value);
-//            System.out.println("---------------");
-//        }
-
-
-        String jSessionId = properties.getProperty("JSESSIONID");
-        String bIGipServerotn = properties.getProperty("BIGipServerotn");
-        String route = properties.getProperty("route");
-
-        addCookie("JSESSIONID", jSessionId);
-        addCookie("BIGipServerotn", bIGipServerotn);
-        addCookie("route", route);
+        for (String key : properties.stringPropertyNames()) {
+            String data = properties.getProperty(key);
+            String value = "";
+            String path = "";
+            if (data.contains("|")) {
+                value = data.split("\\|")[0];
+                path = data.split("\\|")[1];
+            }
+            addCookie(key, value, path);
+        }
         return this;
     }
 

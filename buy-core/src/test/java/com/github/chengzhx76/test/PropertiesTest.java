@@ -3,11 +3,9 @@ package com.github.chengzhx76.test;
 import com.github.chengzhx76.buy.utils.ConfigUtils;
 import org.junit.Test;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -43,5 +41,20 @@ public class PropertiesTest {
             System.err.println("属性文件更新错误");
         }
     }
+    @Test
+    public void readPro() throws IOException {
+        Properties properties = new Properties();
+        properties.load(new FileInputStream("E:\\Idea\\12306-buy\\buy-core\\src\\main\\resources\\cookies.properties"));
+        Iterator<Map.Entry<Object, Object>> it = properties.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<Object, Object> entry = it.next();
+            Object key = entry.getKey();
+            Object value = entry.getValue();
+            System.out.println("key   :" + key);
+            System.out.println("value :" + value);
+            System.out.println("---------------");
+        }
+    }
+
 
 }

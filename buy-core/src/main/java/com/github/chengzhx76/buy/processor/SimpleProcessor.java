@@ -38,6 +38,7 @@ public class SimpleProcessor implements Processor {
             String ip = StationUtils.getCdnIP();
 
             request.setUrl(operation.getUrl()
+                    .replace("https", "http")
                     .replace("{IP}", ip)
                     .replace("{TRAINDATE}", buyer.getStationDate())
                     .replace("{FROMSTATION}", buyer.getFromStationCode())

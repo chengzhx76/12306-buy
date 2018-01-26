@@ -14,6 +14,7 @@ public class BuyerTest {
     public static void main(String[] args) {
         Site site = Site.me()
                 .setSleepTime(600L)
+                .setTimeOut(1000)
                 .setUserAgent(HttpConstant.UserAgent.CHROME)
                 .defaultHeader()
                 .loginCookies();

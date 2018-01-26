@@ -36,6 +36,8 @@ public class HttpClientFluent implements Downloader {
         addCookies(request, site);
         deleteCookies(request, executor);
         org.apache.http.client.fluent.Request fluentReq = selectRequestMethod(request)
+                                                                .connectTimeout(site.getTimeOut())
+                                                                .socketTimeout(site.getTimeOut())
                                                             .userAgent(site.getUserAgent());
         addHeaders(fluentReq, request, site);
         try {
