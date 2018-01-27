@@ -17,7 +17,7 @@ public class BuyerTest {
                 .setTimeOut(1000)
                 .setUserAgent(HttpConstant.UserAgent.CHROME)
                 .defaultHeader()
-                .loginCookies();
+                .defaultCookies();
         Buyer.create(site).go();
     }
 

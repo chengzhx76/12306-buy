@@ -76,7 +76,10 @@ public class SimpleProcessor implements Processor {
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else if (OperationType.LOG.equals(operation) ||
                 OperationType.QUERY.equals(operation)) {
+            String ip = StationUtils.getCdnIP();
             request.setUrl(operation.getUrl()
+                    .replace("https", "http")
+                    .replace("{IP}", ip)
                     .replace("{TRAINDATE}", buyer.getStationDate())
                     .replace("{FROMSTATION}", buyer.getFromStationCode())
                     .replace("{TOSTATION}", buyer.getToStationCode()));
