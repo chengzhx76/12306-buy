@@ -248,7 +248,7 @@ public class Buyer {
         if (request == null) {
             request = new Request();
         }
-        request.setOperation(OperationType.QUERY);
+        request.setOperation(OperationType.CHECK_USER);
 
         if (processor == null) {
             processor = new SimpleProcessor();

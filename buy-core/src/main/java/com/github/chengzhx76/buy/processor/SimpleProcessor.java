@@ -32,31 +32,7 @@ public class SimpleProcessor implements Processor {
         request.setMethod(operation.getMethod());
         request.setHeaders(operation.getHeader());
 
-        if (OperationType.LOG.equals(operation) ||
-                OperationType.QUERY.equals(operation)) {
-
-            String ip = StationUtils.getCdnIP();
-
-            request.setUrl(operation.getUrl()
-                    .replace("https", "http")
-                    .replace("{IP}", ip)
-                    .replace("{TRAINDATE}", buyer.getStationDate())
-                    .replace("{FROMSTATION}", buyer.getFromStationCode())
-                    .replace("{TOSTATION}", buyer.getToStationCode()));
-
-            if (OperationType.QUERY.equals(operation)) {
-                try {
-                    request.addCookie("_jc_save_fromStation", URLEncoder.encode(buyer.getFromStation()+","+buyer.getFromStationCode(), "UTF-8"), ip);
-                    request.addCookie("_jc_save_fromDate", buyer.getStationDate(), ip);
-                    request.addCookie("_jc_save_toStation", URLEncoder.encode(buyer.getToStation()+","+buyer.getToStationCode(), "UTF-8"), ip);
-                    request.addCookie("_jc_save_toDate", buyer.getStationDate(), ip);
-                    request.addCookie("_jc_save_wfdc_flag", "dc", ip);
-                } catch (UnsupportedEncodingException e) {
-                    LOG.error("编码失败", e);
-                    throw new RuntimeException("编码失败");
-                }
-            }
-        } else if (OperationType.CHECK_USER.equals(operation)) {
+        if (OperationType.CHECK_USER.equals(operation)) {
             request.setUrl(operation.getUrl());
             Map<String, Object> params = new HashMap<>();
             params.put("json_att", "");
@@ -75,10 +51,8 @@ public class SimpleProcessor implements Processor {
             params.put("login_site", "E");
             params.put("rand", "sjrand");
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
-        }else if (OperationType.LOGIN.equals(operation)){
+        } else if (OperationType.LOGIN.equals(operation)){
             request.setUrl(operation.getUrl());
-
-            request.addCookie("RAIL_DEVICEID", "pfCytWi-RvCa3rJCErlhW1-2kmt8Z5cK9MrwL4io10AacWOLR1c392NpvQpevNWoSMgA9xMXsZGvtMDnTU2VCvNjdTHH1UFsq0QXbeADamd_MbBmlUFPaDIT4_dFHk8WJlEOREf3rXOLJA4uN3sI51bY5nkwZXeB");
 
             Map<String, Object> params = new HashMap<>();
             params.put("username", buyer.getUsername());
@@ -100,6 +74,25 @@ public class SimpleProcessor implements Processor {
             params.put("tk", request.getExtra("tk"));
             params.put("_json_att", "");
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
+        } else if (OperationType.LOG.equals(operation) ||
+                OperationType.QUERY.equals(operation)) {
+            request.setUrl(operation.getUrl()
+                    .replace("{TRAINDATE}", buyer.getStationDate())
+                    .replace("{FROMSTATION}", buyer.getFromStationCode())
+                    .replace("{TOSTATION}", buyer.getToStationCode()));
+
+            if (OperationType.QUERY.equals(operation)) {
+                try {
+                    request.addCookie("_jc_save_fromStation", URLEncoder.encode(buyer.getFromStation()+","+buyer.getFromStationCode(), "UTF-8"));
+                    request.addCookie("_jc_save_fromDate", buyer.getStationDate());
+                    request.addCookie("_jc_save_toStation", URLEncoder.encode(buyer.getToStation()+","+buyer.getToStationCode(), "UTF-8"));
+                    request.addCookie("_jc_save_toDate", buyer.getStationDate());
+                    request.addCookie("_jc_save_wfdc_flag", "dc");
+                } catch (UnsupportedEncodingException e) {
+                    LOG.error("编码失败", e);
+                    throw new RuntimeException("编码失败");
+                }
+            }
         } else if (OperationType.SUBMIT_ORDER.equals(operation)) {
             request.setUrl(operation.getUrl());
 
@@ -158,7 +151,7 @@ public class SimpleProcessor implements Processor {
             String seatType = StationUtils.getSeatType(buyer.getSetType().get(0));
             String fromStationTelecode = queryLeftTicketRequestJsonObject.getString("from_station");
             String toStationTelecode = queryLeftTicketRequestJsonObject.getString("to_station");
-            String leftTicketStr = EncodeUtils.decode(ticketInfoForPassengerJsonObject.getString("leftTicketStr"));
+            String leftTicketStr = ticketInfoForPassengerJsonObject.getString("leftTicketStr");
             String purposeCodes = ticketInfoForPassengerJsonObject.getString("purpose_codes");
             String trainLocation = ticketInfoForPassengerJsonObject.getString("train_location");
 
@@ -221,55 +214,11 @@ public class SimpleProcessor implements Processor {
     @Override
     public void afterCompletion(Buyer buyer, Request request, Response response) {
         OperationType operation = response.getOperation();
-        if (OperationType.LOG.equals(operation)) {
-
-            JSONObject log = parse(response.getRawText());
-            if (log.getInteger("data") == 1) {
-                request.setSleepTime(0L);
-                request.setOperation(OperationType.QUERY);
-            } else {
-                throw new RuntimeException("日志接口返回失败");
-            }
-
-        } else if (OperationType.QUERY.equals(operation)) {
-            JSONObject query = null;
-            try {
-                query = parse(response.getRawText());
-            } catch (Exception e) {
-                LOG.warn("请求错误");
-                request.setOperation(OperationType.QUERY);
-                return;
-            }
-            JSONArray tickets = query.getJSONArray("result");
-            for (int i = 0; i < tickets.size(); i++) {
-                String[] ticket = tickets.getString(i).split("\\|");
-                if ("Y".equals(ticket[11]) && "预订".equals(ticket[1])) {
-                    for (String seatCn : buyer.getSetType()) {
-                        int seatCode = TicketConstant.getSeat(seatCn);
-                        String seat = ticket[seatCode];
-                        if (!"".equals(seat) &&
-                                !"*".equals(seat) &&
-                                !"无".equals(seat) &&
-                                buyer.getStationTrains().contains(ticket[3])) {
-
-                            String secretStr = ticket[0];
-                            String trainNo = ticket[3];
-                            LOG.info("车次：" + trainNo + " 始发车站：" + buyer.getFromStation() + " 终点车站：" +
-                                    buyer.getToStation() + " 席别：" + seatCn + "-" + seat + " 安全码：" + secretStr);
-                            if (!"无".equals(seat)) {
-                                request.putExtra("secretStr", EncodeUtils.decode(secretStr));
-                                request.setOperation(OperationType.CHECK_USER);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        } else if (OperationType.CHECK_USER.equals(operation)) {
+        if (OperationType.CHECK_USER.equals(operation)) {
             JSONObject checkUser = parse(response.getRawText());
             if (checkUser.getBoolean("flag")) {
-                System.out.println("----------开始尝试下单-------------");
-                request.setOperation(OperationType.SUBMIT_ORDER);
+                System.out.println("----------开始查询-------------");
+                request.setOperation(OperationType.QUERY);
             } else {
                 request.setOperation(OperationType.CAPTCHA_IMG);
             }
@@ -344,6 +293,50 @@ public class SimpleProcessor implements Processor {
                 request.setOperation(OperationType.SUBMIT_ORDER);
             } else {
                 throw new RuntimeException(msg);
+            }
+        } else if (OperationType.LOG.equals(operation)) {
+
+            JSONObject log = parse(response.getRawText());
+            if (log.getInteger("data") == 1) {
+                request.setSleepTime(0L);
+                request.setOperation(OperationType.QUERY);
+            } else {
+                throw new RuntimeException("日志接口返回失败");
+            }
+
+        } else if (OperationType.QUERY.equals(operation)) {
+            JSONObject query = null;
+            try {
+                query = parse(response.getRawText());
+            } catch (Exception e) {
+                LOG.warn("请求错误");
+                request.setOperation(OperationType.QUERY);
+                return;
+            }
+            JSONArray tickets = query.getJSONArray("result");
+            for (int i = 0; i < tickets.size(); i++) {
+                String[] ticket = tickets.getString(i).split("\\|");
+                if ("Y".equals(ticket[11]) && "预订".equals(ticket[1])) {
+                    for (String seatCn : buyer.getSetType()) {
+                        int seatCode = TicketConstant.getSeat(seatCn);
+                        String seat = ticket[seatCode];
+                        if (!"".equals(seat) &&
+                                !"*".equals(seat) &&
+                                !"无".equals(seat) &&
+                                buyer.getStationTrains().contains(ticket[3])) {
+
+                            String secretStr = ticket[0];
+                            String trainNo = ticket[3];
+                            LOG.info("车次：" + trainNo + " 始发车站：" + buyer.getFromStation() + " 终点车站：" +
+                                    buyer.getToStation() + " 席别：" + seatCn + "-" + seat + " 安全码：" + secretStr);
+                            if (!"无".equals(seat)) {
+                                request.putExtra("secretStr", EncodeUtils.decode(secretStr));
+                                request.setOperation(OperationType.CHECK_USER);
+                                break;
+                            }
+                        }
+                    }
+                }
             }
         } else if (OperationType.SUBMIT_ORDER.equals(operation)) {
             System.out.println("提交订单结果--> "+ response.getRawText());
@@ -473,15 +466,14 @@ public class SimpleProcessor implements Processor {
     }
 
     private JSONObject parseMsg(String text) {
-        JSONObject result = JSON.parseObject(text);
-        Boolean status = result.getBoolean("status");
-        Integer httpStatus = result.getInteger("httpstatus");
+        JSONObject msg = JSON.parseObject(text);
+        Boolean status = msg.getBoolean("status");
+        Integer httpStatus = msg.getInteger("httpstatus");
         if ((status == null || !status) || (httpStatus == null || httpStatus != 200)) {
             LOG.warn("请求失败 Response {}", text);
-            String msg = result.getJSONArray("messages").getString(0);
-            throw new RuntimeException(msg);
+            throw new RuntimeException(text);
         }
-        return result;
+        return msg;
     }
 
     // "座位编号,0,票类型,乘客名,证件类型,证件号,手机号码,保存常用联系人(Y或N)";
