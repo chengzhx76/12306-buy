@@ -7,6 +7,7 @@ import com.github.chengzhx76.buy.model.Request;
 import com.github.chengzhx76.buy.model.Response;
 import com.github.chengzhx76.buy.model.Site;
 import com.github.chengzhx76.buy.utils.HttpConstant;
+import com.github.chengzhx76.buy.utils.OperationType;
 import com.github.chengzhx76.buy.utils.UrlUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.client.CookieStore;
@@ -19,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 public class HttpClientFluent implements Downloader {
@@ -33,8 +35,7 @@ public class HttpClientFluent implements Downloader {
 
         Response response = null;
         Executor executor = Executor.newInstance(httpClientGenerator.getClient());
-        addCookies(request, site);
-        deleteCookies(request, executor);
+        setCookies(request, site);
         org.apache.http.client.fluent.Request fluentReq = selectRequestMethod(request)
                                                                 .connectTimeout(site.getTimeOut())
                                                                 .socketTimeout(site.getTimeOut())
@@ -47,7 +48,10 @@ public class HttpClientFluent implements Downloader {
             response = handleResponse(content, site, request);
             getCookies(cookieStore, request);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.error("获取资源出错", e);
+            response = new Response();
+            response.setOperation(request.getOperation());
+            response.setRequestSuccess(false);
         }
         return response;
     }
@@ -81,9 +85,23 @@ public class HttpClientFluent implements Downloader {
         cookieStore.addCookie(cookie);
     }
 
-    private void deleteCookies(Request request, Executor executor) {
+    private void setCookies(Request request, Site site) {
         if (request.isDisableCookieManagement()) {
-            executor.clearCookies();
+            if (OperationType.CAPTCHA_IMG.equals(request.getOperation())) {
+                List<org.apache.http.cookie.Cookie> cookies = cookieStore.getCookies();
+                cookieStore.clear();
+                for (org.apache.http.cookie.Cookie cookie : cookies) {
+                    if (!"_passport_ct".equals(cookie.getName()) &&
+                            !"_passport_session".equals(cookie.getName())) {
+                        cookieStore.addCookie(cookie);
+                    }
+                }
+                addCookies(request, site);
+            } else {
+                cookieStore.clear();
+            }
+        } else {
+            addCookies(request, site);
         }
     }
 

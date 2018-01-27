@@ -39,7 +39,7 @@ public class SimpleProcessor implements Processor {
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else if (OperationType.CAPTCHA_IMG.equals(operation)) {
             request.setUrl(operation.getUrl()+"&"+new Random().nextDouble());
-            //request.setDisableCookieManagement(true);
+            request.setDisableCookieManagement(true);
         } else if (OperationType.CHECK_CAPTCHA.equals(operation)) {
             request.setUrl(operation.getUrl());
 
@@ -55,10 +55,10 @@ public class SimpleProcessor implements Processor {
         } else if (OperationType.LOGIN.equals(operation)){
             request.setUrl(operation.getUrl());
 
-            request.addCookie(
+            /*request.addCookie(
                     "RAIL_DEVICEID",
-                    "OvnEIgOOdf-5JT8zQgtSCuJhvyJ0FhanIDJ_6hNV8mjimrEbqj27OUoRMTv9tOaKZlTX9ot_c3qhHUQnMaW2puZR2iwJV51CDF26_qHie8SwTcw7ZfhBYZoTcuoU4P7m-BT2OVpdYwsfePObNhFQiRQcfsgOQlz3",
-                    ".12306.cn");
+                    "OYkMQlD-v2EBlkvCaOpycpRgTz64KyojWaie7e2GQNoS6_YgIN_cxk46Gdk8eL4Aey4CZ_9l8ZuKMn4gtpS173lNXtS9DgY4sZXi1NKeX_Dmm-gJv8QbWBWUVmOQeUmE1ox9vEg69E0AZ6ccCdZBFvJZgXs8SFi2",
+                    ".12306.cn");*/
 
             Map<String, Object> params = new HashMap<>();
             params.put("username", buyer.getUsername());
@@ -304,7 +304,7 @@ public class SimpleProcessor implements Processor {
             String msg = login.getString("result_message");
             if (0 == resultCode) {
                 LOG.info("认证-2成功-{}", username);
-                request.setOperation(OperationType.SUBMIT_ORDER);
+                request.setOperation(OperationType.QUERY);
             } else {
                 throw new RuntimeException(msg);
             }
