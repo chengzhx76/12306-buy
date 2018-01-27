@@ -39,6 +39,7 @@ public class SimpleProcessor implements Processor {
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else if (OperationType.CAPTCHA_IMG.equals(operation)) {
             request.setUrl(operation.getUrl()+"&"+new Random().nextDouble());
+            //request.setDisableCookieManagement(true);
         } else if (OperationType.CHECK_CAPTCHA.equals(operation)) {
             request.setUrl(operation.getUrl());
 
@@ -53,6 +54,11 @@ public class SimpleProcessor implements Processor {
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else if (OperationType.LOGIN.equals(operation)){
             request.setUrl(operation.getUrl());
+
+            request.addCookie(
+                    "RAIL_DEVICEID",
+                    "OvnEIgOOdf-5JT8zQgtSCuJhvyJ0FhanIDJ_6hNV8mjimrEbqj27OUoRMTv9tOaKZlTX9ot_c3qhHUQnMaW2puZR2iwJV51CDF26_qHie8SwTcw7ZfhBYZoTcuoU4P7m-BT2OVpdYwsfePObNhFQiRQcfsgOQlz3",
+                    ".12306.cn");
 
             Map<String, Object> params = new HashMap<>();
             params.put("username", buyer.getUsername());
@@ -220,8 +226,13 @@ public class SimpleProcessor implements Processor {
         if (OperationType.CHECK_USER.equals(operation)) {
             JSONObject checkUser = parse(response.getRawText());
             if (checkUser.getBoolean("flag")) {
-                System.out.println("----------开始查询-------------");
-                request.setOperation(OperationType.QUERY);
+                if (StringUtils.isBlank(request.getExtra("secretStr"))) {
+                    System.out.println("----------开始查询-------------");
+                    request.setOperation(OperationType.QUERY);
+                } else {
+                    request.setOperation(OperationType.SUBMIT_ORDER);
+                }
+
             } else {
                 request.setOperation(OperationType.CAPTCHA_IMG);
             }
