@@ -113,7 +113,7 @@ public class Site {
         return this;
     }
 
-    public Site loginCookies() {
+    public Site defaultCookies() {
         Properties properties = ConfigUtils.loadProperties("cookies.properties");
         for (String key : properties.stringPropertyNames()) {
             String data = properties.getProperty(key);

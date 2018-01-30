@@ -17,3 +17,17 @@ https://zhuanlan.zhihu.com/p/31865300
 https://www.jianshu.com/p/d3e2b3442974
 
 https://zhuanlan.zhihu.com/p/31865300
+
+
+
+submitOrderRequest
+
+initDc
+
+checkOrderInfo
+
+getQueueCount
+
+confirmSingleForQueue
+
+queryOrderWaitTime

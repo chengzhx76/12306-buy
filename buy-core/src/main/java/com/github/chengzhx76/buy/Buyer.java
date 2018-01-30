@@ -300,7 +300,7 @@ public class Buyer {
     }
 
     private void onRequestFail(Response response) {
-        System.err.println("error");
+        logger.warn("请求发生错误->{}", response.getOperation());
     }
 
     private void checkConfig() {

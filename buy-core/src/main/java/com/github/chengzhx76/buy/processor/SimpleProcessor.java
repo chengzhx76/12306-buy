@@ -39,6 +39,7 @@ public class SimpleProcessor implements Processor {
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else if (OperationType.CAPTCHA_IMG.equals(operation)) {
             request.setUrl(operation.getUrl()+"&"+new Random().nextDouble());
+            request.setDisableCookieManagement(true);
         } else if (OperationType.CHECK_CAPTCHA.equals(operation)) {
             request.setUrl(operation.getUrl());
 
@@ -53,6 +54,11 @@ public class SimpleProcessor implements Processor {
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else if (OperationType.LOGIN.equals(operation)){
             request.setUrl(operation.getUrl());
+
+            /*request.addCookie(
+                    "RAIL_DEVICEID",
+                    "OYkMQlD-v2EBlkvCaOpycpRgTz64KyojWaie7e2GQNoS6_YgIN_cxk46Gdk8eL4Aey4CZ_9l8ZuKMn4gtpS173lNXtS9DgY4sZXi1NKeX_Dmm-gJv8QbWBWUVmOQeUmE1ox9vEg69E0AZ6ccCdZBFvJZgXs8SFi2",
+                    ".12306.cn");*/
 
             Map<String, Object> params = new HashMap<>();
             params.put("username", buyer.getUsername());
@@ -76,7 +82,10 @@ public class SimpleProcessor implements Processor {
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else if (OperationType.LOG.equals(operation) ||
                 OperationType.QUERY.equals(operation)) {
+            String ip = StationUtils.getCdnIP();
             request.setUrl(operation.getUrl()
+                    .replace("https", "http")
+                    .replace("{IP}", ip)
                     .replace("{TRAINDATE}", buyer.getStationDate())
                     .replace("{FROMSTATION}", buyer.getFromStationCode())
                     .replace("{TOSTATION}", buyer.getToStationCode()));
@@ -217,8 +226,13 @@ public class SimpleProcessor implements Processor {
         if (OperationType.CHECK_USER.equals(operation)) {
             JSONObject checkUser = parse(response.getRawText());
             if (checkUser.getBoolean("flag")) {
-                System.out.println("----------开始查询-------------");
-                request.setOperation(OperationType.QUERY);
+                if (StringUtils.isBlank(request.getExtra("secretStr"))) {
+                    System.out.println("----------开始查询-------------");
+                    request.setOperation(OperationType.QUERY);
+                } else {
+                    request.setOperation(OperationType.SUBMIT_ORDER);
+                }
+
             } else {
                 request.setOperation(OperationType.CAPTCHA_IMG);
             }
@@ -290,7 +304,7 @@ public class SimpleProcessor implements Processor {
             String msg = login.getString("result_message");
             if (0 == resultCode) {
                 LOG.info("认证-2成功-{}", username);
-                request.setOperation(OperationType.SUBMIT_ORDER);
+                request.setOperation(OperationType.QUERY);
             } else {
                 throw new RuntimeException(msg);
             }
