@@ -117,11 +117,13 @@ public class Site {
         Properties properties = ConfigUtils.loadProperties("cookies.properties");
         for (String key : properties.stringPropertyNames()) {
             String data = properties.getProperty(key);
-            String value = "";
-            String path = "";
+            String value = null;
+            String path = null;
             if (data.contains("|")) {
                 value = data.split("\\|")[0];
                 path = data.split("\\|")[1];
+            } else {
+                value = data;
             }
             addCookie(key, value, path);
         }
