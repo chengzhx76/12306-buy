@@ -58,51 +58,7 @@ public class HttpClientFluentTest {
         map.put("_jc_save_toDate", date);
         map.put("_jc_save_wfdc_flag", "dc");
 
-        /*List<String> ips = new ArrayList<>();
-        ips.add("42.81.28.117");
-        ips.add("123.138.60.232");
-        ips.add("61.163.111.74");
-        ips.add("116.55.236.35");
-        ips.add("150.138.214.84");
-        ips.add("115.231.20.49");
-        ips.add("124.239.186.165");
-        ips.add("36.99.32.182");
-        ips.add("150.138.169.29");
-        ips.add("117.148.165.161");
-        ips.add("59.44.148.55");
-        ips.add("211.91.168.28");
-        ips.add("182.140.147.61");
-        ips.add("14.215.231.134");
-        ips.add("117.187.46.242");
-        ips.add("113.16.210.131");
-        ips.add("59.63.244.111");
-        ips.add("112.17.29.134");
-        ips.add("180.97.244.190");
-        ips.add("182.242.43.188");
-        ips.add("111.20.250.117");
-        ips.add("61.138.219.85");
-        ips.add("59.49.94.147");
-        ips.add("36.102.238.45");
-        ips.add("111.6.192.131");
-        ips.add("182.140.147.104");
-        ips.add("182.34.127.23");
-        ips.add("122.143.27.169");
-        ips.add("119.6.226.157");
-        ips.add("121.30.196.35");
-        ips.add("123.183.164.137");
-        ips.add("218.29.50.20");
-        ips.add("125.77.130.216");
-        ips.add("123.128.14.198");
-        ips.add("58.18.254.234");
-        ips.add("61.147.227.140");
-        ips.add("113.207.77.115");
-        ips.add("182.140.147.79");
-        ips.add("61.184.117.30");
-        ips.add("120.221.25.177");
-        ips.add("61.136.167.78");
-        ips.add("219.146.68.78");
-        ips.add("117.145.179.145");*/
-        List<String> ips = IOUtils.readLines(ReadIPTest.class.getClassLoader().getResourceAsStream("ips.txt"));
+        List<String> ips = IOUtils.readLines(ReadIPTest.class.getClassLoader().getResourceAsStream("cdn.txt"));
 
 
         for (;;) {
