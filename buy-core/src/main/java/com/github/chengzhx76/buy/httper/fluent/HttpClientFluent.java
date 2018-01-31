@@ -113,6 +113,15 @@ public class HttpClientFluent implements Downloader {
                 addCookie(request, cookieStore, cookieEntry);
             }
         }
+
+        if (OperationType.QUERY.equals(request.getOperation())) {
+            tempCookieStore = cookieStore;
+        } else {
+            if (!tempCookieStore.getCookies().isEmpty()) {
+                cookieStore = tempCookieStore;
+            }
+        }
+
         if (request.getCookies() != null && !request.getCookies().isEmpty()) {
             for (Cookie cookieEntry : request.getCookies()) {
                 addCookie(request, cookieStore, cookieEntry);
@@ -123,6 +132,9 @@ public class HttpClientFluent implements Downloader {
     private void getCookies(CookieStore cookieStore, Response response) {
         for (org.apache.http.cookie.Cookie cookie : cookieStore.getCookies()) {
             response.addCookie(cookie.getName(), cookie.getValue(), cookie.getDomain(), cookie.getPath());
+        }
+        if (OperationType.QUERY.equals(response.getOperation())) {
+            cookieStore.clear();
         }
     }
 
