@@ -114,13 +114,13 @@ public class HttpClientFluent implements Downloader {
             }
         }
 
-        if (OperationType.QUERY.equals(request.getOperation())) {
+        /*if (OperationType.QUERY.equals(request.getOperation())) {
             tempCookieStore = cookieStore;
         } else {
             if (!tempCookieStore.getCookies().isEmpty()) {
                 cookieStore = tempCookieStore;
             }
-        }
+        }*/
 
         if (request.getCookies() != null && !request.getCookies().isEmpty()) {
             for (Cookie cookieEntry : request.getCookies()) {
@@ -133,9 +133,9 @@ public class HttpClientFluent implements Downloader {
         for (org.apache.http.cookie.Cookie cookie : cookieStore.getCookies()) {
             response.addCookie(cookie.getName(), cookie.getValue(), cookie.getDomain(), cookie.getPath());
         }
-        if (OperationType.QUERY.equals(response.getOperation())) {
+        /*if (OperationType.QUERY.equals(response.getOperation())) {
             cookieStore.clear();
-        }
+        }*/
     }
 
     private void addHeaders(org.apache.http.client.fluent.Request fluentReq, Request request, Site site) {
