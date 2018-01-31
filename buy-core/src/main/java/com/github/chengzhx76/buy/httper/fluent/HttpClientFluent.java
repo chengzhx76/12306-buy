@@ -28,6 +28,7 @@ public class HttpClientFluent implements Downloader {
     private final static Logger LOG = LoggerFactory.getLogger(HttpClientFluent.class);
     private HttpClientFluentGenerator httpClientGenerator = new HttpClientFluentGenerator();
     private CookieStore cookieStore = new BasicCookieStore();
+    private CookieStore tempCookieStore = new BasicCookieStore();
     private volatile boolean addCookies = true;
 
     @Override
@@ -56,20 +57,6 @@ public class HttpClientFluent implements Downloader {
         return response;
     }
 
-    private void addCookies(Request request, Site site) {
-        if (addCookies && site.getCookies() != null && !site.getCookies().isEmpty()) {
-            addCookies = false;
-            for (Cookie cookieEntry : site.getCookies()) {
-                addCookie(request, cookieStore, cookieEntry);
-            }
-        }
-        if (request.getCookies() != null && !request.getCookies().isEmpty()) {
-            for (Cookie cookieEntry : request.getCookies()) {
-                addCookie(request, cookieStore, cookieEntry);
-            }
-        }
-    }
-
     private void addCookie(Request request, CookieStore cookieStore, Cookie cookieEntry) {
         BasicClientCookie cookie = new BasicClientCookie(cookieEntry.getName(), cookieEntry.getValue());
         if (StringUtils.isNotBlank(cookieEntry.getDomain())) {
@@ -86,7 +73,7 @@ public class HttpClientFluent implements Downloader {
     }
 
     private void setCookies(Request request, Site site) {
-        if (request.isDisableCookieManagement()) {
+        if (request.isDisableCookie()) {
             if (OperationType.CAPTCHA_IMG.equals(request.getOperation())) {
                 List<org.apache.http.cookie.Cookie> cookies = cookieStore.getCookies();
                 cookieStore.clear();
@@ -102,6 +89,34 @@ public class HttpClientFluent implements Downloader {
             }
         } else {
             addCookies(request, site);
+        }
+    }
+
+
+    /*private void setCookies(Request request, Site site) {
+        if (request.isDisableCookie()) {
+            tempCookieStore = cookieStore;
+            cookieStore.clear();
+        } else {
+            if (!tempCookieStore.getCookies().isEmpty()) {
+                cookieStore = tempCookieStore;
+                tempCookieStore.clear();
+            }
+            addCookies(request, site);
+        }
+    }*/
+
+    private void addCookies(Request request, Site site) {
+        if (addCookies && site.getCookies() != null && !site.getCookies().isEmpty()) {
+            addCookies = false;
+            for (Cookie cookieEntry : site.getCookies()) {
+                addCookie(request, cookieStore, cookieEntry);
+            }
+        }
+        if (request.getCookies() != null && !request.getCookies().isEmpty()) {
+            for (Cookie cookieEntry : request.getCookies()) {
+                addCookie(request, cookieStore, cookieEntry);
+            }
         }
     }
 

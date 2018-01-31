@@ -21,9 +21,13 @@ public class Request implements Serializable {
 
     private HttpRequestBody requestBody;
 
-    private boolean disableCookieManagement;
+    private boolean disableCookie;
 
     private long sleepTime;
+
+    private long lastTime;
+
+    private long endTime;
 
     private Map<String, String> extras;
 
@@ -42,8 +46,10 @@ public class Request implements Serializable {
         method = null;
 //        operation = null; // 传递业务类型 不能销毁
         requestBody = null;
-        disableCookieManagement = false;
+        disableCookie = false;
         sleepTime = 0L;
+        lastTime = 0L;
+        endTime = 0L;
 //        if (extras != null) { // 传递信息 不能销毁
 //            extras.clear();
 //        }
@@ -147,22 +153,13 @@ public class Request implements Serializable {
     public void setRequestBody(HttpRequestBody requestBody) {
         this.requestBody = requestBody;
     }
-    public boolean isDisableCookieManagement() {
-//        if (OperationType.QUERY.equals(getOperation())) {
-//            disableCookieManagement = true;
-//        }
-        return disableCookieManagement;
+
+    public boolean isDisableCookie() {
+        return disableCookie;
     }
 
-    /**
-     * Downloader is supposed to store response cookie.
-     * Disable it to ignore all cookie fields and stay clean.
-     * Warning: Set cookie will still NOT work if disableCookieManagement is true.
-     * @param disableCookieManagement disableCookieManagement
-     * @return this
-     */
-    public Request setDisableCookieManagement(boolean disableCookieManagement) {
-        this.disableCookieManagement = disableCookieManagement;
+    public Request setDisableCookie(boolean disableCookie) {
+        this.disableCookie = disableCookie;
         return this;
     }
 
@@ -172,6 +169,24 @@ public class Request implements Serializable {
 
     public Request setSleepTime(long sleepTime) {
         this.sleepTime = sleepTime;
+        return this;
+    }
+
+    public long getLastTime() {
+        return lastTime;
+    }
+
+    public Request setLastTime(long lastTime) {
+        this.lastTime = lastTime;
+        return this;
+    }
+
+    public long getEndTime() {
+        return endTime;
+    }
+
+    public Request setEndTime(long endTime) {
+        this.endTime = endTime;
         return this;
     }
 }

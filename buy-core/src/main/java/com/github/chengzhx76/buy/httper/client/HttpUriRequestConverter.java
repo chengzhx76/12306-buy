@@ -39,7 +39,7 @@ public class HttpUriRequestConverter {
                     new UsernamePasswordCredentials(proxy.getUsername(), proxy.getPassword()));
             httpContext.setAttribute(HttpClientContext.PROXY_AUTH_STATE, authState);
         }
-        if (request.isDisableCookieManagement()) {
+        if (request.isDisableCookie()) {
             CookieStore store = httpContext.getCookieStore();
             if (store != null) {
                 store.clear();

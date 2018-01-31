@@ -39,7 +39,7 @@ public class SimpleProcessor implements Processor {
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else if (OperationType.CAPTCHA_IMG.equals(operation)) {
             request.setUrl(operation.getUrl()+"&"+new Random().nextDouble());
-            request.setDisableCookieManagement(true);
+            request.setDisableCookie(true);
         } else if (OperationType.CHECK_CAPTCHA.equals(operation)) {
             request.setUrl(operation.getUrl());
 
@@ -54,12 +54,6 @@ public class SimpleProcessor implements Processor {
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else if (OperationType.LOGIN.equals(operation)){
             request.setUrl(operation.getUrl());
-
-            /*request.addCookie(
-                    "RAIL_DEVICEID",
-                    "OYkMQlD-v2EBlkvCaOpycpRgTz64KyojWaie7e2GQNoS6_YgIN_cxk46Gdk8eL4Aey4CZ_9l8ZuKMn4gtpS173lNXtS9DgY4sZXi1NKeX_Dmm-gJv8QbWBWUVmOQeUmE1ox9vEg69E0AZ6ccCdZBFvJZgXs8SFi2",
-                    ".12306.cn");*/
-
             Map<String, Object> params = new HashMap<>();
             params.put("username", buyer.getUsername());
             params.put("password", buyer.getPassword());
@@ -176,8 +170,6 @@ public class SimpleProcessor implements Processor {
             params.put("_json_att", "");
             params.put("REPEAT_SUBMIT_TOKEN", token);
 
-            System.out.println("------------> "+params);
-
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else if (OperationType.CONFIRM_SINGLE_FOR_QUEUE.equals(operation)) {
             request.setUrl(operation.getUrl());
@@ -255,7 +247,7 @@ public class SimpleProcessor implements Processor {
             if (4 == resultCode) {
                 request.setOperation(OperationType.LOGIN);
             } else if (5 == resultCode) {
-                request.setDisableCookieManagement(true);
+                request.setDisableCookie(true);
                 LOG.info("验证码校验失败,重新认证");
                 request.setOperation(OperationType.CAPTCHA_IMG);
             } else if (7 == resultCode) {
@@ -326,7 +318,7 @@ public class SimpleProcessor implements Processor {
             try {
                 query = parse(response.getRawText());
             } catch (Exception e) {
-                LOG.warn("请求错误");
+                LOG.warn("请求错误", e);
                 request.setOperation(OperationType.QUERY);
                 return;
             }
@@ -456,11 +448,13 @@ public class SimpleProcessor implements Processor {
             }
         } else if (OperationType.QUERY_ORDER_WAIT_TIME.equals(operation)) {
             JSONObject queryOrder = parse(response.getRawText());
-            if (StringUtils.isBlank(queryOrder.getString("orderId"))) {
-                System.out.println("订票成功，订单号为：" + queryOrder.getString("orderId"));
+            String orderId = queryOrder.getString("orderId");
+            String waitTime = queryOrder.getString("waitTime");
+            if (StringUtils.isNotBlank(orderId)) {
+                System.out.println("订票成功，订单号为：" + orderId);
                 request.setOperation(OperationType.END);
-            }else if (StringUtils.isBlank(queryOrder.getString("waitTime"))) {
-                System.out.println("排队等待时间预计还剩 "+ queryOrder.getString("waitTime") +" ms");
+            }else if (StringUtils.isNotBlank(waitTime)) {
+                System.out.println("排队等待时间预计还剩 "+ waitTime +" ms");
                 request.setOperation(OperationType.QUERY_ORDER_WAIT_TIME);
             }
         } else if (OperationType.RESULT_ORDER_FOR_DC_QUEUE.equals(operation)) {
