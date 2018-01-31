@@ -19,7 +19,7 @@ public class TestDate {
     @Test
     public void test_format_date() {
         // Mon Jan 22 2018 00:00:00 GMT+0800 (中国标准时间)
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM d 00:00:00 'GMT+0800 (中国标准时间)'", Locale.ENGLISH);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM d yyyy 00:00:00 'GMT+0800 (中国标准时间)'", Locale.ENGLISH);
         System.out.println(dateFormat.format(new Date()));
     }
 

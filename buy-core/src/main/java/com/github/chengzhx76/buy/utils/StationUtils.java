@@ -116,7 +116,7 @@ public class StationUtils {
     public static String getCdnIP() {
         String ip = "kyfw.12306.cn";
         try {
-            List<String> ips = IOUtils.readLines(StationUtils.class.getClassLoader().getResourceAsStream("ips.txt"));
+            List<String> ips = IOUtils.readLines(StationUtils.class.getClassLoader().getResourceAsStream("cdn.txt"));
             int index = new Random().nextInt(ips.size());
             ip = ips.get(index);
         }catch (Exception e) {

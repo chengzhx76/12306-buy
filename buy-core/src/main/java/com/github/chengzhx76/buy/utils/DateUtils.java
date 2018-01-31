@@ -15,7 +15,7 @@ public class DateUtils {
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date date = dateFormat.parse(cnDate);
-            dateFormat = new SimpleDateFormat("EEE MMM d 00:00:00 'GMT+0800 (中国标准时间)'", Locale.ENGLISH);
+            dateFormat = new SimpleDateFormat("EEE MMM d yyyy 00:00:00 'GMT+0800 (中国标准时间)'", Locale.ENGLISH);
             return dateFormat.format(date);
         } catch (ParseException e) {
             e.printStackTrace();

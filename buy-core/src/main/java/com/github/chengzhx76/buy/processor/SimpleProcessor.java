@@ -175,6 +175,9 @@ public class SimpleProcessor implements Processor {
             params.put("train_location", trainLocation);
             params.put("_json_att", "");
             params.put("REPEAT_SUBMIT_TOKEN", token);
+
+            System.out.println("------------> "+params);
+
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else if (OperationType.CONFIRM_SINGLE_FOR_QUEUE.equals(operation)) {
             request.setUrl(operation.getUrl());
