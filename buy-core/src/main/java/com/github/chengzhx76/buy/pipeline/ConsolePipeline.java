@@ -19,6 +19,7 @@ public class ConsolePipeline implements Pipeline {
                 request.getMethod() + " " + request.getUrl()+"\r\n" +
                 response.getRawText());
 
+        System.out.println("----------COOKIES---------");
         Set<Cookie> cookies = response.getCookies();
         for (Cookie cookie : cookies) {
             System.out.println(cookie.getName() + "|" + cookie.getValue() +

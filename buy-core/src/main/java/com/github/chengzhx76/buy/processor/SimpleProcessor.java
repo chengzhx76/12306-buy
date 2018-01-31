@@ -449,13 +449,18 @@ public class SimpleProcessor implements Processor {
         } else if (OperationType.QUERY_ORDER_WAIT_TIME.equals(operation)) {
             JSONObject queryOrder = parse(response.getRawText());
             String orderId = queryOrder.getString("orderId");
-            String waitTime = queryOrder.getString("waitTime");
+            int waitTime = queryOrder.getIntValue("waitTime");
+            String msg = queryOrder.getString("msg");
             if (StringUtils.isNotBlank(orderId)) {
                 System.out.println("订票成功，订单号为：" + orderId);
                 request.setOperation(OperationType.END);
-            }else if (StringUtils.isNotBlank(waitTime)) {
-                System.out.println("排队等待时间预计还剩 "+ waitTime +" ms");
-                request.setOperation(OperationType.QUERY_ORDER_WAIT_TIME);
+            }else if (waitTime != 0) {
+                if (waitTime > 0) {
+                    System.out.println("排队等待时间预计还剩 "+ waitTime +" ms");
+                    request.setOperation(OperationType.QUERY_ORDER_WAIT_TIME);
+                } else {
+                    throw new RuntimeException(msg);
+                }
             }
         } else if (OperationType.RESULT_ORDER_FOR_DC_QUEUE.equals(operation)) {
             JSONObject queryOrder = parse(response.getRawText());
@@ -463,8 +468,6 @@ public class SimpleProcessor implements Processor {
                 System.out.println("----");
             }
             request.setOperation(OperationType.END);
-        } else {
-            System.out.println("SimpleProcessor--> ---------");
         }
     }
 
