@@ -4,6 +4,8 @@ import com.github.chengzhx76.buy.utils.OperationType;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Response implements Serializable {
 
@@ -17,7 +19,8 @@ public class Response implements Serializable {
 
     private int statusCode;
 
-    private boolean destroy;
+    private Set<Cookie> cookies = new HashSet<>();
+
 
     public byte[] getContent() {
         return content;
@@ -70,11 +73,12 @@ public class Response implements Serializable {
         return this;
     }
 
-    public void destroy() {
-        destroy = true;
+    public Response addCookie(String name, String value, String domain, String path) {
+        cookies.add(new Cookie(name, value, domain, path));
+        return this;
     }
 
-    public boolean isDestroy() {
-        return destroy;
+    public Set<Cookie> getCookies() {
+        return cookies;
     }
 }

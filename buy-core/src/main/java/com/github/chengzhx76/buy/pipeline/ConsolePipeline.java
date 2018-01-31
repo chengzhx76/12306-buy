@@ -14,19 +14,17 @@ import java.util.Set;
 public class ConsolePipeline implements Pipeline {
     @Override
     public void process(Request request, Response response) {
-        if (!response.isDestroy()) {
-            System.out.println("--------------------RESULT-----------------");
-            System.out.println(response.getOperation()+"\r\n" +
-                    request.getMethod() + " " + request.getUrl()+"\r\n" +
-                    response.getRawText());
+        System.out.println("--------------------RESULT-----------------");
+        System.out.println(response.getOperation()+"\r\n" +
+                request.getMethod() + " " + request.getUrl()+"\r\n" +
+                response.getRawText());
 
-            Set<Cookie> cookies = request.getCookies();
-            for (Cookie cookie : cookies) {
-                System.out.println(cookie.getName() + "|" + cookie.getValue() +
-                        "|" + cookie.getPath() + "|" + cookie.getDomain());
-            }
-            System.out.println("---------------------END-------------------\r\n");
+        Set<Cookie> cookies = response.getCookies();
+        for (Cookie cookie : cookies) {
+            System.out.println(cookie.getName() + "|" + cookie.getValue() +
+                    "|" + cookie.getPath() + "|" + cookie.getDomain());
         }
+        System.out.println("---------------------END-------------------\r\n");
         request.destroy(); // 处理完成之后把Request销毁，交给下一业务赋值
     }
 }

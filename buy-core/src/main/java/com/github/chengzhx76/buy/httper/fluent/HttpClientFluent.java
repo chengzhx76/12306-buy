@@ -47,7 +47,7 @@ public class HttpClientFluent implements Downloader {
                     .execute(fluentReq)
                     .returnContent();
             response = handleResponse(content, site, request);
-            getCookies(cookieStore, request);
+            getCookies(cookieStore, response);
         } catch (IOException e) {
             LOG.error("获取资源出错", e);
             response = new Response();
@@ -120,9 +120,9 @@ public class HttpClientFluent implements Downloader {
         }
     }
 
-    private void getCookies(CookieStore cookieStore, Request request) {
+    private void getCookies(CookieStore cookieStore, Response response) {
         for (org.apache.http.cookie.Cookie cookie : cookieStore.getCookies()) {
-            request.addCookie(cookie.getName(), cookie.getValue(), cookie.getDomain(), cookie.getPath());
+            response.addCookie(cookie.getName(), cookie.getValue(), cookie.getDomain(), cookie.getPath());
         }
     }
 
