@@ -76,7 +76,8 @@ public class SimpleProcessor implements Processor {
             request.setRequestBody(HttpRequestBody.form(params, "UTF-8"));
         } else if (OperationType.LOG.equals(operation) ||
                 OperationType.QUERY.equals(operation)) {
-            String ip = StationUtils.getCdnIP();
+//            String ip = StationUtils.getCdnIP();
+            String ip = "127.0.0.1";
             request.setUrl(operation.getUrl()
                     .replace("https", "http")
                     .replace("{IP}", ip)
@@ -265,10 +266,6 @@ public class SimpleProcessor implements Processor {
             String uamtk = login.getString("uamtk");
             if (0 == resultCode) {
                 System.out.println("登录成功---->开始认证-1");
-
-                // 登录成功把Cookie写文件
-                StationUtils.saveLoginCookie(request.getCookies());
-
                 request.putExtra("uamtk", uamtk);
                 request.setOperation(OperationType.AUTH_UAMTK);
             } else if (1 == resultCode) {
@@ -299,6 +296,10 @@ public class SimpleProcessor implements Processor {
             String msg = login.getString("result_message");
             if (0 == resultCode) {
                 LOG.info("认证-2成功-{}", username);
+
+                // 登录成功把Cookie写文件
+                StationUtils.saveLoginCookie(response.getCookies());
+
                 request.setOperation(OperationType.QUERY);
             } else {
                 throw new RuntimeException(msg);

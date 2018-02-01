@@ -382,14 +382,26 @@ Response
   }
 
 {
-  "validateMessagesShowId": "_validatorMessage", 
-  "status": false, 
-  "httpstatus": 200, 
+  "validateMessagesShowId": "_validatorMessage",
+  "status": false,
+  "httpstatus": 200,
   "messages": [
     "车票信息已过期，请重新查询最新车票信息"
-  ], 
+  ],
   "validateMessages": { }
 }
+
+{
+  "validateMessagesShowId": "_validatorMessage",
+  "status": false,
+  "httpstatus": 200,
+  "messages": [
+    "您还有未处理的订单，请您到<a href=\"../queryOrder/initNoComplete\">[未完成订单]</a>进行处理!"
+  ],
+  "validateMessages": { }
+}
+
+
 
 9.#################################################################################################
 General

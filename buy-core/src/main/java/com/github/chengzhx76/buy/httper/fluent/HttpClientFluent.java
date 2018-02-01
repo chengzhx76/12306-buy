@@ -57,6 +57,57 @@ public class HttpClientFluent implements Downloader {
         return response;
     }
 
+    private void setCookies(Request request, Site site) {
+        if (request.isDisableCookie()) {
+            if (OperationType.CAPTCHA_IMG.equals(request.getOperation())) {
+                List<org.apache.http.cookie.Cookie> cookies = cookieStore.getCookies();
+                cookieStore.clear();
+                for (org.apache.http.cookie.Cookie cookie : cookies) {
+                    if (!"_passport_ct".equals(cookie.getName()) &&
+                            !"_passport_session".equals(cookie.getName())) {
+                        cookieStore.addCookie(cookie);
+                    }
+                }
+                addCookies(request, site);
+            } else if (OperationType.QUERY.equals(request.getOperation())) {
+                List<org.apache.http.cookie.Cookie> cookies = cookieStore.getCookies();
+                // 先把上一个CDN的Cookies删除
+                cookieStore.clear();
+                addRequestCookies(request);
+                for (org.apache.http.cookie.Cookie cookie : cookies) {
+                    cookieStore.addCookie(cookie);
+                }
+
+            } else {
+                cookieStore.clear();
+            }
+        } else {
+            addCookies(request, site);
+        }
+    }
+
+
+    private void addCookies(Request request, Site site) {
+        addSiteCookies(request, site);
+        addRequestCookies(request);
+    }
+
+    private void addSiteCookies(Request request, Site site) {
+        if (addCookies && site.getCookies() != null && !site.getCookies().isEmpty()) {
+            addCookies = false;
+            for (Cookie cookieEntry : site.getCookies()) {
+                addCookie(request, cookieStore, cookieEntry);
+            }
+        }
+    }
+    private void addRequestCookies(Request request) {
+        if (request.getCookies() != null && !request.getCookies().isEmpty()) {
+            for (Cookie cookieEntry : request.getCookies()) {
+                addCookie(request, cookieStore, cookieEntry);
+            }
+        }
+    }
+
     private void addCookie(Request request, CookieStore cookieStore, Cookie cookieEntry) {
         BasicClientCookie cookie = new BasicClientCookie(cookieEntry.getName(), cookieEntry.getValue());
         if (StringUtils.isNotBlank(cookieEntry.getDomain())) {
@@ -72,70 +123,11 @@ public class HttpClientFluent implements Downloader {
         cookieStore.addCookie(cookie);
     }
 
-    private void setCookies(Request request, Site site) {
-        if (request.isDisableCookie()) {
-            if (OperationType.CAPTCHA_IMG.equals(request.getOperation())) {
-                List<org.apache.http.cookie.Cookie> cookies = cookieStore.getCookies();
-                cookieStore.clear();
-                for (org.apache.http.cookie.Cookie cookie : cookies) {
-                    if (!"_passport_ct".equals(cookie.getName()) &&
-                            !"_passport_session".equals(cookie.getName())) {
-                        cookieStore.addCookie(cookie);
-                    }
-                }
-                addCookies(request, site);
-            } else {
-                cookieStore.clear();
-            }
-        } else {
-            addCookies(request, site);
-        }
-    }
-
-
-    /*private void setCookies(Request request, Site site) {
-        if (request.isDisableCookie()) {
-            tempCookieStore = cookieStore;
-            cookieStore.clear();
-        } else {
-            if (!tempCookieStore.getCookies().isEmpty()) {
-                cookieStore = tempCookieStore;
-                tempCookieStore.clear();
-            }
-            addCookies(request, site);
-        }
-    }*/
-
-    private void addCookies(Request request, Site site) {
-        if (addCookies && site.getCookies() != null && !site.getCookies().isEmpty()) {
-            addCookies = false;
-            for (Cookie cookieEntry : site.getCookies()) {
-                addCookie(request, cookieStore, cookieEntry);
-            }
-        }
-
-        /*if (OperationType.QUERY.equals(request.getOperation())) {
-            tempCookieStore = cookieStore;
-        } else {
-            if (!tempCookieStore.getCookies().isEmpty()) {
-                cookieStore = tempCookieStore;
-            }
-        }*/
-
-        if (request.getCookies() != null && !request.getCookies().isEmpty()) {
-            for (Cookie cookieEntry : request.getCookies()) {
-                addCookie(request, cookieStore, cookieEntry);
-            }
-        }
-    }
 
     private void getCookies(CookieStore cookieStore, Response response) {
         for (org.apache.http.cookie.Cookie cookie : cookieStore.getCookies()) {
             response.addCookie(cookie.getName(), cookie.getValue(), cookie.getDomain(), cookie.getPath());
         }
-        /*if (OperationType.QUERY.equals(response.getOperation())) {
-            cookieStore.clear();
-        }*/
     }
 
     private void addHeaders(org.apache.http.client.fluent.Request fluentReq, Request request, Site site) {
